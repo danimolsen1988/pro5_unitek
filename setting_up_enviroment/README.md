@@ -16,6 +16,7 @@ blabla
   * nRF
   * dwm1001
 * Connecting PC to UWB-units
+ * PUTTY
 * Running Code
 
 
@@ -23,24 +24,24 @@ blabla
 IDE used for compiling and running code. Comes with integrated debugger J-Link, which is also used to flash devices.
 *Free-of-charge for non-commerial use*
 
-### Download
+#### Download
 SEGGER is available for download at: https://www.segger.com/downloads/embedded-studio
 Select: Embedded Studio for ARM 
 At current writing newest version is V5.10b.
 
-### Install
+#### Install
 For install run downloaded file and follow steps.
 During install make sure to select: *Install J_Link Device Drivers*
 
 
 
-### Configuration
+#### Configuration
 
 **Installing Packages**
 Tools->package manager
-•	CMSIS 5 CMSIS-CORE Support Package (version 5.02)
-•	CMSIS-CORE Support Package (version 4.05)
-•	Nordic Semiconductor nRF CPU Support Package (version 1.06)
+* CMSIS 5 CMSIS-CORE Support Package (version 5.02)
+* CMSIS-CORE Support Package (version 4.05)
+* Nordic Semiconductor nRF CPU Support Package (version 1.06)
 
 **Installing CMSIS Configuration Wizard**
 
