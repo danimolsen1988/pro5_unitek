@@ -30,17 +30,18 @@
 #define RNG_DELAY_MS 80
 
 /* Frames used in the ranging process. See NOTE 2,3 below. */
-static uint8 rx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 'W', 'A', 'V', 'E', 0xE0, 0, 0};
-static uint8 tx_resp_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 'V', 'E', 'W', 'A', 0xE1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 rx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE0, 0, 0};
+static uint8 tx_resp_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* Length of the common part of the message (up to and including the function code, see NOTE 3 below). */
 #define ALL_MSG_COMMON_LEN 10
 
 /* Index to access some of the fields in the frames involved in the process. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 10
-#define RESP_MSG_RESP_TX_TS_IDX 14
+#define RESP_MSG_POLL_RX_TS_IDX 12
+#define RESP_MSG_RESP_TX_TS_IDX 16
 #define RESP_MSG_TS_LEN 4	
+#define RESP_MSG_RESP_ADDR_IDX 7
 
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
@@ -147,6 +148,9 @@ int ss_resp_run(void)
       /* Write all timestamps in the final message. See NOTE 8 below. */
       resp_msg_set_ts(&tx_resp_msg[RESP_MSG_POLL_RX_TS_IDX], poll_rx_ts);
       resp_msg_set_ts(&tx_resp_msg[RESP_MSG_RESP_TX_TS_IDX], resp_tx_ts);
+
+      /* Write partid as 4 byte address*/
+      resp_msg_set_ts(&tx_resp_msg[RESP_MSG_RESP_ADDR_IDX],dwt_getpartid());
 
       /* Write and send the response message. See NOTE 9 below. */
       tx_resp_msg[ALL_MSG_SN_IDX] = frame_seq_nb;

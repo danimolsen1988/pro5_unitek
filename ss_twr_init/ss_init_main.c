@@ -33,21 +33,23 @@
 #define RNG_DELAY_MS 100
 
 /* Frames used in the ranging process. See NOTE 1,2 below. */
-static uint8 tx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 'W', 'A', 'V', 'E', 0xE0, 0, 0};
-static uint8 rx_resp_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 'V', 'E', 'W', 'A', 0xE1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 tx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE0, 0, 0};
+static uint8 rx_resp_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* Length of the common part of the message (up to and including the function code, see NOTE 1 below). */
-#define ALL_MSG_COMMON_LEN 10
+#define ALL_MSG_COMMON_LEN 7
 /* Indexes to access some of the fields in the frames defined above. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 10
-#define RESP_MSG_RESP_TX_TS_IDX 14
+#define RESP_MSG_POLL_RX_TS_IDX 12
+#define RESP_MSG_RESP_TX_TS_IDX 16
 #define RESP_MSG_TS_LEN 4
+#define RESP_SOURCE_ADDR_IDX 7
+#define RESP_SOURCE_ADDR_LEN 4
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
 
 /* Buffer to store received response message.
 * Its size is adjusted to longest frame that this example code is supposed to handle. */
-#define RX_BUF_LEN 20
+#define RX_BUF_LEN 22
 static uint8 rx_buffer[RX_BUF_LEN];
 
 /* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
@@ -60,9 +62,10 @@ static uint32 status_reg = 0;
 /* Speed of light in air, in metres per second. */
 #define SPEED_OF_LIGHT 299702547
 
-/* Hold copies of computed time of flight and distance here for reference so that it can be examined at a debug breakpoint. */
+/* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
 static double tof;
 static double distance;
+static unsigned long int tag_addr_32;
 
 /* Declaration of static functions. */
 static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
@@ -133,6 +136,15 @@ int ss_init_run(void)
     {
       dwt_readrxdata(rx_buffer, frame_len, 0);
     }
+
+    for(int i = 1; i <= RESP_SOURCE_ADDR_LEN; i++)
+    {
+      tag_addr_32 = (tag_addr_32 << 8) + rx_buffer[RESP_SOURCE_ADDR_IDX+RESP_SOURCE_ADDR_LEN-i];
+    }
+
+    /*used for test of id. Remove as comment to print id*/
+    //printf("partid of tag    : %#8x \r\n",tag_addr_32);
+
 
     /* Check that the frame is the expected response from the companion "SS TWR responder" example.
     * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
