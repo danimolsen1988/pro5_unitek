@@ -38,6 +38,7 @@
 	
 //-----------------dw1000----------------------------
 
+
 static dwt_config_t config = {
     5,                /* Channel number. */
     DWT_PRF_64M,      /* Pulse repetition frequency. */
@@ -57,9 +58,14 @@ static dwt_config_t config = {
 /* Delay between frames, in UWB microseconds. See NOTE 1 below. */
 #define POLL_TX_TO_RESP_RX_DLY_UUS 100 
 
-/*Should be accurately calculated during calibration*/
-#define TX_ANT_DLY 16300
-#define RX_ANT_DLY 16456	
+/* rx and tx antenna delay*/
+#ifdef CALIBRATE
+#define TX_ANT_DLY 0
+#define RX_ANT_DLY 0
+#else
+#define TX_ANT_DLY 16429
+#define RX_ANT_DLY 16429
+#endif
 
 //--------------dw1000---end---------------
 
@@ -155,8 +161,8 @@ int main(void)
   dwt_configure(&config);
 
   /* Apply default antenna delay value. See NOTE 2 below. */
-  dwt_setrxantennadelay(RX_ANT_DLY);
-  dwt_settxantennadelay(TX_ANT_DLY);
+  dwt_setrxantennadelay((TX_ANT_DLY));
+  dwt_settxantennadelay((RX_ANT_DLY));
 
   /* Set preamble timeout for expected frames. See NOTE 3 below. */
   //dwt_setpreambledetecttimeout(0); // PRE_TIMEOUT

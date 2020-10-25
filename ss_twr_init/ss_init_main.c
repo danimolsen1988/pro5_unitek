@@ -26,6 +26,7 @@
 #include "deca_device_api.h"
 #include "deca_regs.h"
 #include "port_platform.h"
+#include "calibration.h"
 
 #define APP_NAME "SS TWR INIT v1.3"
 
@@ -56,7 +57,7 @@ static uint8 rx_buffer[RX_BUF_LEN];
 static uint32 status_reg = 0;
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
-* 1 uus = 512 / 499.2 µs and 1 µs = 499.2 * 128 dtu. */
+* 1 uus = 512 / 499.2 us and 1 us = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
 
 /* Speed of light in air, in metres per second. */
@@ -64,7 +65,7 @@ static uint32 status_reg = 0;
 
 /* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
 static double tof;
-static double distance;
+
 static unsigned long int tag_addr_32;
 
 /* Declaration of static functions. */
@@ -74,6 +75,15 @@ static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
 /*Transactions Counters */
 static volatile int tx_count = 0 ; // Successful transmit counter
 static volatile int rx_count = 0 ; // Successful receive counter 
+
+// calibration
+#ifdef CALIBRATE
+static double distance[AVG];
+static int cal = 0;
+static int delay = 0;
+#else
+static double distance;
+#endif
 
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -87,7 +97,6 @@ static volatile int rx_count = 0 ; // Successful receive counter
 */
 int ss_init_run(void)
 {
-
 
   /* Loop forever initiating ranging exchanges. */
 
@@ -142,6 +151,7 @@ int ss_init_run(void)
       tag_addr_32 = (tag_addr_32 << 8) + rx_buffer[RESP_SOURCE_ADDR_IDX+RESP_SOURCE_ADDR_LEN-i];
     }
 
+
     /*used for test of id. Remove as comment to print id*/
     //printf("partid of tag    : %#8x \r\n",tag_addr_32);
 
@@ -172,9 +182,25 @@ int ss_init_run(void)
       rtd_init = resp_rx_ts - poll_tx_ts;
       rtd_resp = resp_tx_ts - poll_rx_ts;
 
-      tof = ((rtd_init - rtd_resp * (1.0f - clockOffsetRatio)) / 2.0f) * DWT_TIME_UNITS; // Specifying 1.0f and 2.0f are floats to clear warning 
-      distance = tof * SPEED_OF_LIGHT;
-      printf("Distance : %f\r\n",distance);
+      tof = ((rtd_init - rtd_resp * (1.0f - clockOffsetRatio)) / 2.0f) * DWT_TIME_UNITS; // Specifying 1.0f and 2.0f are floats to clear warning
+
+#ifdef CALIBRATE
+      int old_delay = delay;
+      distance[cal] = tof * SPEED_OF_LIGHT;
+      printf("Distance : %f\r\n",distance[cal]);
+      cal++;
+      if(cal == AVG) {
+         delay = calibrate_device(distance, delay);
+         cal = 0;
+         if(old_delay == delay) {
+            printf("set TX_ANT_DLY and RX_ANT_DLY in main to %d",delay);
+            exit(0);
+         }
+      }    
+#else
+    distance = tof*SPEED_OF_LIGHT;
+    printf("Distance : %f\r\n",distance);
+#endif
     }
   }
   else
