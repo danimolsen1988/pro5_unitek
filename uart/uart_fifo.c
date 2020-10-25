@@ -26,7 +26,7 @@
 //#define UART_RX_BUF_SIZE 32
 
 //UART Buffers
-app_uart_buffers_t buffers;
+static app_uart_buffers_t buffers;
 //static uint8_t rx_buf[UART_RX_BUF_SIZE];                                                    
 static uint8_t txBuf[UART_TX_BUF_SIZE];
 //current handles char
@@ -127,7 +127,6 @@ static void uartEventhandler(nrf_drv_uart_event_t * p_event, void* p_context) {
             }
             else {
                 // Last byte from FIFO transmitted, notify the application.
-
             }
             break;
         default:

@@ -5,6 +5,9 @@
 *
 * @file uart_fifo.h
 */
+
+#include "nrf_uart.h"
+
 uint32_t uartInit(nrf_uart_baudrate_t baud, bool parity);
 
 uint32_t uartDeinit();
