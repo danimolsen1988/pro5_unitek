@@ -70,11 +70,11 @@ nRF5 SDK
 
 
 ## Connecting PC and UWB-units
-
+Comming soon...
 
 
 ## Running Code
-
+Comming soon...
 
 
 ## Analog Discovery 2
