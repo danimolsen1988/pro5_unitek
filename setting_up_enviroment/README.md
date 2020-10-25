@@ -66,7 +66,7 @@ Follow instuctions from site.
 
 
 ## SDKs
-nRF5 SDK
+nRF5 SDK : https://infocenter.nordicsemi.com/index.jsp?topic=%2Fstruct_sdk%2Fstruct%2Fsdk_nrf5_latest.html
 
 
 ## Connecting PC and UWB-units
