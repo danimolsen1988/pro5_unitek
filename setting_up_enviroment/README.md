@@ -16,10 +16,10 @@ blabla
   * nRF
   * dwm1001
 * Connecting PC to UWB-units
- * PUTTY
+  * PUTTY
 * Running Code
 * Analog Discovery 2
- * Installing WaveForms
+  * Installing WaveForms
 
 
 ## SEGGER embedded studio
