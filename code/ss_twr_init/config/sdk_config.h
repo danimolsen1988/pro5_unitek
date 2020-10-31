@@ -123,7 +123,7 @@
 // <128=> Custom tx power selection 
 
 #ifndef ANTFS_CONFIG_TRANSMIT_POWER
-#define ANTFS_CONFIG_TRANSMIT_POWER 3
+#define ANTFS_CONFIG_TRANSMIT_POWER 0
 #endif
 
 // <o> ANTFS_CONFIG_CUSTOM_TRANSMIT_POWER - ANT Custom Transmit Power. 
@@ -3226,7 +3226,7 @@
 // <e> APP_TIMER_ENABLED - app_timer - Application timer functionality
 //==========================================================
 #ifndef APP_TIMER_ENABLED
-#define APP_TIMER_ENABLED 0
+#define APP_TIMER_ENABLED 1
 #endif
 // <o> APP_TIMER_CONFIG_RTC_FREQUENCY  - Configure RTC prescaler.
  

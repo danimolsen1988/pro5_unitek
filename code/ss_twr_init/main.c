@@ -63,8 +63,8 @@ static dwt_config_t config = {
 #define TX_ANT_DLY 0
 #define RX_ANT_DLY 0
 #else
-#define TX_ANT_DLY 16429
-#define RX_ANT_DLY 16429
+#define TX_ANT_DLY 16434
+#define RX_ANT_DLY 16434
 #endif
 
 //--------------dw1000---end---------------
@@ -145,7 +145,7 @@ int main(void)
   reset_DW1000(); 
 
   /* Set SPI clock to 2MHz */
-  port_set_dw1000_slowrate();			
+  port_set_dw1000_slowrate();
   
   /* Init the DW1000 */
   if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)
@@ -161,11 +161,11 @@ int main(void)
   dwt_configure(&config);
 
   /* Apply default antenna delay value. See NOTE 2 below. */
-  dwt_setrxantennadelay((TX_ANT_DLY));
-  dwt_settxantennadelay((RX_ANT_DLY));
+  dwt_setrxantennadelay((RX_ANT_DLY));
+  dwt_settxantennadelay((TX_ANT_DLY));
 
   /* Set preamble timeout for expected frames. See NOTE 3 below. */
-  //dwt_setpreambledetecttimeout(0); // PRE_TIMEOUT
+ // dwt_setpreambledetecttimeout(10); // PRE_TIMEOUT
           
   /* Set expected response's delay and timeout. 
   * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */

@@ -57,6 +57,7 @@ static dwt_config_t config = {
   (129 + 8 - 8)     /* SFD timeout (preamble length + 1 + SFD length - PAC size). Used in RX only. */
 };
 
+
 //--------------dw1000---end---------------
 
 
@@ -130,7 +131,7 @@ int main(void)
   reset_DW1000(); 
 
   /* Set SPI clock to 2MHz */
-  port_set_dw1000_slowrate();			
+  port_set_dw1000_slowrate();
 
   /* Init the DW1000 */
   if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)

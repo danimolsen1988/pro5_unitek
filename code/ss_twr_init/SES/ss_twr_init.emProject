@@ -36,6 +36,13 @@
       <file file_name="../main.c" />
       <file file_name="../ss_init_main.c" />
       <file file_name="../config/sdk_config.h" />
+      <folder Name="Calibration">
+        <file file_name="../Calibration/calibration.c" />
+      </folder>
+      <folder Name="Ignorelist">
+        <file file_name="../Ignorelist/ignorelist.c" />
+        <file file_name="../Ignorelist/ignorelist.h" />
+      </folder>
     </folder>
     <folder Name="Board Definition">
       <file file_name="../../../nRF5_SDK_14.2.0/components/boards/boards.c" />
