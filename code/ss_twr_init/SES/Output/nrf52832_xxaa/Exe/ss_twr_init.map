@@ -105,24 +105,48 @@ Discarded input sections
  .text          0x0000000000000000        0x0 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .data          0x0000000000000000        0x0 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .bss           0x0000000000000000        0x0 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .text.setupTimer
+ .bss.m_ss_timer_id0_data
+                0x0000000000000000       0x20 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .rodata.m_ss_timer_id0
                 0x0000000000000000        0x4 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .bss.m_ss_timer_id1_data
+                0x0000000000000000       0x20 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .rodata.m_ss_timer_id1
+                0x0000000000000000        0x4 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .bss.m_ss_timer_id2_data
+                0x0000000000000000       0x20 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .rodata.m_ss_timer_id2
+                0x0000000000000000        0x4 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .bss.ignorelist
+                0x0000000000000000        0x4 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .bss.length    0x0000000000000000        0x4 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .text.lfclk_request
+                0x0000000000000000       0x28 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .text.timer_handler
+                0x0000000000000000       0x2c Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .text.createTimer
+                0x0000000000000000       0x30 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .rodata        0x0000000000000000       0x36 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .text.setupTimer
+                0x0000000000000000       0x74 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .text.onIgnorelist
                 0x0000000000000000        0xc Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .text.putOnList
+                0x0000000000000000       0x50 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .text.putOnIgnorelist
-                0x0000000000000000       0x12 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .debug_frame   0x0000000000000000       0x68 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .debug_info    0x0000000000000000      0x6c4 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .debug_abbrev  0x0000000000000000      0x16e Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+                0x0000000000000000       0x6c Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .debug_frame   0x0000000000000000      0x118 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .debug_info    0x0000000000000000      0x91a Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .debug_abbrev  0x0000000000000000      0x20a Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .debug_pubnames
-                0x0000000000000000       0x46 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+                0x0000000000000000      0x16d Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .debug_pubtypes
-                0x0000000000000000      0x1ad Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+                0x0000000000000000      0x1fc Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .debug_aranges
-                0x0000000000000000       0x30 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .debug_ranges  0x0000000000000000       0x20 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .debug_line    0x0000000000000000      0x211 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
- .debug_str     0x0000000000000000      0x787 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+                0x0000000000000000       0x50 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .debug_ranges  0x0000000000000000       0x40 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .debug_line    0x0000000000000000      0x328 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
+ .debug_str     0x0000000000000000      0x8c1 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o

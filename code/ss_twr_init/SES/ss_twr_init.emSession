@@ -27,6 +27,8 @@
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;Calibration"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;Ignorelist"/>
+  <ProjectSessionItem path="ss_twr_init;ss_twr_init;Decadriver"/>
+  <ProjectSessionItem path="ss_twr_init;ss_twr_init;Freertos"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;nRF_Drivers"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Uart"/>
  </Project>
@@ -63,16 +65,12 @@
  <Files>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="64" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="0" top="33" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../UART/UART.c" selected="0" top="21" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="22" y="28" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../ss_init_main.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="58" y="2113" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/main.c" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_device.c" selected="0" top="2082" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="202" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/main.c" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_device_api.h" selected="0" top="184" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="27" y="3228" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/clock/nrf_drv_clock.c" selected="0" top="243" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="43" y="21" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.h" selected="1" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="41" y="26" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Calibration/calibration.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="9" y="218" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h" selected="0" top="64" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="42" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../deca_driver/port/port_platform.h" selected="0" top="6" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="28" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../ss_init_main.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="36" y="108" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.c" selected="1" top="69" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="42" y="168" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h" selected="0" top="149" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="118" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer_freertos.c" selected="0" top="95" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="140" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h" selected="0" top="117" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ss_twr_init" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ss_twr_init" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

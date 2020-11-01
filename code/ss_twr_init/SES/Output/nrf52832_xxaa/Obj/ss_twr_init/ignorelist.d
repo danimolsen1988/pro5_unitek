@@ -27,4 +27,16 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stddef.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
- ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
+ ../../../nRF5_SDK_14.2.0/components/drivers_nrf/clock/nrf_drv_clock.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_errors.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
+ ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_clock.h \
+ ../../../nRF5_SDK_14.2.0/components/drivers_nrf/common/nrf_drv_common.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/string.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_os.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_macros.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdlib.h
