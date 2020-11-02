@@ -159,7 +159,13 @@ int ss_init_run(void)
     /* Check that the frame is the expected response from the companion "SS TWR responder" example.
     * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
     rx_buffer[ALL_MSG_SN_IDX] = 0;
-    if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
+
+
+    if(onIgnorelist(tag_addr_32)) 
+    {
+      // skip this transmission
+    }
+    else if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
     {	
       rx_count++;
       printf("Reception # : %d\r\n",rx_count);
@@ -199,6 +205,9 @@ int ss_init_run(void)
       }    
 #else
     distance = tof*SPEED_OF_LIGHT;
+    if(distance > 10) {
+      putOnIgnorelist(tag_addr_32);
+    }
     printf("Distance : %f\r\n",distance);
 #endif
     }

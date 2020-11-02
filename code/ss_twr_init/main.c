@@ -63,12 +63,12 @@ static dwt_config_t config = {
 #define TX_ANT_DLY 0
 #define RX_ANT_DLY 0
 #else
-#define TX_ANT_DLY 16434
-#define RX_ANT_DLY 16434
+#define TX_ANT_DLY 14600//16434
+#define RX_ANT_DLY 15000//16434
 #endif
 
 //--------------dw1000---end---------------
-
+extern void setupTimer();
 
 #define TASK_DELAY        200           /**< Task delay. Delays a LED0 task for 200 ms */
 #define TIMER_PERIOD      2000          /**< Timer period. LED1 timer will expire after 1000 ms */
@@ -171,9 +171,14 @@ int main(void)
   * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
   dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
   dwt_setrxtimeout(65000); // Maximum value timeout with DW1000 is 65ms  
+  
 
-  //-------------dw1000  ini------end---------------------------	
+  //-------------dw1000  ini------end---------------------------
+  //-----timer init------
+    setupTimer();
+  //-----timer init end -----
   // IF WE GET HERE THEN THE LEDS WILL BLINK
+
 
   #ifdef USE_FREERTOS		
     /* Start FreeRTOS scheduler. */
