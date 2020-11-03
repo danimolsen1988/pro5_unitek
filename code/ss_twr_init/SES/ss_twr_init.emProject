@@ -43,6 +43,9 @@
         <file file_name="../Ignorelist/ignorelist.c" />
         <file file_name="../Ignorelist/ignorelist.h" />
       </folder>
+      <folder Name="movementAnalysis">
+        <file file_name="../movementAnalysis/movementAnalysis.c" />
+      </folder>
     </folder>
     <folder Name="Board Definition">
       <file file_name="../../../nRF5_SDK_14.2.0/components/boards/boards.c" />
@@ -120,6 +123,7 @@
     Name="nrf52832_xxaa"
     c_preprocessor_definitions=""
     c_preprocessor_undefinitions=""
+    c_user_include_directories="../movementAnalysis."
     inherited_configurations="Internal"
     linker_additional_options=""
     linker_printf_fp_enabled="Float"

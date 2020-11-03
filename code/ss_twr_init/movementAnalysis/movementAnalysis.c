@@ -37,11 +37,11 @@ void analysis(double distance) //call this function in main file
 {
   double average_distance = ma_filter4(distance, old_dist1, old_dist2, old_dist3); 
   //printf("Distance : %f m\r\n",average_distance); //prints the distance in same style as transmission
-  printf("%f,",average_distance); //prints distance for putty.log
+  //printf("%f,",average_distance); //prints distance for putty.log
     
   double velocity = central_difference(average_distance); //using a central difference filter to calculate velocity
   //printf("Velocity : %f m/s\r\n",velocity); //prints the velocity in same style as transmission
-  printf("%f\r\n",velocity); //prints velocity for putty.log
+  //printf("%f\r\n",velocity); //prints velocity for putty.log
 
   // will most likely be swapped out for circular buffers 
   old_dist3 = old_dist2;

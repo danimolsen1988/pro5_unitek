@@ -40,7 +40,8 @@ value (expected to be a little low so a positive error will be seen on the resul
 device should have its own antenna delay properly calibrated to get good precision when performing range measurements.   
 
 */
-
+#define TX_ANT_DLY 16456
+#define RX_ANT_DLY 16456
 	
 int readfromspi(uint16 headerLength, const uint8 *headerBuffer, uint32 readlength, uint8 *readBuffer);
 int writetospi( uint16 headerLength, const uint8 *headerBuffer, uint32 bodylength, const uint8 *bodyBuffer);

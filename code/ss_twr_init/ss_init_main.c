@@ -28,6 +28,7 @@
 #include "port_platform.h"
 #include "Calibration//calibration.h"
 #include "Ignorelist/ignorelist.h"
+#include "movementAnalysis/movementAnalysis.h"
 
 #define APP_NAME "SS TWR INIT v1.3"
 
@@ -210,6 +211,13 @@ int ss_init_run(void)
     }
     printf("Distance : %f\r\n",distance);
 #endif
+
+// movement analysis
+#ifdef ANALYSIS
+    analysis(distance);
+#else
+#endif
+
     }
   }
   else
