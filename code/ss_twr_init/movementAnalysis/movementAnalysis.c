@@ -8,14 +8,15 @@
 
 #include "movementAnalysis.h"
 
+struct Movement{
 //save old distance and average to calculate velocity
-static double old_avg = 0;
-static double old_avg2 = 0;
-static double old_avg3 = 0;
-static double old_dist1 = 0;
-static double old_dist2 = 0;
-static double old_dist3 = 0;
-
+  double old_avg;
+  double old_avg2;
+  double old_avg3;
+  double old_dist1;
+  double old_dist2;
+  double old_dist3;
+} tag;
 
 // enum used for the state machine
 typedef enum{
@@ -31,25 +32,25 @@ double ma_filter3(double a, double b, double c);
 double ma_filter4(double a, double b, double c, double d);
 double ma_filter10(double a, double b, double c, double d, double e, double f, double g, double h, double i, double j);
 void analysis(double distance);
-double central_difference(double avg_dist);
+double central_difference(double avg_dist, double old_avg3);
 
 void analysis(double distance) //call this function in main file
 {
-  double average_distance = ma_filter4(distance, old_dist1, old_dist2, old_dist3); 
+  double average_distance = ma_filter4(distance, tag.old_dist1, tag.old_dist2, tag.old_dist3); 
   //printf("Distance : %f m\r\n",average_distance); //prints the distance in same style as transmission
   //printf("%f,",average_distance); //prints distance for putty.log
     
-  double velocity = central_difference(average_distance); //using a central difference filter to calculate velocity
+  double velocity = central_difference(average_distance, tag.old_avg3); //using a central difference filter to calculate velocity
   //printf("Velocity : %f m/s\r\n",velocity); //prints the velocity in same style as transmission
   //printf("%f\r\n",velocity); //prints velocity for putty.log
 
   // will most likely be swapped out for circular buffers 
-  old_dist3 = old_dist2;
-  old_dist2 = old_dist1;
-  old_dist1 = distance;
-  old_avg3 = old_avg2;
-  old_avg2 = old_avg;
-  old_avg = average_distance;
+  tag.old_dist3 = tag.old_dist2;
+  tag.old_dist2 = tag.old_dist1;
+  tag.old_dist1 = distance;
+  tag.old_avg3 = tag.old_avg2;
+  tag.old_avg2 = tag.old_avg;
+  tag.old_avg = average_distance;
 
   
   // making a 3 stage state machine, to filter out people passing the door
@@ -121,7 +122,7 @@ double ma_filter10(double a, double b, double c, double d, double e, double f, d
 }
 
 // central difference filter to get a more reliable velocity [0.5 0 -0.5]
-double central_difference(double avg_dist){
+double central_difference(double avg_dist, double old_avg3){
   float coef1 = 0.5;
   float coef2 = -0.5;
   double cd_velocity = (avg_dist*coef1 + old_avg3*coef2);
