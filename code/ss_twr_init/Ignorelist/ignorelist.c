@@ -10,6 +10,7 @@
 #include "app_timer.h"
 #include "nrf_drv_clock.h"
 #include <stdlib.h>
+#include "app_fifo.h"
 
 // timer def
 APP_TIMER_DEF(m_ss_timer_id0);
@@ -20,15 +21,21 @@ APP_TIMER_DEF(m_ss_timer_id4);
 
 
 
-
 // ignore list with 5 spaces
 static volatile unsigned long int ignorelist[LISTSIZE] = {0};
-static int length = 0;  // for next empty position in list.
+static volatile int length = 0;  // for next empty position in list.
 static bool initialized = false; // for setup
+static volatile int timer = 0;
 
 static void lfclk_request();
-static void putOnList(app_timer_id_t timer_id, unsigned long int id);
+static _Bool putOnList(app_timer_id_t timer_id, unsigned long int id,uint8_t index);
 static void createTimer(app_timer_id_t timer_id);
+static void timer_handler(void * p_context);
+ 
+//fifo stuff
+ app_fifo_t ignorelistFifo; //fifo 
+
+uint8_t id_index[4];
 
 /**
 *
@@ -49,6 +56,9 @@ extern void setupTimer() {
     createTimer(m_ss_timer_id2);
     createTimer(m_ss_timer_id3);
     createTimer(m_ss_timer_id4);
+
+    err_code = app_fifo_init(&ignorelistFifo, id_index,(uint16_t)sizeof(id_index));  // init of fifo
+    APP_ERROR_CHECK(err_code);
     initialized = true;
     // do the initialization part
   } else {
@@ -61,39 +71,57 @@ extern void setupTimer() {
 
 _Bool onIgnorelist(unsigned long int id){
   int i = 0;
-  while(i <= length) {
-    if(id == ignorelist[i]) { 
-    return true;
+  while(i < LISTSIZE) {
+    if(id == ignorelist[i]) {
+        return true;
     }
     i++;
+
   }
   return false;
 }
 
 
 void putOnIgnorelist(unsigned long int id) {
-  if(length > LISTSIZE) {
-    printf("list is full!");
-    return;
-  }
 
-  switch(length) { 
+  switch(timer) { 
     case 0:
-      putOnList(m_ss_timer_id0, id);
+     if(!putOnList(m_ss_timer_id0, id, timer)) {
+        break;
+     }
+    //  printf("\ntimer0 \n%d\n",timer);
+      timer = 1;
       break;
     case 1:
-      putOnList(m_ss_timer_id1, id);
+     if(!putOnList(m_ss_timer_id1, id, timer)) {
+        break;
+     }
+    //  printf("\ntimer1\%d\n",timer);
+      timer = 2;
       break;
     case 2:
-      putOnList(m_ss_timer_id2, id);
+     if(!putOnList(m_ss_timer_id2, id, timer)) {
+        break;
+     }
+  //    printf("\ntimer2\%d\n",timer);
+      timer = 3;
       break;
     case 3:
-      putOnList(m_ss_timer_id3, id);
-      break;;
+     if(!putOnList(m_ss_timer_id3, id, timer)) {
+        break;
+     }
+ //     printf("\ntimer3\%d\n",timer);
+      timer = 0;
+      break;
     case 4:
-      putOnList(m_ss_timer_id4, id);
+     if(!putOnList(m_ss_timer_id4, id, timer)) {
+        break;
+     }
+ //     printf("\ntimer4\%d\n",timer);
+      timer = 0;
       break;
     default:
+    printf("\n%d\n",timer);
       break;
   }
 
@@ -113,23 +141,31 @@ static void lfclk_request()
  * @brief intern Function for starting timer
  *
  */
-static void putOnList(app_timer_id_t timer_id, unsigned long int id) {
+static _Bool putOnList(app_timer_id_t timer_id, unsigned long int id, uint8_t index) {
       ret_code_t err_code;
-      err_code = app_timer_start(timer_id, APP_TIMER_TICKS((IGNORETIME/20)), NULL);
-      APP_ERROR_CHECK(err_code);
-        //only if timer startet succesfully put id on ignorelist
-      ignorelist[length] = id;
-      length++;
+      err_code = app_fifo_put(&ignorelistFifo,index);
+      if(err_code == NRF_SUCCESS) {
+        err_code = app_timer_start(timer_id, APP_TIMER_TICKS((IGNORETIME/20)), &index);
+        APP_ERROR_CHECK(err_code);
+        ignorelist[index] = id;
+        return true;
+      }
+      return false;
+        //only if timer startet succesfully put id on ignorelist     
+
+     
 }
+
 
 /**
  * @brief timerhandler for timers
- *
+ *  
  */
 static void timer_handler(void * p_context) {
 // remove ID from ignorelist
-  length--;
-  ignorelist[length] = 0;
+  uint8_t tmp;
+  app_fifo_get(&ignorelistFifo,&tmp);
+  ignorelist[tmp] = 0;
 }
 
 /**

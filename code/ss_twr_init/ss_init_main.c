@@ -68,6 +68,7 @@ static uint32 status_reg = 0;
 /* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
 static double tof;
 static unsigned long int tag_addr_32;
+//static int test = 0;
 
 /* Declaration of static functions. */
 static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
@@ -160,8 +161,8 @@ int ss_init_run(void)
     /* Check that the frame is the expected response from the companion "SS TWR responder" example.
     * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
     rx_buffer[ALL_MSG_SN_IDX] = 0;
-
-
+ //   test++;
+ //   tag_addr_32=+test;
     if(onIgnorelist(tag_addr_32)) 
     {
       // skip this transmission

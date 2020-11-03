@@ -48,6 +48,7 @@
 
 #define USE_FREERTOS	// define to use RTOS in this example code. Comment if FREERTOS is not necessary
 //#define CALIBRATE // delete comment if calibration values is needed, sent trough UART
+//#define TEST // for ignorelist
 
 //#define ANALYSIS
 

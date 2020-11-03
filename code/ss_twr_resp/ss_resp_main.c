@@ -27,7 +27,7 @@
 #include "port_platform.h"
 
 /* Inter-ranging delay period, in milliseconds. See NOTE 1*/
-#define RNG_DELAY_MS 80
+#define RNG_DELAY_MS 40
 
 /* Frames used in the ranging process. See NOTE 2,3 below. */
 static uint8 rx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE0, 0, 0};
