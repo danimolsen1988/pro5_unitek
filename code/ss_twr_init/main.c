@@ -63,8 +63,8 @@ static dwt_config_t config = {
 #define TX_ANT_DLY 0
 #define RX_ANT_DLY 0
 #else
-#define TX_ANT_DLY 14600//16434
-#define RX_ANT_DLY 15000//16434
+#define TX_ANT_DLY 16434//16434
+#define RX_ANT_DLY 16434//16434
 #endif
 
 //--------------dw1000---end---------------

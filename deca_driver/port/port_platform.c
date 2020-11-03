@@ -14,6 +14,9 @@
 #include "port_platform.h"
 #include "deca_device_api.h"
 
+#define TX_ANT_DLY 16456
+#define RX_ANT_DLY 16456
+
 /****************************************************************************//**
  *
  *                              APP global variables
