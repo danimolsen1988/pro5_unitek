@@ -36,23 +36,23 @@
 #define RNG_DELAY_MS 100
 
 /* Frames used in the ranging process. See NOTE 1,2 below. */
-static uint8 tx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE0, 0, 0};
-static uint8 rx_resp_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0xE1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 tx_poll_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 rx_resp_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* Length of the common part of the message (up to and including the function code, see NOTE 1 below). */
-#define ALL_MSG_COMMON_LEN 7
+#define ALL_MSG_COMMON_LEN 2
 /* Indexes to access some of the fields in the frames defined above. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 12
-#define RESP_MSG_RESP_TX_TS_IDX 16
+#define RESP_MSG_POLL_RX_TS_IDX 11
+#define RESP_MSG_RESP_TX_TS_IDX 15
 #define RESP_MSG_TS_LEN 4
-#define RESP_SOURCE_ADDR_IDX 7
-#define RESP_SOURCE_ADDR_LEN 4
+#define RESP_SOURCE_ADDR_IDX 3
+#define RESP_SOURCE_ADDR_LEN 8
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
 
 /* Buffer to store received response message.
 * Its size is adjusted to longest frame that this example code is supposed to handle. */
-#define RX_BUF_LEN 22
+#define RX_BUF_LEN 21
 static uint8 rx_buffer[RX_BUF_LEN];
 
 /* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
