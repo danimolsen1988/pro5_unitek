@@ -5,9 +5,13 @@
 *
 * @file ignorelist.h
 */
+#include "app_timer.h"
+#include "nrf_drv_clock.h"
+#include <stdlib.h>
+#include "app_fifo.h"
 
-#define IGNORETIME 2000 // in ms 
-#define LISTSIZE 5  // size of ignorelist
+#define IGNORETIME 4000 // in ms
+#define LISTSIZE 4  // size of ignorelist
 
 
 /**@brief       Setup function. Should be called on once before

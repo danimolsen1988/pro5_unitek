@@ -7,25 +7,26 @@
 */
 
 #include "ignorelist.h"
-#include "app_timer.h"
-#include "nrf_drv_clock.h"
-#include <stdlib.h>
-#include "app_fifo.h"
+
 
 // timer def
 APP_TIMER_DEF(m_ss_timer_id0);
 APP_TIMER_DEF(m_ss_timer_id1);
 APP_TIMER_DEF(m_ss_timer_id2);
 APP_TIMER_DEF(m_ss_timer_id3);
-APP_TIMER_DEF(m_ss_timer_id4);
 
-
+typedef enum{ 
+  timer0,
+  timer1,
+  timer2,
+  timer3,
+} States; 
 
 // ignore list with 5 spaces
 static volatile unsigned long int ignorelist[LISTSIZE] = {0};
-static volatile int length = 0;  // for next empty position in list.
 static bool initialized = false; // for setup
 static volatile int timer = 0;
+static States state;
 
 static void lfclk_request();
 static _Bool putOnList(app_timer_id_t timer_id, unsigned long int id,uint8_t index);
@@ -33,9 +34,9 @@ static void createTimer(app_timer_id_t timer_id);
 static void timer_handler(void * p_context);
  
 //fifo stuff
- app_fifo_t ignorelistFifo; //fifo 
+app_fifo_t ignorelistFifo; //fifo 
 
-uint8_t id_index[4];
+uint8_t id_index[LISTSIZE];
 
 /**
 *
@@ -44,6 +45,7 @@ uint8_t id_index[4];
 extern void setupTimer() {
   if (!initialized) {
     ret_code_t err_code;
+    state = timer0;
 
     lfclk_request();
 
@@ -55,7 +57,6 @@ extern void setupTimer() {
     createTimer(m_ss_timer_id1);
     createTimer(m_ss_timer_id2);
     createTimer(m_ss_timer_id3);
-    createTimer(m_ss_timer_id4);
 
     err_code = app_fifo_init(&ignorelistFifo, id_index,(uint16_t)sizeof(id_index));  // init of fifo
     APP_ERROR_CHECK(err_code);
@@ -68,6 +69,68 @@ extern void setupTimer() {
 
 }
 
+#ifdef TEST
+
+_Bool onIgnorelist(unsigned long int id){
+  int i = 0;
+  while(i < LISTSIZE) {
+    if(id == ignorelist[i]) {
+    printf("id:%d is on ignorelist!\r\n",id);
+        return true;
+    }
+    i++;
+
+  }
+  printf("id:%d is NOT on ignorelist!\r\n",id);
+  return false;
+}
+
+void putOnIgnorelist(unsigned long int id) {
+
+  switch(state) { 
+    case timer0:
+     if(!putOnList(m_ss_timer_id0, id, state)) {
+      
+      printf("timer module is full!\r\n",id);
+        break;
+     } else {
+      printf("id:%d timer 0 started\r\n",id);
+     }
+      state = timer1;
+      break;
+    case timer1:
+     if(!putOnList(m_ss_timer_id1, id, state)) {      
+      printf("timer module is full!\r\n",id);
+        break;
+     } else {
+      printf("id:%d timer 1 started\r\n",id);
+     }
+      state = timer2;
+      break;
+    case timer2:
+     if(!putOnList(m_ss_timer_id2, id, state)) {
+        printf("timer module is full!\r\n",id);
+        break;       
+     } else {
+      printf("id:%d timer 2 started\r\n",id);
+     }
+      state = timer3;
+      break;
+    case timer3:
+     if(!putOnList(m_ss_timer_id3, id, state)) {
+        printf("timer module is full!\r\n",id);
+        break;
+     } else {
+     printf("id:%d timer 3 started\r\n",id);
+     }
+      state = timer0;
+      break;
+    default:
+      break;
+  }
+
+}
+#else
 
 _Bool onIgnorelist(unsigned long int id){
   int i = 0;
@@ -81,51 +144,39 @@ _Bool onIgnorelist(unsigned long int id){
   return false;
 }
 
-
 void putOnIgnorelist(unsigned long int id) {
 
-  switch(timer) { 
-    case 0:
-     if(!putOnList(m_ss_timer_id0, id, timer)) {
+  switch(state) { 
+    case timer0:
+     if(!putOnList(m_ss_timer_id0, id, state)) {
         break;
      }
-    //  printf("\ntimer0 \n%d\n",timer);
-      timer = 1;
+      state = timer1;
       break;
-    case 1:
-     if(!putOnList(m_ss_timer_id1, id, timer)) {
+    case timer1:
+     if(!putOnList(m_ss_timer_id1, id, state)) {
         break;
      }
-    //  printf("\ntimer1\%d\n",timer);
-      timer = 2;
+      state = timer2;
       break;
-    case 2:
-     if(!putOnList(m_ss_timer_id2, id, timer)) {
+    case timer2:
+     if(!putOnList(m_ss_timer_id2, id, state)) {
         break;
      }
-  //    printf("\ntimer2\%d\n",timer);
-      timer = 3;
+      state = timer3;
       break;
-    case 3:
-     if(!putOnList(m_ss_timer_id3, id, timer)) {
+    case timer3:
+     if(!putOnList(m_ss_timer_id3, id, state)) {
         break;
      }
- //     printf("\ntimer3\%d\n",timer);
-      timer = 0;
-      break;
-    case 4:
-     if(!putOnList(m_ss_timer_id4, id, timer)) {
-        break;
-     }
- //     printf("\ntimer4\%d\n",timer);
-      timer = 0;
+      state = timer0;
       break;
     default:
-    printf("\n%d\n",timer);
       break;
   }
 
 }
+#endif
 /**
  * @brief intern Function starting the internal LFCLK oscillator.
  *
@@ -145,15 +196,12 @@ static _Bool putOnList(app_timer_id_t timer_id, unsigned long int id, uint8_t in
       ret_code_t err_code;
       err_code = app_fifo_put(&ignorelistFifo,index);
       if(err_code == NRF_SUCCESS) {
-        err_code = app_timer_start(timer_id, APP_TIMER_TICKS((IGNORETIME/20)), &index);
+        err_code = app_timer_start(timer_id, APP_TIMER_TICKS((IGNORETIME)), &index);
         APP_ERROR_CHECK(err_code);
         ignorelist[index] = id;
         return true;
       }
       return false;
-        //only if timer startet succesfully put id on ignorelist     
-
-     
 }
 
 
@@ -179,29 +227,3 @@ static void createTimer(app_timer_id_t timer_id) {
                               timer_handler);
   APP_ERROR_CHECK(err_code);
 }
-
-/**
-* @depricated
-* @breif could be used to increase/decrease ignorelist size
-*
-#define LISTDOUBLE 2 
-
-static unsigned long int * ignorelist;
-
-static void increaseList() {
-  ignorelist = (unsigned long int *)realloc(ignorelist, sizeof(ignorelist)*LISTDOUBLE);
-    if(ignorelist == NULL) {
-      printf("failed to alocate space for ignore list");
-      exit(1);  // SKAL LAVES OM TIL NOGET DER HÅNDTER FEJLEN.
-      memset(ignorelist+(sizeof(ignorelist)/2),0,sizeof(ignorelist)/2);
-  }
-}
-static void decreaseList() {
-  ignorelist = (unsigned long int *)realloc(ignorelist, sizeof(ignorelist)/LISTDOUBLE);
-    if(ignorelist == NULL) {
-      printf("failed to alocate space for ignore list");
-      exit(1);  // SKAL LAVES OM TIL NOGET DER HÅNDTER FEJLEN.
-  }
-}
-
-*/
