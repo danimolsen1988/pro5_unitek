@@ -26,10 +26,10 @@ void setupTimer();
  * @param[in]  id           : Tag id
  * @param[out] _bool        : true if on ignorelist, false if not
  */
-_Bool onIgnorelist(unsigned long long int id);
+_Bool onIgnorelist(uint64_t id);
 
 /**@brief       Function for putting id on ignorelist
  *
  * @param[in]  id           : Tag id
  */
-void putOnIgnorelist(unsigned long long int id);
+void putOnIgnorelist(uint64_t id);

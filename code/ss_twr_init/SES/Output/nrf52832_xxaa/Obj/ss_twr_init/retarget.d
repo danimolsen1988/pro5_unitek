@@ -1,5 +1,5 @@
 Output/nrf52832_xxaa/Obj/ss_twr_init/retarget.o: \
- C:\Users\Lasse\PRO5_GIT\pro5_unitek\nRF5_SDK_14.2.0\components\libraries\uart\retarget.c \
+ C:\Users\Keld\Documents\GitHub\pro5_unitek\nRF5_SDK_14.2.0\components\libraries\uart\retarget.c \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdint.h \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdbool.h \
@@ -15,11 +15,11 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/retarget.o: \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stddef.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52.h \
- C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/core_cm4.h \
- C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_version.h \
- C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_compiler.h \
- C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_gcc.h \
- C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/mpu_armv7.h \
+ C:/Users/Keld/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/core_cm4.h \
+ C:/Users/Keld/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_version.h \
+ C:/Users/Keld/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_compiler.h \
+ C:/Users/Keld/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_gcc.h \
+ C:/Users/Keld/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/mpu_armv7.h \
  ../../../nRF5_SDK_14.2.0/components/toolchain/system_nrf52.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52_bitfields.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf51_to_nrf52.h \
@@ -27,7 +27,7 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/retarget.o: \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_macros.h \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdio.h \
- C:\Users\Lasse\PRO5_GIT\pro5_unitek\nRF5_SDK_14.2.0\components\libraries\uart\app_uart.h \
+ C:\Users\Keld\Documents\GitHub\pro5_unitek\nRF5_SDK_14.2.0\components\libraries\uart\app_uart.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util_platform.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \

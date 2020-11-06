@@ -78,9 +78,10 @@ static int delay = 0;
 #elif defined (TEST)
 /* Inter-ranging delay period, in milliseconds. */
 #define RNG_DELAY_MS 500
-unsigned long int tag_addr_32 = 0;
-static int counter = 0;
+uint64_t tag_id;
+static uint64_t counter = 0;
 static double distance;
+static double tof;
 
 #else
 /* Inter-ranging delay period, in milliseconds. */
@@ -166,19 +167,20 @@ int ss_init_run(void)
       tag_id = (tag_id   << 8) + rx_buffer[RESP_ADDR_IDX+i];
     }
 
+
+#ifdef TEST
+      counter++;
+      if(counter % 2 == 0) {
+        tag_id = counter;
+      } else {
+        tag_id = counter-1;
+      }
+#endif
+
     if(onIgnorelist(tag_id)) 
     {
-      // skip this transmission
+          // skip this transmission
     }
-
-    #ifdef TEST
-      counter++;
-  if(counter % 2 == 0) {
-    tag_addr_32 = counter;
-  } else {
-    tag_addr_32 = counter-1;
-  }
-    #endif
 
     else if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
     {	
@@ -225,7 +227,7 @@ int ss_init_run(void)
 #else
     distance = tof*SPEED_OF_LIGHT;
     if(distance > 10) {
-      putOnIgnorelist(tag_addr_32);
+      putOnIgnorelist(tag_id);
     }
     printf("Distance : %f\r\n",distance);
 

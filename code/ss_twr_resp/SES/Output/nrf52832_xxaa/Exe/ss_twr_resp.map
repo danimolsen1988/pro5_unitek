@@ -159,8 +159,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0xf0 Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
  .debug_ranges  0x0000000000000000       0xe0 Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
- .debug_line    0x0000000000000000      0x5ef Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
- .debug_str     0x0000000000000000      0xc4b Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
+ .debug_line    0x0000000000000000      0x5f5 Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
+ .debug_str     0x0000000000000000      0xc59 Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o
@@ -191,8 +191,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x50 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
  .debug_ranges  0x0000000000000000       0x40 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
- .debug_line    0x0000000000000000      0x255 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
- .debug_str     0x0000000000000000      0xc3a Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
+ .debug_line    0x0000000000000000      0x25b Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
+ .debug_str     0x0000000000000000      0xc48 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o
@@ -207,8 +207,8 @@ Discarded input sections
                 0x0000000000000000      0x18d Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
- .debug_line    0x0000000000000000      0x13b Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
- .debug_str     0x0000000000000000      0x72b Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
+ .debug_line    0x0000000000000000      0x13a Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
+ .debug_str     0x0000000000000000      0x739 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o
@@ -524,8 +524,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
- .debug_str     0x0000000000000000      0x725 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
+ .debug_str     0x0000000000000000      0x733 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_button.o
@@ -552,8 +552,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
- .debug_str     0x0000000000000000      0x72b Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
+ .debug_str     0x0000000000000000      0x739 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_scheduler.o
@@ -581,8 +581,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x20 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
  .debug_ranges  0x0000000000000000       0x10 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
- .debug_line    0x0000000000000000      0x1c2 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
- .debug_str     0x0000000000000000      0x78d Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
+ .debug_line    0x0000000000000000      0x1c8 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
+ .debug_str     0x0000000000000000      0x79b Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_assert.o
@@ -609,8 +609,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x40 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
  .debug_ranges  0x0000000000000000       0x30 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
- .debug_line    0x0000000000000000      0x38b Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
- .debug_str     0x0000000000000000      0x8d5 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
+ .debug_line    0x0000000000000000      0x391 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
+ .debug_str     0x0000000000000000      0x8e3 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_balloc.o
@@ -631,8 +631,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x28 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
  .debug_ranges  0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
- .debug_line    0x0000000000000000      0x25d Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
- .debug_str     0x0000000000000000      0x825 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
+ .debug_line    0x0000000000000000      0x263 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
+ .debug_str     0x0000000000000000      0x833 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf.o
@@ -661,8 +661,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x40 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
  .debug_ranges  0x0000000000000000       0x30 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
- .debug_line    0x0000000000000000      0x552 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
- .debug_str     0x0000000000000000      0x88f Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
+ .debug_line    0x0000000000000000      0x558 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
+ .debug_str     0x0000000000000000      0x89d Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_fprintf_format.o
@@ -699,8 +699,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x68 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
  .debug_ranges  0x0000000000000000       0x58 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
- .debug_line    0x0000000000000000      0x4c7 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
- .debug_str     0x0000000000000000      0xa6a Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
+ .debug_line    0x0000000000000000      0x4cd Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
+ .debug_str     0x0000000000000000      0xa78 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_memobj.o
@@ -726,8 +726,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x28 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
  .debug_ranges  0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
- .debug_line    0x0000000000000000      0x254 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
- .debug_str     0x0000000000000000      0x7b1 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
+ .debug_line    0x0000000000000000      0x25a Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
+ .debug_str     0x0000000000000000      0x7bf Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_strerror.o
@@ -742,8 +742,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
- .debug_str     0x0000000000000000      0x723 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
+ .debug_str     0x0000000000000000      0x731 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer.o
@@ -758,8 +758,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
- .debug_str     0x0000000000000000      0x73c Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
+ .debug_str     0x0000000000000000      0x74a Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_rtt.o
@@ -774,8 +774,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
- .debug_str     0x0000000000000000      0x73f Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
+ .debug_str     0x0000000000000000      0x74d Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_serial.o
@@ -790,8 +790,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
- .debug_str     0x0000000000000000      0x73d Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
+ .debug_str     0x0000000000000000      0x74b Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_backend_uart.o
@@ -806,8 +806,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
- .debug_str     0x0000000000000000      0x741 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
+ .debug_str     0x0000000000000000      0x74f Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_default_backends.o
@@ -822,8 +822,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
- .debug_str     0x0000000000000000      0x739 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
+ .debug_str     0x0000000000000000      0x747 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_frontend.o
@@ -838,8 +838,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
- .debug_str     0x0000000000000000      0x73e Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
+ .debug_str     0x0000000000000000      0x74c Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_log_str_formatter.o
@@ -926,8 +926,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000      0x108 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
  .debug_ranges  0x0000000000000000       0xf8 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
- .debug_line    0x0000000000000000      0x981 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
- .debug_str     0x0000000000000000      0xb30 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
+ .debug_line    0x0000000000000000      0x987 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
+ .debug_str     0x0000000000000000      0xb3e Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT.o
@@ -956,8 +956,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x40 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
  .debug_ranges  0x0000000000000000       0x48 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
- .debug_line    0x0000000000000000      0x532 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
- .debug_str     0x0000000000000000      0x8f5 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
+ .debug_line    0x0000000000000000      0x538 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
+ .debug_str     0x0000000000000000      0x903 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/SEGGER_RTT_printf.o
@@ -1116,8 +1116,8 @@ Discarded input sections
                 0x0000000000000000      0x1a3 Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
- .debug_line    0x0000000000000000      0x17c Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
- .debug_str     0x0000000000000000      0x756 Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
+ .debug_line    0x0000000000000000      0x17b Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
+ .debug_str     0x0000000000000000      0x764 Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/croutine.o
@@ -1156,8 +1156,8 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x70 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
  .debug_ranges  0x0000000000000000       0x60 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
- .debug_line    0x0000000000000000      0x5cd Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
- .debug_str     0x0000000000000000      0xb74 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
+ .debug_line    0x0000000000000000      0x5d3 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
+ .debug_str     0x0000000000000000      0xb82 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/event_groups.o
@@ -1289,8 +1289,8 @@ Discarded input sections
                 0x0000000000000000      0x184 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
  .debug_aranges
                 0x0000000000000000       0x18 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
- .debug_line    0x0000000000000000      0x171 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
- .debug_str     0x0000000000000000      0x72c Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
+ .debug_line    0x0000000000000000      0x170 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
+ .debug_str     0x0000000000000000      0x73a Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
  .comment       0x0000000000000000       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
  .ARM.attributes
                 0x0000000000000000       0x39 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_timer_freertos.o
@@ -4656,31 +4656,31 @@ LOAD linker stubs
  .comment       0x0000000000000024       0x25 Output/nrf52832_xxaa/Obj/ss_twr_resp/port.o
  .comment       0x0000000000000024       0x25 C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 5.10b/lib/libc_v7em_fpv4_sp_d16_hard_t_le_eabi.a(libc2.o)
 
-.debug_line     0x0000000000000000     0xa9bd
+.debug_line     0x0000000000000000     0xaa43
  .debug_line    0x0000000000000000      0x297 Output/nrf52832_xxaa/Obj/ss_twr_resp/thumb_crt0.o
- .debug_line    0x0000000000000297      0x76d Output/nrf52832_xxaa/Obj/ss_twr_resp/system_nrf52.o
- .debug_line    0x0000000000000a04       0xd1 Output/nrf52832_xxaa/Obj/ss_twr_resp/ses_nrf52_startup.o
- .debug_line    0x0000000000000ad5      0x556 Output/nrf52832_xxaa/Obj/ss_twr_resp/main.o
- .debug_line    0x000000000000102b      0x4d0 Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o
- .debug_line    0x00000000000014fb      0x35b Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_common.o
- .debug_line    0x0000000000001856      0xfeb Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_gpiote.o
- .debug_line    0x0000000000002841      0x96d Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_spi.o
- .debug_line    0x00000000000031ae     0x12a5 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_uart.o
- .debug_line    0x0000000000004453      0x7d8 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_clock.o
- .debug_line    0x0000000000004c2b      0x289 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error.o
- .debug_line    0x0000000000004eb4      0x2ae Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error_weak.o
- .debug_line    0x0000000000005162      0x33e Output/nrf52832_xxaa/Obj/ss_twr_resp/app_util_platform.o
- .debug_line    0x00000000000054a0     0x1578 Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_device.o
- .debug_line    0x0000000000006a18       0xf0 Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_params_init.o
- .debug_line    0x0000000000006b08      0x66f Output/nrf52832_xxaa/Obj/ss_twr_resp/port_platform.o
- .debug_line    0x0000000000007177      0x385 Output/nrf52832_xxaa/Obj/ss_twr_resp/list.o
- .debug_line    0x00000000000074fc      0xba7 Output/nrf52832_xxaa/Obj/ss_twr_resp/queue.o
- .debug_line    0x00000000000080a3     0x146c Output/nrf52832_xxaa/Obj/ss_twr_resp/tasks.o
- .debug_line    0x000000000000950f      0x6a9 Output/nrf52832_xxaa/Obj/ss_twr_resp/timers.o
- .debug_line    0x0000000000009bb8      0x297 Output/nrf52832_xxaa/Obj/ss_twr_resp/heap_1.o
- .debug_line    0x0000000000009e4f      0x430 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis.o
- .debug_line    0x000000000000a27f      0x50f Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis_systick.o
- .debug_line    0x000000000000a78e      0x22f Output/nrf52832_xxaa/Obj/ss_twr_resp/port.o
+ .debug_line    0x0000000000000297      0x773 Output/nrf52832_xxaa/Obj/ss_twr_resp/system_nrf52.o
+ .debug_line    0x0000000000000a0a       0xd1 Output/nrf52832_xxaa/Obj/ss_twr_resp/ses_nrf52_startup.o
+ .debug_line    0x0000000000000adb      0x55c Output/nrf52832_xxaa/Obj/ss_twr_resp/main.o
+ .debug_line    0x0000000000001037      0x4d6 Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o
+ .debug_line    0x000000000000150d      0x361 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_common.o
+ .debug_line    0x000000000000186e      0xff1 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_gpiote.o
+ .debug_line    0x000000000000285f      0x973 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_spi.o
+ .debug_line    0x00000000000031d2     0x12ab Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_uart.o
+ .debug_line    0x000000000000447d      0x7de Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_clock.o
+ .debug_line    0x0000000000004c5b      0x28f Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error.o
+ .debug_line    0x0000000000004eea      0x2b4 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error_weak.o
+ .debug_line    0x000000000000519e      0x344 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_util_platform.o
+ .debug_line    0x00000000000054e2     0x157f Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_device.o
+ .debug_line    0x0000000000006a61       0xf7 Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_params_init.o
+ .debug_line    0x0000000000006b58      0x675 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_platform.o
+ .debug_line    0x00000000000071cd      0x38b Output/nrf52832_xxaa/Obj/ss_twr_resp/list.o
+ .debug_line    0x0000000000007558      0xbad Output/nrf52832_xxaa/Obj/ss_twr_resp/queue.o
+ .debug_line    0x0000000000008105     0x1472 Output/nrf52832_xxaa/Obj/ss_twr_resp/tasks.o
+ .debug_line    0x0000000000009577      0x6af Output/nrf52832_xxaa/Obj/ss_twr_resp/timers.o
+ .debug_line    0x0000000000009c26      0x29d Output/nrf52832_xxaa/Obj/ss_twr_resp/heap_1.o
+ .debug_line    0x0000000000009ec3      0x436 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis.o
+ .debug_line    0x000000000000a2f9      0x515 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis_systick.o
+ .debug_line    0x000000000000a80e      0x235 Output/nrf52832_xxaa/Obj/ss_twr_resp/port.o
 
 .debug_info     0x0000000000000000    0x19fcb
  .debug_info    0x0000000000000000       0x22 Output/nrf52832_xxaa/Obj/ss_twr_resp/thumb_crt0.o
@@ -4784,54 +4784,54 @@ LOAD linker stubs
  .debug_aranges
                 0x00000000000012a0       0x30 Output/nrf52832_xxaa/Obj/ss_twr_resp/port.o
 
-.debug_str      0x0000000000000000     0x7441
+.debug_str      0x0000000000000000     0x74a2
  .debug_str     0x0000000000000000       0x9f Output/nrf52832_xxaa/Obj/ss_twr_resp/thumb_crt0.o
- .debug_str     0x000000000000009f      0x76a Output/nrf52832_xxaa/Obj/ss_twr_resp/system_nrf52.o
-                                        0x798 (size before relaxing)
- .debug_str     0x0000000000000809       0xb0 Output/nrf52832_xxaa/Obj/ss_twr_resp/ses_nrf52_startup.o
+ .debug_str     0x000000000000009f      0x738 Output/nrf52832_xxaa/Obj/ss_twr_resp/system_nrf52.o
+                                        0x7a6 (size before relaxing)
+ .debug_str     0x00000000000007d7       0xb0 Output/nrf52832_xxaa/Obj/ss_twr_resp/ses_nrf52_startup.o
                                          0xbe (size before relaxing)
- .debug_str     0x00000000000008b9      0xdc6 Output/nrf52832_xxaa/Obj/ss_twr_resp/main.o
-                                       0x127d (size before relaxing)
- .debug_str     0x000000000000167f      0x115 Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o
-                                        0xe30 (size before relaxing)
- .debug_str     0x0000000000001794      0x137 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_common.o
-                                        0xb6d (size before relaxing)
- .debug_str     0x00000000000018cb      0xe50 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_gpiote.o
-                                       0x1b66 (size before relaxing)
- .debug_str     0x000000000000271b      0x59a Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_spi.o
-                                       0x159a (size before relaxing)
- .debug_str     0x0000000000002cb5     0x1292 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_uart.o
-                                       0x2217 (size before relaxing)
- .debug_str     0x0000000000003f47      0x729 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_clock.o
-                                       0x12f2 (size before relaxing)
- .debug_str     0x0000000000004670      0x127 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error.o
-                                        0x836 (size before relaxing)
- .debug_str     0x0000000000004797       0x77 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error_weak.o
-                                        0x882 (size before relaxing)
- .debug_str     0x000000000000480e      0x214 Output/nrf52832_xxaa/Obj/ss_twr_resp/app_util_platform.o
-                                        0xc77 (size before relaxing)
- .debug_str     0x0000000000004a22      0xc0a Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_device.o
-                                       0x146b (size before relaxing)
- .debug_str     0x000000000000562c       0x43 Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_params_init.o
-                                        0x7a7 (size before relaxing)
- .debug_str     0x000000000000566f      0x1ed Output/nrf52832_xxaa/Obj/ss_twr_resp/port_platform.o
-                                       0x14cc (size before relaxing)
- .debug_str     0x000000000000585c      0x188 Output/nrf52832_xxaa/Obj/ss_twr_resp/list.o
-                                        0x891 (size before relaxing)
- .debug_str     0x00000000000059e4      0x546 Output/nrf52832_xxaa/Obj/ss_twr_resp/queue.o
-                                        0xdb0 (size before relaxing)
- .debug_str     0x0000000000005f2a      0xabe Output/nrf52832_xxaa/Obj/ss_twr_resp/tasks.o
-                                       0x13fc (size before relaxing)
- .debug_str     0x00000000000069e8      0x4d6 Output/nrf52832_xxaa/Obj/ss_twr_resp/timers.o
-                                        0xd9e (size before relaxing)
- .debug_str     0x0000000000006ebe       0xd9 Output/nrf52832_xxaa/Obj/ss_twr_resp/heap_1.o
-                                        0x7ef (size before relaxing)
- .debug_str     0x0000000000006f97      0x15c Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis.o
-                                        0xc35 (size before relaxing)
- .debug_str     0x00000000000070f3      0x2bf Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis_systick.o
-                                        0xe64 (size before relaxing)
- .debug_str     0x00000000000073b2       0x8f Output/nrf52832_xxaa/Obj/ss_twr_resp/port.o
-                                        0x78d (size before relaxing)
+ .debug_str     0x0000000000000887      0xdcd Output/nrf52832_xxaa/Obj/ss_twr_resp/main.o
+                                       0x128b (size before relaxing)
+ .debug_str     0x0000000000001654      0x11c Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o
+                                        0xe3e (size before relaxing)
+ .debug_str     0x0000000000001770      0x13e Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_common.o
+                                        0xb7b (size before relaxing)
+ .debug_str     0x00000000000018ae      0xe57 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_gpiote.o
+                                       0x1b74 (size before relaxing)
+ .debug_str     0x0000000000002705      0x5a1 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_spi.o
+                                       0x15a8 (size before relaxing)
+ .debug_str     0x0000000000002ca6     0x1299 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_uart.o
+                                       0x2225 (size before relaxing)
+ .debug_str     0x0000000000003f3f      0x730 Output/nrf52832_xxaa/Obj/ss_twr_resp/nrf_drv_clock.o
+                                       0x1300 (size before relaxing)
+ .debug_str     0x000000000000466f      0x12e Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error.o
+                                        0x844 (size before relaxing)
+ .debug_str     0x000000000000479d       0x7e Output/nrf52832_xxaa/Obj/ss_twr_resp/app_error_weak.o
+                                        0x890 (size before relaxing)
+ .debug_str     0x000000000000481b      0x21b Output/nrf52832_xxaa/Obj/ss_twr_resp/app_util_platform.o
+                                        0xc85 (size before relaxing)
+ .debug_str     0x0000000000004a36      0xc11 Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_device.o
+                                       0x1479 (size before relaxing)
+ .debug_str     0x0000000000005647       0x4a Output/nrf52832_xxaa/Obj/ss_twr_resp/deca_params_init.o
+                                        0x7b5 (size before relaxing)
+ .debug_str     0x0000000000005691      0x1f4 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_platform.o
+                                       0x14da (size before relaxing)
+ .debug_str     0x0000000000005885      0x18f Output/nrf52832_xxaa/Obj/ss_twr_resp/list.o
+                                        0x89f (size before relaxing)
+ .debug_str     0x0000000000005a14      0x54d Output/nrf52832_xxaa/Obj/ss_twr_resp/queue.o
+                                        0xdbe (size before relaxing)
+ .debug_str     0x0000000000005f61      0xac5 Output/nrf52832_xxaa/Obj/ss_twr_resp/tasks.o
+                                       0x140a (size before relaxing)
+ .debug_str     0x0000000000006a26      0x4dd Output/nrf52832_xxaa/Obj/ss_twr_resp/timers.o
+                                        0xdac (size before relaxing)
+ .debug_str     0x0000000000006f03       0xe0 Output/nrf52832_xxaa/Obj/ss_twr_resp/heap_1.o
+                                        0x7fd (size before relaxing)
+ .debug_str     0x0000000000006fe3      0x163 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis.o
+                                        0xc43 (size before relaxing)
+ .debug_str     0x0000000000007146      0x2c6 Output/nrf52832_xxaa/Obj/ss_twr_resp/port_cmsis_systick.o
+                                        0xe72 (size before relaxing)
+ .debug_str     0x000000000000740c       0x96 Output/nrf52832_xxaa/Obj/ss_twr_resp/port.o
+                                        0x79b (size before relaxing)
 
 .debug_ranges   0x0000000000000000     0x1158
  .debug_ranges  0x0000000000000000       0xc8 Output/nrf52832_xxaa/Obj/ss_twr_resp/thumb_crt0.o

@@ -23,14 +23,14 @@ typedef enum{
 } States; 
 
 // ignore list with 5 spaces
-static volatile unsigned long long int ignorelist[LISTSIZE] = {0};
+static volatile uint64_t ignorelist[LISTSIZE] = {0};
 static volatile int length = 0;  // for next empty position in list.
 static bool initialized = false; // for setup
 static volatile int timer = 0;
 static States state;
 
 static void lfclk_request();
-static _Bool putOnList(app_timer_id_t timer_id, unsigned long long int id,uint8_t index);
+static _Bool putOnList(app_timer_id_t timer_id, uint64_t id,uint8_t index);
 static void createTimer(app_timer_id_t timer_id);
 static void timer_handler(void * p_context);
  
@@ -72,49 +72,49 @@ extern void setupTimer() {
 
 #ifdef TEST
 
-_Bool onIgnorelist(unsigned long long int id){
+_Bool onIgnorelist(uint64_t id){
   int i = 0;
   while(i < LISTSIZE) {
     if(id == ignorelist[i]) {
-    printf("id:%d is on ignorelist!\r\n",id);
+    printf("id:%d is on ignorelist!\r\n",(int)id);
         return true;
     }
     i++;
 
   }
-  printf("id:%d is NOT on ignorelist!\r\n",id);
+  printf("id:%d is NOT on ignorelist!\r\n",(int)id);
   return false;
 }
 
 
-void putOnIgnorelist(unsigned long long int id) {
+void putOnIgnorelist(uint64_t id) {
 
   switch(state) { 
     case timer0:
      if(!putOnList(m_ss_timer_id0, id, state)) {
       
-      printf("timer module is full!\r\n",id);
+      printf("timer module is full!\r\n",(int)id);
         break;
      } else {
-      printf("id:%d timer 0 started\r\n",id);
+      printf("id:%d timer 0 started\r\n",(int)id);
      }
       state = timer1;
       break;
     case timer1:
      if(!putOnList(m_ss_timer_id1, id, state)) {      
-      printf("timer module is full!\r\n",id);
+      printf("timer module is full!\r\n",(int)id);
         break;
      } else {
-      printf("id:%d timer 1 started\r\n",id);
+      printf("id:%d timer 1 started\r\n",(int)id);
      }
       state = timer2;
       break;
     case timer2:
      if(!putOnList(m_ss_timer_id2, id, state)) {
-        printf("timer module is full!\r\n",id);
+        printf("timer module is full!\r\n",(int)id);
         break;       
      } else {
-      printf("id:%d timer 2 started\r\n",id);
+      printf("id:%d timer 2 started\r\n",(int)id);
      }
       state = timer3;
       break;
@@ -134,7 +134,7 @@ void putOnIgnorelist(unsigned long long int id) {
 }
 #else
 
-_Bool onIgnorelist(unsigned long long int id){
+_Bool onIgnorelist(uint64_t id){
   int i = 0;
   while(i < LISTSIZE) {
     if(id == ignorelist[i]) {
@@ -146,7 +146,7 @@ _Bool onIgnorelist(unsigned long long int id){
   return false;
 }
 
-void putOnIgnorelist(unsigned long long int id) {
+void putOnIgnorelist(uint64_t id) {
 
   switch(state) { 
     case timer0:
@@ -194,7 +194,7 @@ static void lfclk_request()
  * @brief intern Function for starting timer
  *
  */
-static _Bool putOnList(app_timer_id_t timer_id, unsigned long long int id, uint8_t index) {
+static _Bool putOnList(app_timer_id_t timer_id, uint64_t id, uint8_t index) {
       ret_code_t err_code;
       err_code = app_fifo_put(&ignorelistFifo,index);
       if(err_code == NRF_SUCCESS) {
