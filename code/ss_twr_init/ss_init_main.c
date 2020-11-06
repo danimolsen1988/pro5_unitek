@@ -45,8 +45,8 @@ static uint8 rx_resp_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 
 #define RESP_MSG_POLL_RX_TS_IDX 11
 #define RESP_MSG_RESP_TX_TS_IDX 15
 #define RESP_MSG_TS_LEN 4
-#define RESP_SOURCE_ADDR_IDX 3
-#define RESP_SOURCE_ADDR_LEN 8
+#define RESP_ADDR_LEN 8
+#define RESP_ADDR_IDX 3
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
 
@@ -115,6 +115,7 @@ int ss_init_run(void)
   tx_count++;
   printf("Transmission # : %d\r\n",tx_count);
 
+  uint64_t tag_id;
 
   /* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 4 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
@@ -148,25 +149,21 @@ int ss_init_run(void)
       dwt_readrxdata(rx_buffer, frame_len, 0);
     }
 
-    for(int i = 1; i <= RESP_SOURCE_ADDR_LEN; i++)
-    {
-      tag_addr_32 = (tag_addr_32 << 8) + rx_buffer[RESP_SOURCE_ADDR_IDX+RESP_SOURCE_ADDR_LEN-i];
-    }
-
-
-    /*used for test of id. Remove as comment to print id*/
-    //printf("partid of tag    : %#8x \r\n",tag_addr_32);
-
-
     /* Check that the frame is the expected response from the companion "SS TWR responder" example.
     * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
     rx_buffer[ALL_MSG_SN_IDX] = 0;
- //   test++;
- //   tag_addr_32=+test;
-    if(onIgnorelist(tag_addr_32)) 
+
+    /* reading source ID of tag. */
+    for(int i = 0; i < RESP_ADDR_LEN; i++)
+    {
+      tag_id = (tag_id   << 8) + rx_buffer[RESP_ADDR_IDX+i];
+    }
+
+    if(onIgnorelist(tag_id)) 
     {
       // skip this transmission
     }
+
     else if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
     {	
       rx_count++;
@@ -211,6 +208,7 @@ int ss_init_run(void)
       putOnIgnorelist(tag_addr_32);
     }
     printf("Distance : %f\r\n",distance);
+
 #endif
 
 // movement analysis

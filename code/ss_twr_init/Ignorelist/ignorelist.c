@@ -22,13 +22,13 @@ APP_TIMER_DEF(m_ss_timer_id4);
 
 
 // ignore list with 5 spaces
-static volatile unsigned long int ignorelist[LISTSIZE] = {0};
+static volatile unsigned long long int ignorelist[LISTSIZE] = {0};
 static volatile int length = 0;  // for next empty position in list.
 static bool initialized = false; // for setup
 static volatile int timer = 0;
 
 static void lfclk_request();
-static _Bool putOnList(app_timer_id_t timer_id, unsigned long int id,uint8_t index);
+static _Bool putOnList(app_timer_id_t timer_id, unsigned long long int id,uint8_t index);
 static void createTimer(app_timer_id_t timer_id);
 static void timer_handler(void * p_context);
  
@@ -69,7 +69,7 @@ extern void setupTimer() {
 }
 
 
-_Bool onIgnorelist(unsigned long int id){
+_Bool onIgnorelist(unsigned long long int id){
   int i = 0;
   while(i < LISTSIZE) {
     if(id == ignorelist[i]) {
@@ -82,7 +82,7 @@ _Bool onIgnorelist(unsigned long int id){
 }
 
 
-void putOnIgnorelist(unsigned long int id) {
+void putOnIgnorelist(unsigned long long int id) {
 
   switch(timer) { 
     case 0:
@@ -141,7 +141,7 @@ static void lfclk_request()
  * @brief intern Function for starting timer
  *
  */
-static _Bool putOnList(app_timer_id_t timer_id, unsigned long int id, uint8_t index) {
+static _Bool putOnList(app_timer_id_t timer_id, unsigned long long int id, uint8_t index) {
       ret_code_t err_code;
       err_code = app_fifo_put(&ignorelistFifo,index);
       if(err_code == NRF_SUCCESS) {

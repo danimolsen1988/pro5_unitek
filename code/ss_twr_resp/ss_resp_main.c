@@ -34,14 +34,15 @@ static uint8 rx_poll_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 
 static uint8 tx_resp_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* Length of the common part of the message (up to and including the function code, see NOTE 3 below). */
-#define ALL_MSG_COMMON_LEN 10
+#define ALL_MSG_COMMON_LEN 2
 
 /* Index to access some of the fields in the frames involved in the process. */
 #define ALL_MSG_SN_IDX 2
 #define RESP_MSG_POLL_RX_TS_IDX 11
 #define RESP_MSG_RESP_TX_TS_IDX 15
 #define RESP_MSG_TS_LEN 4	
-#define RESP_MSG_RESP_ADDR_IDX 3
+#define RESP_MSG_PART_ID_IDX 3
+#define RESP_MSG_PART_ID_LEN 8
 
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
@@ -100,6 +101,14 @@ int ss_resp_run(void)
   /* Activate reception immediately. */
   dwt_rxenable(DWT_START_RX_IMMEDIATE);
 
+  uint64 temp_id;
+  dwt_geteui((uint8_t*) &temp_id);
+
+  for (int i = 0; i < RESP_MSG_PART_ID_LEN; i++)
+  {
+    tx_resp_msg[RESP_MSG_PART_ID_IDX+RESP_MSG_PART_ID_LEN-1-i] = (temp_id >> (i*8));
+  }
+
   /* Poll for reception of a frame or error/timeout. See NOTE 5 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
   {};
@@ -148,9 +157,6 @@ int ss_resp_run(void)
       /* Write all timestamps in the final message. See NOTE 8 below. */
       resp_msg_set_ts(&tx_resp_msg[RESP_MSG_POLL_RX_TS_IDX], poll_rx_ts);
       resp_msg_set_ts(&tx_resp_msg[RESP_MSG_RESP_TX_TS_IDX], resp_tx_ts);
-
-      /* Write partid as 4 byte address*/
-      resp_msg_set_ts(&tx_resp_msg[RESP_MSG_RESP_ADDR_IDX],dwt_getpartid());
 
       /* Write and send the response message. See NOTE 9 below. */
       tx_resp_msg[ALL_MSG_SN_IDX] = frame_seq_nb;

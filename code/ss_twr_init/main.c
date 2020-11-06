@@ -172,6 +172,7 @@ int main(void)
   dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
   dwt_setrxtimeout(65000); // Maximum value timeout with DW1000 is 65ms  
   
+  dwt_seteui((uint8_t*) NRF_FICR->DEVICEID);
 
   //-------------dw1000  ini------end---------------------------
   //-----timer init------
