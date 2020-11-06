@@ -65,14 +65,14 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="18" y="92" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="8" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="77" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h" selected="0" top="62" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="35" y="85" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="0" top="66" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="201" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../ss_init_main.c" selected="0" top="173" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="35" y="96" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.c" selected="0" top="63" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="23" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="77" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h" selected="0" top="86" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="64" y="54" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="0" top="56" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="66" y="146" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../ss_init_main.c" selected="1" top="123" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Calibration/calibration.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_device.c" selected="1" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="HUD {ab231262-d67a-47dd-a65d-a5cbbd57e936} Middle" x="0" y="80" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="49" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_device.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="2" y="50" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="24" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ss_twr_init" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="C:/Users/rikke/Documents/PRO5_test/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s&#xa;C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s" fileDialogInitialDirectory="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/SES/RTE" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ss_twr_init" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="C:/Users/rikke/Documents/PRO5_test/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s&#xa;C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s" fileDialogInitialDirectory="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/SES/RTE" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

@@ -62,10 +62,6 @@ static uint32 status_reg = 0;
 /* Speed of light in air, in metres per second. */
 #define SPEED_OF_LIGHT 299702547
 
-/* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
-static double tof;
-static int test = 0;
-
 /* Declaration of static functions. */
 static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
 
@@ -89,6 +85,9 @@ static double distance;
 #else
 /* Inter-ranging delay period, in milliseconds. */
 #define RNG_DELAY_MS 50
+/* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
+static double tof;
+static int test = 0;
 static double distance;
 static unsigned long int tag_addr_32;
 
