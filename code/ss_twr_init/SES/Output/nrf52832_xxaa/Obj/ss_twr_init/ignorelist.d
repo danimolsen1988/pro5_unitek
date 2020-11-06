@@ -28,10 +28,13 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/ignorelist.o: \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stddef.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
- ../../../nRF5_SDK_14.2.0/components/drivers_nrf/clock/nrf_drv_clock.h \
- ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_errors.h \
+ ../../../nRF5_SDK_14.2.0/external/freertos/config/FreeRTOSConfig.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util_platform.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/nrf_assert.h \
+ ../../../nRF5_SDK_14.2.0/components/drivers_nrf/clock/nrf_drv_clock.h \
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_errors.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_clock.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/common/nrf_drv_common.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \

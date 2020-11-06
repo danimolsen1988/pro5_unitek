@@ -32,9 +32,6 @@
 
 #define APP_NAME "SS TWR INIT v1.3"
 
-/* Inter-ranging delay period, in milliseconds. */
-#define RNG_DELAY_MS 100
-
 /* Frames used in the ranging process. See NOTE 1,2 below. */
 static uint8 tx_poll_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static uint8 rx_resp_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -65,11 +62,6 @@ static uint32 status_reg = 0;
 /* Speed of light in air, in metres per second. */
 #define SPEED_OF_LIGHT 299702547
 
-/* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
-static double tof;
-static unsigned long int tag_addr_32;
-//static int test = 0;
-
 /* Declaration of static functions. */
 static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
 
@@ -83,9 +75,24 @@ static volatile int rx_count = 0 ; // Successful receive counter
 static double distance[AVG];
 static int cal = 0;
 static int delay = 0;
-#else
+#elif defined (TEST)
+/* Inter-ranging delay period, in milliseconds. */
+#define RNG_DELAY_MS 500
+unsigned long int tag_addr_32 = 0;
+static int counter = 0;
 static double distance;
+
+#else
+/* Inter-ranging delay period, in milliseconds. */
+#define RNG_DELAY_MS 50
+/* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
+static double tof;
+static int test = 0;
+static double distance;
+static unsigned long int tag_addr_32;
+
 #endif
+
 
 
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -164,6 +171,15 @@ int ss_init_run(void)
       // skip this transmission
     }
 
+    #ifdef TEST
+      counter++;
+  if(counter % 2 == 0) {
+    tag_addr_32 = counter;
+  } else {
+    tag_addr_32 = counter-1;
+  }
+    #endif
+
     else if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
     {	
       rx_count++;
@@ -201,7 +217,11 @@ int ss_init_run(void)
             printf("set TX_ANT_DLY and RX_ANT_DLY in main to %d",delay);
             exit(0);
          }
-      }    
+      }
+
+#elif defined (TESTANALYSIS)  
+// movement analysis
+    analysis(distance);
 #else
     distance = tof*SPEED_OF_LIGHT;
     if(distance > 10) {
@@ -209,12 +229,6 @@ int ss_init_run(void)
     }
     printf("Distance : %f\r\n",distance);
 
-#endif
-
-// movement analysis
-#ifdef ANALYSIS
-    analysis(distance);
-#else
 #endif
 
     }

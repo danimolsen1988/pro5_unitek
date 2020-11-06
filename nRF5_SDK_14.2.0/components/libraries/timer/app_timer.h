@@ -75,6 +75,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#define FREERTOS
+
 #ifdef __cplusplus
 extern "C" {
 #endif
