@@ -134,7 +134,7 @@ void putOnIgnorelist(unsigned long long int id) {
 }
 #else
 
-_Bool onIgnorelist(unsigned long int id){
+_Bool onIgnorelist(unsigned long long int id){
   int i = 0;
   while(i < LISTSIZE) {
     if(id == ignorelist[i]) {
@@ -146,7 +146,7 @@ _Bool onIgnorelist(unsigned long int id){
   return false;
 }
 
-void putOnIgnorelist(unsigned long int id) {
+void putOnIgnorelist(unsigned long long int id) {
 
   switch(state) { 
     case timer0:
