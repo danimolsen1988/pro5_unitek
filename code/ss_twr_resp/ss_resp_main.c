@@ -56,7 +56,7 @@ static uint8 rx_buffer[RX_BUF_LEN];
 static uint32 status_reg = 0;
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
-* 1 uus = 512 / 499.2 µs and 1 µs = 499.2 * 128 dtu. */
+* 1 uus = 512 / 499.2 Âµs and 1 Âµs = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
 
 // Not enough time to write the data so TX timeout extended for nRF operation.
@@ -101,12 +101,12 @@ int ss_resp_run(void)
   /* Activate reception immediately. */
   dwt_rxenable(DWT_START_RX_IMMEDIATE);
 
-  uint64 temp_id;
-  dwt_geteui((uint8_t*) &temp_id);
+  uint64 tag_id;
+  dwt_geteui((uint8_t*) &tag_id);
 
   for (int i = 0; i < RESP_MSG_PART_ID_LEN; i++)
   {
-    tx_resp_msg[RESP_MSG_PART_ID_IDX+RESP_MSG_PART_ID_LEN-1-i] = (temp_id >> (i*8));
+    tx_resp_msg[RESP_MSG_PART_ID_IDX+RESP_MSG_PART_ID_LEN-1-i] = (tag_id >> (i*8));
   }
 
   /* Poll for reception of a frame or error/timeout. See NOTE 5 below. */
