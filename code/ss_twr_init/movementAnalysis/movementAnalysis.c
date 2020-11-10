@@ -70,8 +70,15 @@ void analysis(double distance) //call this function in main file
           }
         case Third :
         {
-          printf("_________________Signal_________________\r\n");
+          #ifdef ANALYSIS
+            printf("_________________Signal_________________\r\n");
+          #endif
+
+          
           State = First;
+          LEDS_ON(BSP_LED_0_MASK);
+          vTaskDelay(2000);
+          LEDS_OFF(BSP_LED_0_MASK);
           break;
           }
         default : 
