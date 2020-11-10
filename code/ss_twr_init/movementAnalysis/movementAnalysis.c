@@ -75,7 +75,7 @@ void analysis(double distance) //call this function in main file
           #endif
           State = First;
           LEDS_ON(BSP_LED_0_MASK);
-          vTaskDelay(1000);
+          vTaskDelay(2500);
           LEDS_OFF(BSP_LED_0_MASK);
           break;
           }
