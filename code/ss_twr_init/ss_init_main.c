@@ -284,7 +284,7 @@ void ss_initiator_task_function (void * pvParameter)
 
   //dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
 
-  dwt_setleds(DWT_LEDS_ENABLE);
+  //dwt_setleds(DWT_LEDS_ENABLE);
 
   while (true)
   {
