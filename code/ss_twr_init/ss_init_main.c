@@ -222,15 +222,13 @@ int ss_init_run(void)
          }
       }
 
-#elif defined (ANALYSIS)  
-// movement analysis
-    analysis(distance);
 #else
     distance = tof*SPEED_OF_LIGHT;
     if(distance > 10) {
       putOnIgnorelist(tag_id);
     }
     printf("Distance : %f\r\n",distance);
+    analysis(distance);
 
 #endif
 

@@ -50,7 +50,7 @@
 //#define CALIBRATE // delete comment if calibration values is needed, sent trough UART
 //#define TEST // for ignorelist
 
-//#define ANALYSIS
+#define ANALYSIS
 
 // <h> Board Support 
 
