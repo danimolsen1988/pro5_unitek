@@ -30,33 +30,34 @@
 #define RNG_DELAY_MS 40
 
 /* Frames used in the ranging process. See NOTE 2,3 below. */
-static uint8 rx_poll_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static uint8 tx_resp_msg[] = {0x88, 0x07, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 rx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 tx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* Length of the common part of the message (up to and including the function code, see NOTE 3 below). */
 #define ALL_MSG_COMMON_LEN 2
 
 /* Index to access some of the fields in the frames involved in the process. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 11
-#define RESP_MSG_RESP_TX_TS_IDX 15
+#define RESP_MSG_POLL_RX_TS_IDX 19
+#define RESP_MSG_RESP_TX_TS_IDX 23
 #define RESP_MSG_TS_LEN 4	
-#define RESP_MSG_PART_ID_IDX 3
-#define RESP_MSG_PART_ID_LEN 8
+#define RESP_MSG_SOURCE_ID_IDX 11
+#define RESP_MSG_TARGET_ID_IDX 3
+#define RESP_MSG_ID_LEN 8
 
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
 
 /* Buffer to store received response message.
 * Its size is adjusted to longest frame that this example code is supposed to handle. */
-#define RX_BUF_LEN 21
+#define RX_BUF_LEN 29
 static uint8 rx_buffer[RX_BUF_LEN];
 
 /* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
 static uint32 status_reg = 0;
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
-* 1 uus = 512 / 499.2 µs and 1 µs = 499.2 * 128 dtu. */
+* 1 uus = 512 / 499.2 Âµs and 1 Âµs = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
 
 // Not enough time to write the data so TX timeout extended for nRF operation.
@@ -101,12 +102,12 @@ int ss_resp_run(void)
   /* Activate reception immediately. */
   dwt_rxenable(DWT_START_RX_IMMEDIATE);
 
-  uint64 temp_id;
-  dwt_geteui((uint8_t*) &temp_id);
+  uint64 tag_id;
+  dwt_geteui((uint8_t*) &tag_id);
 
-  for (int i = 0; i < RESP_MSG_PART_ID_LEN; i++)
+  for (int i = 0; i < RESP_MSG_ID_LEN; i++)
   {
-    tx_resp_msg[RESP_MSG_PART_ID_IDX+RESP_MSG_PART_ID_LEN-1-i] = (temp_id >> (i*8));
+    tx_resp_msg[RESP_MSG_SOURCE_ID_IDX+RESP_MSG_ID_LEN-1-i] = (tag_id >> (i*8));
   }
 
   /* Poll for reception of a frame or error/timeout. See NOTE 5 below. */
