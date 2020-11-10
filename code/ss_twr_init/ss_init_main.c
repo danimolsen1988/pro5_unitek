@@ -126,6 +126,8 @@ int ss_init_run(void)
 
   uint64_t tag_id;
 
+  LEDS_OFF(BSP_LED_1_MASK);
+
   /* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 4 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
   {};
@@ -146,6 +148,8 @@ int ss_init_run(void)
   if (status_reg & SYS_STATUS_RXFCG)
   {		
     uint32 frame_len;
+
+    LEDS_ON(BSP_LED_1_MASK);
 
     /* Clear good RX frame event in the DW1000 status register. */
     dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
