@@ -10,6 +10,7 @@
 #define MOVEMENTANALYSIS_H
 
 #include <stdio.h>
+#include "boards.h"
 
 #endif /* MOVEMENTANALYSIS_H */
 

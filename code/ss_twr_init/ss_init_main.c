@@ -125,11 +125,11 @@ int ss_init_run(void)
   printf("Transmission # : %d\r\n",tx_count);
 
   uint64_t tag_id;
-
+  LEDS_OFF(BSP_LED_1_MASK);
+  
   /* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 4 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
   {};
-
     #if 0  // include if required to help debug timeouts.
     int temp = 0;		
     if(status_reg & SYS_STATUS_RXFCG )
@@ -146,6 +146,8 @@ int ss_init_run(void)
   if (status_reg & SYS_STATUS_RXFCG)
   {		
     uint32 frame_len;
+
+    LEDS_ON(BSP_LED_1_MASK);
 
     /* Clear good RX frame event in the DW1000 status register. */
     dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG);
@@ -222,15 +224,13 @@ int ss_init_run(void)
          }
       }
 
-#elif defined (TESTANALYSIS)  
-// movement analysis
-    analysis(distance);
 #else
     distance = tof*SPEED_OF_LIGHT;
     if(distance > 10) {
       putOnIgnorelist(tag_id);
     }
     printf("Distance : %f\r\n",distance);
+    analysis(distance);
 
 #endif
 
@@ -249,6 +249,7 @@ int ss_init_run(void)
   //     deca_sleep(RNG_DELAY_MS);
 
   //	return(1);
+    
 }
 
 /*! ------------------------------------------------------------------------------------------------------------------
