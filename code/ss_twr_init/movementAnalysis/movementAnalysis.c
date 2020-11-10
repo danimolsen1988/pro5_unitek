@@ -73,8 +73,6 @@ void analysis(double distance) //call this function in main file
           #ifdef ANALYSIS
             printf("_________________Signal_________________\r\n");
           #endif
-
-          
           State = First;
           LEDS_ON(BSP_LED_0_MASK);
           vTaskDelay(2000);
