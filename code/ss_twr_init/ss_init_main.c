@@ -221,7 +221,7 @@ int ss_init_run(void)
          }
       }
 
-#elif defined (TESTANALYSIS)  
+#elif defined (ANALYSIS)  
 // movement analysis
     analysis(distance);
 #else
