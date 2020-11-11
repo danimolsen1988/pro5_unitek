@@ -28,12 +28,12 @@ bool analysis(tags *tag, double distance) //call this function in main file
   if (average_distance < 1.2){ //distance from anchor to tag
     if (velocity < 0.01){ //velocity on tag
       tag->i++;
-        if (tag->i == 6){
+        if (tag->i == 3){
           tag->i = 0;
           return true;
         }
-        return false;
       vTaskDelay(200);
+      return false;
     }
       else{
         tag->i = 0;
