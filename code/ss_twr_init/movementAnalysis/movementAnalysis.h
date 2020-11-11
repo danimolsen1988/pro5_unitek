@@ -21,6 +21,7 @@ typedef struct Movement{
   double old_dist1;
   double old_dist2;
   double old_dist3;
+  int i;
 }tags;
 
 

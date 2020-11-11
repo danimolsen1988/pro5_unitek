@@ -11,13 +11,11 @@ State_type State;
 
 bool analysis(tags *tag, double distance) //call this function in main file
 {
+  if (tag->old_dist1 == 0){
+    tag->i = 1;
+   }
   double average_distance = ma_filter4(distance, tag->old_dist1, tag->old_dist2, tag->old_dist3); 
-  //printf("Distance : %f m\r\n",average_distance); //prints the distance in same style as transmission
-  //printf("%f,",average_distance); //prints distance for putty.log
-
   double velocity = central_difference(average_distance, tag->old_avg3); //using a central difference filter to calculate velocity
-  //printf("Velocity : %f m/s\r\n",velocity); //prints the velocity in same style as transmission
-  //printf("%f\r\n",velocity); //prints velocity for putty.log
 
   tag->old_dist3 = tag->old_dist2;
   tag->old_dist2 = tag->old_dist1;
@@ -26,37 +24,23 @@ bool analysis(tags *tag, double distance) //call this function in main file
   tag->old_avg2 = tag->old_avg;
   tag->old_avg = average_distance;
   
-  // making a 3 stage state machine, to filter out people passing the door
+
   if (average_distance < 1.2){ //distance from anchor to tag
     if (velocity < 0.01){ //velocity on tag
-      switch(State)
-      {
-        case First :
-         {
-          State = Second;
-          break;
-          }
-        case Second : 
-        {
-          State = Third;
-          break;
-          }
-        case Third :
-        {
-          State = First;
+      tag->i++;
+        if (tag->i == 6){
+          tag->i = 0;
           return true;
-          break;
-          }
-        default : 
-        {
-          State = First;
-          break;
-          }
-          }
+        }
+        return false;
+      vTaskDelay(200);
+    }
+      else{
+        tag->i = 0;
+        return false;
+      }
   }
-  else State = First;
-  return false;
-  }
+
 }
 
 
