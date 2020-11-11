@@ -71,6 +71,9 @@ static void resp_msg_get_ts(uint8 *ts_field, uint32 *ts);
 static volatile int tx_count = 0 ; // Successful transmit counter
 static volatile int rx_count = 0 ; // Successful receive counter 
 
+// MOVEMENT TAG STRUCT TO TEST ANALYSIS FUNCTION
+tags tag1;
+
 // calibration
 #ifdef CALIBRATE
 static double distance[AVG];
@@ -232,7 +235,14 @@ int ss_init_run(void)
       putOnIgnorelist(tag_id);
     }
     printf("Distance : %f\r\n",distance);
-    analysis(distance);
+    if (analysis(&tag1, distance)){
+      #ifdef ANALYSIS
+        printf("_________________Signal_________________\r\n");
+        LEDS_ON(BSP_LED_0_MASK);
+        vTaskDelay(2000);
+        LEDS_OFF(BSP_LED_0_MASK);
+      #endif
+    }
 
 #endif
 
