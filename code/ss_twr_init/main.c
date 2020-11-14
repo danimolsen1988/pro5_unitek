@@ -177,6 +177,7 @@ int main(void)
   //-------------dw1000  ini------end---------------------------
   //-----timer init------
     setupTimer();
+    setupDelayTimer();
   //-----timer init end -----
   // IF WE GET HERE THEN THE LEDS WILL BLINK
 
