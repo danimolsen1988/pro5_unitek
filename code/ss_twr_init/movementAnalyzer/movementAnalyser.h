@@ -1,3 +1,6 @@
+#ifndef MOVEMENTANALYZER_H
+#define MOVEMENTANALYZER_H
+
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
 * 1 uus = 512 / 499.2 us and 1 us = 499.2 * 128 dtu. */
 #define UUS_TO_DWT_TIME 65536
@@ -9,3 +12,5 @@
 #define TAGLISTSIZE 3
 
 void movementAnalyzer_initiator (void * pvParameter);
+
+#endif
