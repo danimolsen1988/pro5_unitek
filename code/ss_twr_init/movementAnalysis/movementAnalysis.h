@@ -1,7 +1,7 @@
 /** @file movementAnalysis.h
- *       
- * 
- */ 
+ *
+ *
+ */
 
 #ifndef MOVEMENTANALYSIS_H
 #define MOVEMENTANALYSIS_H
@@ -11,20 +11,9 @@
 #include "stdbool.h"
 #include "app_timer.h"
 #include "nrf_drv_clock.h"
+#include "../movementStruct/movementStruct.h"
 
 #define DELAY 200 // delay for hardware timer in ms
-
-
-typedef struct Movement{
-//save old distance and average to calculate velocity
-  double old_avg;
-  double old_avg2;
-  double old_avg3;
-  double old_dist1;
-  double old_dist2;
-  double old_dist3;
-  int i;
-}tags;
 
 static bool delayTimerInitialized = false; // for setup
 static bool delaySample = false; //delay flag for hardware timer
@@ -41,4 +30,3 @@ bool analysis(tags *tag, double distance);
 #endif /* MOVEMENTANALYSIS_H */
 
 /*** end of file ***/
-

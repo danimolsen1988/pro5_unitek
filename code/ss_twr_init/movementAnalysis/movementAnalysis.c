@@ -5,7 +5,6 @@
 
 #include "movementAnalysis.h"
 
-
 APP_TIMER_DEF(delay_timer_id);
 
 /**

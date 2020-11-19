@@ -45,6 +45,7 @@ uint8_t id_index[LISTSIZE];
 */
 extern void setupTimer() {
   if (!initialized) {
+      // do the initialization part
     ret_code_t err_code;
     state = timer0;
 
@@ -62,12 +63,10 @@ extern void setupTimer() {
     err_code = app_fifo_init(&ignorelistFifo, id_index,(uint16_t)sizeof(id_index));  // init of fifo
     APP_ERROR_CHECK(err_code);
     initialized = true;
-    // do the initialization part
+
   } else {
     printf("timer is already intialized!"); 
   }
-
-
 }
 
 #ifdef TEST
