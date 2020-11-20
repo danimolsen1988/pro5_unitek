@@ -14,14 +14,16 @@
 #include "app_fifo.h"
 
 #define IGNORETIME 4000 // in ms
-#define LISTSIZE 4  // size of ignorelist
+#define LISTSIZE 4      // size of ignorelist
+#define MAXDISTANCE 10
 
 
-/**@brief       Setup function. Should be called on once before
+/**@brief       Setup function. Should be called once before
  *              other functions in the libary is used
  *
+ * @param[out] _bool        : true initialized, false if error
  */
-void setupTimer();
+_Bool setupTimer();
 
 
 /**@brief       Function for checking if id os on ignorelist

@@ -11,6 +11,11 @@
 // MOVEMENT TAG STRUCT TO TEST ANALYSIS FUNCTION
 #define TAGLISTSIZE 3
 
+/**
+* @brief MovementAnalyzer Initiator task entry function.
+*
+* @param[in] pvParameter   Pointer that will be used as the parameter for the task.
+*/
 void movementAnalyzer_initiator (void * pvParameter);
 
 #endif

@@ -34,8 +34,11 @@
 #include "deca_param_types.h"
 #include "deca_regs.h"
 #include "deca_device_api.h"
-#include "UART.h"
 #include "../movementStruct/movementStruct.h"
+#if DEBUG_MOVEMENTSTATE == 1
+#include "UART.h"
+#else
+#endif
 	
 //-----------------dw1000----------------------------
 
@@ -69,7 +72,7 @@ static dwt_config_t config = {
 #endif
 
 //--------------dw1000---end---------------
-extern void setupTimer();
+extern _Bool setupTimer();
 extern _Bool setupQueue();
 extern void setupDelayTimer();
 
@@ -84,8 +87,6 @@ TaskHandle_t test_ss_init_main_handle;    // task handle for debugging task.
 #define DEBUG_DELAY        1000           // delay for debugging
 static _Bool test_ss_init_main_case(xMessage message);
 static void test_ss_init_main(void * pvParameter);
-#else
-#define DEBUG_DELAY        1000           // delay for debugging
 #endif
 // xQueue handle, to queue sending type xMessage
 QueueHandle_t xQueue;
@@ -120,8 +121,13 @@ int main(void)
   /* Setup DW1000 IRQ pin */  
   nrf_gpio_cfg_input(DW1000_IRQ, NRF_GPIO_PIN_NOPULL); 		//irq
   
+
   /*Initialization UART*/
+  #if DEBUG_MOVEMENTSTATE == 0 && DEBUG_EVENT == 0
+  // danis uart
+  #else
   boUART_Init ();
+  #endif
   
   /* Reset DW1000 */
   reset_DW1000(); 
@@ -154,14 +160,16 @@ int main(void)
   dwt_seteui((uint8_t*) NRF_FICR->DEVICEID);
 
   //-------------dw1000  ini------end---------------------------
-  //-----timer init------
-    setupTimer();
+  //-------------perifials init--------------------------------
+    if(!setupTimer()) { 
+      exit(EXIT_FAILURE); //couldn't setup timer for ignorelist
+    }
     setupDelayTimer();
-    if(!setupQueue()) {
+
+    if(!setupQueue()) { // couldn't set up queue for tag events
       exit(EXIT_FAILURE);
     }
   //-----timer init end -----
-  // IF WE GET HERE THEN THE LEDS WILL BLINK
 	
     /* Start FreeRTOS scheduler. */
     vTaskStartScheduler();	

@@ -1,7 +1,7 @@
 #include "movementStruct.h"
 
 static bool initialized = false; // for setup
-extern xQueueHandle xQueue;
+extern xQueueHandle xQueue; //extern queue handle from main
 
 //do some queue stuff, not done!
 _Bool setupQueue() {

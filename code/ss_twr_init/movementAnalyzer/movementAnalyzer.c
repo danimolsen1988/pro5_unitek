@@ -1,7 +1,10 @@
-/*! ----------------------------------------------------------------------------
-*  @file    movementAnalyzer.c
-*  @brief   
+/*!
+* @brief Component name:	movementAnalzer
 *
+* the main application for movement analysis
+* 
+*
+* @file movementAnalyzer.c
 */
 #include "movementAnalyser.h"
 #include <stdio.h>
@@ -16,13 +19,9 @@
 #include "../movementAnalysis/movementAnalysis.h"
 #include "../movementstruct/movementStruct.h"
 
-
-/* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
-static uint32 status_reg = 0;
-
 /* Declaration of static functions. */
 static int tagOnList(tags * tag, uint64_t id);
-static int updateTag(tags* tag, xMessage message); // should this return a int?
+static int updateTag(tags* tag, xMessage message);
 static _Bool newTag(tags tag[],xMessage message);
 static _Bool deleteTag(tags* tag, uint64_t id);
 static uint32_t tagAnalysis(tags* tag);
@@ -35,105 +34,89 @@ const tags default_tag;
 //Queue for sending data between TDM-task and this task.
 extern xQueueHandle xQueue;
 
-// calibration
+// data far calibration
 #if DEBUG_EVENT == 1
-static double distance[AVG];
-static int cal = 0;
-static int delay = 0;
-static uint64_t tag_id = 0;
-#define RNG_DELAY_MS 10
+  static double distance[AVG];
+  static int cal = 0;
+  static int delay = 0;
+  static uint64_t tag_id = 0;
+  #define RNG_DELAY_MS 10
+  //data for ignorelist debugging
 #elif DEBUG_EVENT == 3
-#define RNG_DELAY_MS 500
-uint64_t tag_id;
-static uint64_t counter = 0;
-static double distance;
-static double tof;
+  #define RNG_DELAY_MS 500
+  uint64_t tag_id;
+  static uint64_t counter = 0;
+  static double distance;
+  static double tof;
 
-#else
-#if DEBUG_MOVEMENTSTATE == 1
-/* Inter-ranging delay period, in milliseconds. */
-#define RNG_DELAY_MS 1000
-#else
-#define RNG_DELAY_MS 100 // inter-ranging delay. should be cordinated with TDM-task
-#endif
-static double tof;
-static double distance;
+#else /* DEBUG_EVENT */
+  #if DEBUG_MOVEMENTSTATE == 1
+    #define RNG_DELAY_MS 1000
+  #else
+    #define RNG_DELAY_MS 100 // inter-ranging delay. should be cordinated with TDM-task
+  #endif
+  static double tof;
+  static double distance;
 #endif
 /*! ------------------------------------------------------------------------------------------------------------------
 
 
-/**@brief SS TWR Initiator task entry function.
+/**@brief   MovementAnalyzer Initiator task entry function.
 *
 * @param[in] pvParameter   Pointer that will be used as the parameter for the task.
 */
-void movementAnalyzer_initiator (void * pvParameter)
-{
+void movementAnalyzer_initiator (void * pvParameter) {
   UNUSED_PARAMETER(pvParameter);
-
-  //dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
-
   dwt_setleds(DWT_LEDS_DISABLE);
 
   while (true)
-  {
+  { // call main task
     movementAnalyzer();
-    /* Delay a task for a given number of ticks */
     vTaskDelay(RNG_DELAY_MS);
-    /* Tasks must be implemented to never return... */
   }
 }
-/* @fn main()
-*
-* @brief Application entry point.
-*
-* @param  none
-*
-* @return none
+/** @brief  determines if a tag is considered wanting access. 
+*           sending message through uart if access is granted.
 */
 
 #if DEBUG_MOVEMENTSTATE == 0
-static int movementAnalyzer(void)
-{
+static int movementAnalyzer(void) {
   xMessage message;
   int index = -1;
-
-//ticktype decides for how long the task should block before giving up.
-//this value should be set, so it fits with dani's time. or figure out how to block until queue got data.
-//takes a full copy instead of pointer, incase data is overwritten before handled
+  
+  //if queue is empty, do nothing
   if( xQueue != NULL){
     if(xQueueReceive(xQueue,&(message),(TickType_t)100) ==pdPASS) {
- 
-      switch(message.event) { 
-    
-        case NEW_TAG:
+
+      switch(message.event) { // do this depending on event value.
+        
+        case NEW_TAG: // adds a new tag if taglist isn't full
           newTag(tag,message);
           break;
-
-        case UPDATE_TAG:
-            if((index = tagOnList(tag,message.id)) !=-1) { 
-                if(updateTag(&tag[index],message));
-                // tag was granted access and removed from list %%message.id%% 
-              }
+        
+        case UPDATE_TAG: // updates a specific tags data, if tag is on the list
+          if((index = tagOnList(tag,message.id)) !=-1) { 
+              updateTag(&tag[index],message);
+          }
           break;
-
-        case DELETE_TAG:
+        
+        case DELETE_TAG:  // deletes a tag if id on list.
           deleteTag(tag,message.id);
           break;
 
         default:
           break;
-  //
       }
     }
   }
 }
 
 //--------------------------helper functions-------------------------
-/**@brief checking if the tagid is on the list.
+/**@brief   checking if the tagid is on the list.
 *
-* @param[in] tag[]    tag list
-* @param[in] message  the recived message
-* @param[out] i       the location of the id.
+* @param[in] tag *    tag list
+* @param[in] id       the id to check after
+* @param[out] i       the index of the id.
 * @param[out] -1      if the id was not on the list
 */
 static int tagOnList(tags * tag, uint64_t id) {
@@ -146,7 +129,13 @@ static int tagOnList(tags * tag, uint64_t id) {
   return -1;
 }
 
-//what do we wish to do here? set id = 0?
+/**@brief   deletes a tag, if id is on list.
+*
+* @param[in] tag*     tag list
+* @param[in] id       the id to remove from the list
+* @param[out] true    tag removed from list
+* @param[out] false   tag is not on list
+*/
 static _Bool deleteTag(tags * tag, uint64_t id) {
 
   for(int i = 0; i < TAGLISTSIZE;i++) {
@@ -158,7 +147,13 @@ static _Bool deleteTag(tags * tag, uint64_t id) {
   return false;
 }
 
-// this depends on deleteTag....
+/**@brief   adds a new tag if there is space
+*
+* @param[in] tag*     tag list
+* @param[in] message  the recived message
+* @param[out] true    tag added to list
+* @param[out] false   tag list is full
+*/
 static _Bool newTag(tags *tag,xMessage message) { 
 
   for(int i = 0; i < TAGLISTSIZE;i++) {
@@ -174,6 +169,13 @@ static _Bool newTag(tags *tag,xMessage message) {
   return false;
 }
 
+/**@brief   updates tag distance
+*
+* @param[in] tag*     tag list
+* @param[in] message  the recived message
+* @param[out] true    tag granted access
+* @param[out] false   tag not granted access
+*/
 static int updateTag(tags* tag, xMessage message) {
   tag->message = message;
   if(tagAnalysis(tag)) {
@@ -183,24 +185,32 @@ static int updateTag(tags* tag, xMessage message) {
   return false;
 }
 
+/**@brief   checks if tag is on ignorelist, or if tag is more than MAXDISTANCE
+*           away(10 m.). if not analyizes the movement of the tag. 
+*
+* @param[in] tag*     tag list
+* @param[out] true    tag granted access
+* @param[out] false   tag not granted access
+* @param[out] -1      tag on ignorelist
+* @param[out] -2      tag put on ignorelist
+*/
 static uint32_t tagAnalysis(tags * tag) {
 #if DEBUG_EVENT == 0
     if(onIgnorelist(tag->message.id)) 
     {
-          // skip this transmission
-       return -1;
+       return -1; // skip this transmission
     } else {
-        distance = tag->message.tof*SPEED_OF_LIGHT;
-        if(distance > 10) {
-          putOnIgnorelist(tag->message.id);
-          return -2;
-        }
+    distance = tag->message.tof*SPEED_OF_LIGHT;
+    if(distance > 10) {
+      putOnIgnorelist(tag->message.id);
+      return -2;
+    }
     else if(analysis(tag, distance)){
    //   return (int)uartTransmit(NRF_BAUD); //transmit something that says this Id wants acces!
      return true;
     }
     return false;
-    }
+  }
 }
 // -----------------------DEBUGGING CODE-------------------------------
 
@@ -214,11 +224,10 @@ static uint32_t tagAnalysis(tags * tag) {
 
     if(onIgnorelist(tag->message.id)) 
     {
-          // skip this transmission
-       return -1;
+       return -1; // skip this transmission
     }  
-          distance = tag->message.tof*SPEED_OF_LIGHT;
-    if(distance > 10) {
+    distance = tag->message.tof*SPEED_OF_LIGHT;
+    if(distance > MAXDISTANCE) {
       putOnIgnorelist(tag->message.id);
     }
     printf("Distance : %f\r\n",distance);
@@ -227,11 +236,10 @@ static uint32_t tagAnalysis(tags * tag) {
 #elif DEBUG_EVENT == 2 
     if(onIgnorelist(tag->message.id)) 
     {
-          // skip this transmission
-       return -1;
+       return -1; // skip this transmission
     }  
           distance = tag->message.tof*SPEED_OF_LIGHT;
-    if(distance > 10) {
+    if(distance > MAXDISTANCE) {
       putOnIgnorelist(tag->message.id);
     }
     printf("Distance : %f\r\n",distance);
@@ -308,7 +316,7 @@ static int movementAnalyzer(void)
           break;
 
          default:
-          printf("why did we hit default?\r\n");
+          printf("something went very wrong in movementAnalyzer - switch\r\n");
       }
     }
   } else {

@@ -22,7 +22,7 @@ typedef enum{
   timer3,
 } States; 
 
-// ignore list with 5 spaces
+// ignore list with LISTSIZE spaces
 static volatile uint64_t ignorelist[LISTSIZE] = {0};
 static volatile int length = 0;  // for next empty position in list.
 static bool initialized = false; // for setup
@@ -34,16 +34,16 @@ static _Bool putOnList(app_timer_id_t timer_id, uint64_t id,uint8_t index);
 static void createTimer(app_timer_id_t timer_id);
 static void timer_handler(void * p_context);
  
-//fifo stuff
-app_fifo_t ignorelistFifo; //fifo 
-
+//fifo 
+app_fifo_t ignorelistFifo;
 uint8_t id_index[LISTSIZE];
 
-/**
+/** SHOULD BE CALLED IN MAIN
+* @breif setup for the timer module 
 *
-* should be called in main
+*  
 */
-extern void setupTimer() {
+extern _Bool setupTimer() {
   if (!initialized) {
       // do the initialization part
     ret_code_t err_code;
@@ -63,13 +63,63 @@ extern void setupTimer() {
     err_code = app_fifo_init(&ignorelistFifo, id_index,(uint16_t)sizeof(id_index));  // init of fifo
     APP_ERROR_CHECK(err_code);
     initialized = true;
-
+    return true;
   } else {
-    printf("timer is already intialized!"); 
+    return true;
   }
+  return false;
 }
 
-#if DEBUG_EVENT == 3
+#if DEBUG_EVENT != 3
+
+_Bool onIgnorelist(uint64_t id){
+  int i = 0;
+  while(i < LISTSIZE) {
+    if(id == ignorelist[i]) {
+        return true;
+    }
+    i++;
+
+  }
+  return false;
+}
+
+void putOnIgnorelist(uint64_t id) {
+
+  switch(state) { 
+    case timer0:
+     if(!putOnList(m_ss_timer_id0, id, state)) {
+        break;
+     }
+      state = timer1;
+      break;
+    case timer1:
+     if(!putOnList(m_ss_timer_id1, id, state)) {
+        break;
+     }
+      state = timer2;
+      break;
+    case timer2:
+     if(!putOnList(m_ss_timer_id2, id, state)) {
+        break;
+     }
+      state = timer3;
+      break;
+    case timer3:
+     if(!putOnList(m_ss_timer_id3, id, state)) {
+        break;
+     }
+      state = timer0;
+      break;
+    default:
+      break;
+  }
+
+}
+
+#else
+
+
 
 _Bool onIgnorelist(uint64_t id){
   int i = 0;
@@ -123,52 +173,6 @@ void putOnIgnorelist(uint64_t id) {
         break;
      } else {
      printf("id:%d timer 3 started\r\n",id);
-     }
-      state = timer0;
-      break;
-    default:
-      break;
-  }
-
-}
-#else
-
-_Bool onIgnorelist(uint64_t id){
-  int i = 0;
-  while(i < LISTSIZE) {
-    if(id == ignorelist[i]) {
-        return true;
-    }
-    i++;
-
-  }
-  return false;
-}
-
-void putOnIgnorelist(uint64_t id) {
-
-  switch(state) { 
-    case timer0:
-     if(!putOnList(m_ss_timer_id0, id, state)) {
-        break;
-     }
-      state = timer1;
-      break;
-    case timer1:
-     if(!putOnList(m_ss_timer_id1, id, state)) {
-        break;
-     }
-      state = timer2;
-      break;
-    case timer2:
-     if(!putOnList(m_ss_timer_id2, id, state)) {
-        break;
-     }
-      state = timer3;
-      break;
-    case timer3:
-     if(!putOnList(m_ss_timer_id3, id, state)) {
-        break;
      }
       state = timer0;
       break;

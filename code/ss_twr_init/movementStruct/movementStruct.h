@@ -10,6 +10,8 @@
 
 #include "FreeRTOS.h"
 #include "queue.h"
+
+// event types
 typedef enum {
   UPDATE_TAG,
   DELETE_TAG,
@@ -18,10 +20,6 @@ typedef enum {
 
 //size of queue containing tags struct
 #define QUEUESIZE 20
-
-//Queue handler. should only exist 1 place.
-
-
 
 /**@brief       struct for event data
  *
@@ -35,7 +33,7 @@ typedef struct message{
   double tof;
 }xMessage;
 
-/**@brief       struct for event data
+/**@brief       struct for event data, measurements
  *
  * @data  xMessage[message]   : struct containing message data.
  * @data  _Bool[taken]        : bool for checking if the tag is occupied
@@ -62,7 +60,7 @@ typedef struct message{
 typedef struct tags_s tags;
 
 /**@brief       Sets up a Queue for sending 
- *
+ * @return      true if success else false
  */
 _Bool setupQueue();
 
