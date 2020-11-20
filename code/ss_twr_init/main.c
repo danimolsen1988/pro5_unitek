@@ -121,13 +121,6 @@ int main(void)
   LEDS_OFF(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK );
 
   #ifdef USE_FREERTOS
-    /* Create task for LED0 blinking with priority set to 2 */
-    //UNUSED_VARIABLE(xTaskCreate(led_toggle_task_function, "LED2", configMINIMAL_STACK_SIZE + 200, NULL, 2, &led_toggle_task_handle));
-
-    /* Start timer for LED1 blinking */
-    //led_toggle_timer_handle = xTimerCreate( "LED3", TIMER_PERIOD, pdTRUE, NULL, led_toggle_timer_callback);
-    //UNUSED_VARIABLE(xTimerStart(led_toggle_timer_handle, 0));
-
     /* Create task for SS TWR Initiator set to 2 */
     UNUSED_VARIABLE(xTaskCreate(ss_initiator_task_function, "SSTWR_INIT", configMINIMAL_STACK_SIZE + 200, NULL, 2, &ss_initiator_task_handle));
   #endif // #ifdef USE_FREERTOS
