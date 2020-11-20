@@ -60,7 +60,7 @@ static dwt_config_t config = {
 #define POLL_TX_TO_RESP_RX_DLY_UUS 100 
 
 /* rx and tx antenna delay*/
-#ifdef CALIBRATE
+#if DEBUG_EVENT == 1
 #define TX_ANT_DLY 0
 #define RX_ANT_DLY 0
 #else
@@ -80,8 +80,13 @@ TimerHandle_t led_toggle_timer_handle;  /**< Reference to LED1 toggling FreeRTOS
 
 //DEBUGGING HANDLE
 TaskHandle_t test_ss_init_main_handle;    // task handle for debugging task.
+#if DEBUG_MOVEMENTSTATE == 1 || DEBUG_EVENT ==3
 #define DEBUG_DELAY        1000           // delay for debugging
-
+static _Bool test_ss_init_main_case(xMessage message);
+static void test_ss_init_main(void * pvParameter);
+#else
+#define DEBUG_DELAY        1000           // delay for debugging
+#endif
 // xQueue handle, to queue sending type xMessage
 QueueHandle_t xQueue;
 
@@ -90,6 +95,83 @@ QueueHandle_t xQueue;
  * @param[in] pvParameter   Pointer that will be used as the parameter for the task.
  */
 
+int main(void)
+{
+  /* Setup some LEDs for debug Green and Blue on DWM1001-DEV */
+  LEDS_CONFIGURE(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK);
+  LEDS_OFF(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK );
+
+    /* Create task for SS TWR Initiator set to 2 */
+    if(xTaskCreate(movementAnalyzer_initiator, "movementAnalyser_INIT", 
+                   configMINIMAL_STACK_SIZE+200 , NULL, 2, 
+                   &movementAnalyzer_initiator_handler) !=pdPASS) {
+      exit(0);  // could not create task, so abort
+      }
+#if DEBUG_MOVEMENTSTATE == 1   
+    //IF DEBUG CREATE DEBUGGING TASK
+    if(xTaskCreate(test_ss_init_main, "movementAnalyser_TEST", 
+                  configMINIMAL_STACK_SIZE+100, NULL, 2, 
+                  &test_ss_init_main_handle) !=pdPASS) {
+    exit(0);  // could not create task, so abort
+    }
+ #endif
+  //-------------dw1000  ini------------------------------------	
+
+  /* Setup DW1000 IRQ pin */  
+  nrf_gpio_cfg_input(DW1000_IRQ, NRF_GPIO_PIN_NOPULL); 		//irq
+  
+  /*Initialization UART*/
+  boUART_Init ();
+  
+  /* Reset DW1000 */
+  reset_DW1000(); 
+
+  /* Set SPI clock to 2MHz */
+  port_set_dw1000_slowrate();
+  
+  /* Init the DW1000 */
+  if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)
+  {
+    //Init of DW1000 Failed
+    while (1) {};
+  }
+
+  // Set SPI to 8MHz clock
+  port_set_dw1000_fastrate();
+
+  /* Configure DW1000. */
+  dwt_configure(&config);
+
+  /* Apply default antenna delay value. See NOTE 2 below. */
+  dwt_setrxantennadelay((RX_ANT_DLY));
+  dwt_settxantennadelay((TX_ANT_DLY));
+          
+  /* Set expected response's delay and timeout. 
+  * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
+  dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
+  dwt_setrxtimeout(65000); // Maximum value timeout with DW1000 is 65ms  
+  
+  dwt_seteui((uint8_t*) NRF_FICR->DEVICEID);
+
+  //-------------dw1000  ini------end---------------------------
+  //-----timer init------
+    setupTimer();
+    setupDelayTimer();
+    if(!setupQueue()) {
+      exit(EXIT_FAILURE);
+    }
+  //-----timer init end -----
+  // IF WE GET HERE THEN THE LEDS WILL BLINK
+	
+    /* Start FreeRTOS scheduler. */
+    vTaskStartScheduler();	
+
+    while(1) 
+    {};
+}
+
+//-----------------------DEBUGGING CODE--------------------------------------
+#if DEBUG_MOVEMENTSTATE == 1
 static _Bool test_ss_init_main_case(xMessage message) {
       switch(message.event) {
       case  NEW_TAG:
@@ -159,78 +241,4 @@ static void test_ss_init_main(void * pvParameter) {
       }
   }
 }
-
-int main(void)
-{
-  /* Setup some LEDs for debug Green and Blue on DWM1001-DEV */
-  LEDS_CONFIGURE(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK);
-  LEDS_OFF(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK );
-
-    /* Create task for SS TWR Initiator set to 2 */
-    if(xTaskCreate(movementAnalyzer_initiator, "movementAnalyser_INIT", 
-                   configMINIMAL_STACK_SIZE+200 , NULL, 2, 
-                   &movementAnalyzer_initiator_handler) !=pdPASS) {
-      exit(0);  // could not create task, so abort
-      }
-    
-    //IF DEBUG CREATE DEBUGGING TASK
-    if(xTaskCreate(test_ss_init_main, "movementAnalyser_TEST", 
-                  configMINIMAL_STACK_SIZE+100, NULL, 2, 
-                  &test_ss_init_main_handle) !=pdPASS) {
-    exit(0);  // could not create task, so abort
-    }
-  
-  //-------------dw1000  ini------------------------------------	
-
-  /* Setup DW1000 IRQ pin */  
-  nrf_gpio_cfg_input(DW1000_IRQ, NRF_GPIO_PIN_NOPULL); 		//irq
-  
-  /*Initialization UART*/
-  boUART_Init ();
-  
-  /* Reset DW1000 */
-  reset_DW1000(); 
-
-  /* Set SPI clock to 2MHz */
-  port_set_dw1000_slowrate();
-  
-  /* Init the DW1000 */
-  if (dwt_initialise(DWT_LOADUCODE) == DWT_ERROR)
-  {
-    //Init of DW1000 Failed
-    while (1) {};
-  }
-
-  // Set SPI to 8MHz clock
-  port_set_dw1000_fastrate();
-
-  /* Configure DW1000. */
-  dwt_configure(&config);
-
-  /* Apply default antenna delay value. See NOTE 2 below. */
-  dwt_setrxantennadelay((RX_ANT_DLY));
-  dwt_settxantennadelay((TX_ANT_DLY));
-          
-  /* Set expected response's delay and timeout. 
-  * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
-  dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
-  dwt_setrxtimeout(65000); // Maximum value timeout with DW1000 is 65ms  
-  
-  dwt_seteui((uint8_t*) NRF_FICR->DEVICEID);
-
-  //-------------dw1000  ini------end---------------------------
-  //-----timer init------
-    setupTimer();
-    setupDelayTimer();
-    if(!setupQueue()) {
-      exit(EXIT_FAILURE);
-    }
-  //-----timer init end -----
-  // IF WE GET HERE THEN THE LEDS WILL BLINK
-	
-    /* Start FreeRTOS scheduler. */
-    vTaskStartScheduler();	
-
-    while(1) 
-    {};
-}
+#endif

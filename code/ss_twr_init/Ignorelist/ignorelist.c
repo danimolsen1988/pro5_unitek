@@ -69,7 +69,7 @@ extern void setupTimer() {
   }
 }
 
-#ifdef TEST
+#if DEBUG_EVENT == 3
 
 _Bool onIgnorelist(uint64_t id){
   int i = 0;

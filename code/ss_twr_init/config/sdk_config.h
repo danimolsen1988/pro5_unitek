@@ -45,22 +45,41 @@
 #include "app_config.h"
 #endif
 
+//------------------------APPLICATION------------------------
 
-#define USE_FREERTOS	// define to use RTOS in this example code. Comment if FREERTOS is not necessary
-//#define CALIBRATE // delete comment if calibration values is needed, sent trough UART
+#define USE_FREERTOS
 //#define TEST // for ignorelist
-#define ANALYSIS
 
-// <h> Movement Analyzer 
 
+
+
+// <h> movementAnalyzer
 //==========================================================
-// <q> DEBUG_ENABLED  -  debug for movementAnalyzer, prints out data on uart
-#ifndef DEBUG_ENABLED
-#define DEBUG_ENABLED 0
+// <q> DEBUG_MOVEMENTSTATE  -  debug for movementAnalyzer, prints out data on uart
+
+
+#ifndef DEBUG_MOVEMENTSTATE
+#define DEBUG_MOVEMENTSTATE 1
 #endif
 
-// <h> Board Support 
+// </h>
+// <h> Movement Analyzer 
+//==========================================================
+// <q> DEBUG_EVENT  -  debug different functionalities, calibration.
 
+// <0=> debug structure 
+// <1=> calibrate unit 
+// <2=> debug movement analysis
+// <3=> debug ignorelist
+
+#ifndef DEBUG_EVENT
+#define DEBUG_EVENT 0
+#endif
+
+// </h>
+//-----------------------------PREDEFINED------------------------
+
+// <h> Board Support 
 //==========================================================
 // <q> BSP_BTN_BLE_ENABLED  - bsp_btn_ble - Button Control for BLE
  

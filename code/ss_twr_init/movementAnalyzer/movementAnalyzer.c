@@ -28,20 +28,21 @@ static _Bool deleteTag(tags* tag, uint64_t id);
 static uint32_t tagAnalysis(tags* tag);
 static int movementAnalyzer(void);
 
-static tags tag[TAGLISTSIZE] = {0};  //initializer element is not a compile time constant
-
-
-extern xQueueHandle xQueue;
-//since global structures have static storage duration, it will be initailzed to all 0's.
+//tag struct for keeping data on tags.
+static tags tag[TAGLISTSIZE] = {0}; 
 const tags default_tag;
 
+//Queue for sending data between TDM-task and this task.
+extern xQueueHandle xQueue;
+
 // calibration
-#ifdef CALIBRATE
+#if DEBUG_EVENT == 1
 static double distance[AVG];
 static int cal = 0;
 static int delay = 0;
-#elif defined (TEST)
-/* Inter-ranging delay period, in milliseconds. */
+static uint64_t tag_id = 0;
+#define RNG_DELAY_MS 10
+#elif DEBUG_EVENT == 3
 #define RNG_DELAY_MS 500
 uint64_t tag_id;
 static uint64_t counter = 0;
@@ -49,11 +50,13 @@ static double distance;
 static double tof;
 
 #else
+#if DEBUG_MOVEMENTSTATE == 1
 /* Inter-ranging delay period, in milliseconds. */
 #define RNG_DELAY_MS 1000
-/* Hold copies of computed time of flight, distance and partid here for reference so that it can be examined at a debug breakpoint. */
+#else
+#define RNG_DELAY_MS 100 // inter-ranging delay. should be cordinated with TDM-task
+#endif
 static double tof;
-static int test = 0;
 static double distance;
 #endif
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -88,7 +91,7 @@ void movementAnalyzer_initiator (void * pvParameter)
 * @return none
 */
 
-#if DEBUG_ENABLED == 0
+#if DEBUG_MOVEMENTSTATE == 0
 static int movementAnalyzer(void)
 {
   xMessage message;
@@ -108,7 +111,8 @@ static int movementAnalyzer(void)
 
         case UPDATE_TAG:
             if((index = tagOnList(tag,message.id)) !=-1) { 
-                updateTag(&tag[index],message);
+                if(updateTag(&tag[index],message));
+                // tag was granted access and removed from list %%message.id%% 
               }
           break;
 
@@ -179,68 +183,89 @@ static int updateTag(tags* tag, xMessage message) {
   return false;
 }
 
-static _Bool tagAnalysis(tags * tag) {
-  #ifdef TEST
-      counter++;
-      if(counter % 2 == 0) {
-        tag_id = counter;
-      } else {
-        tag_id = counter-1;
-      }
-          distance = tag.message.tof*SPEED_OF_LIGHT;
-    if(distance > 10) {
-      putOnIgnorelist(tag.message.id);
-    }
-    printf("Distance : %f\r\n",distance);
-    if (analysis(&tag1, distance)){
-        printf("_________________Signal_________________\r\n");
-        LEDS_ON(BSP_LED_0_MASK);
-        vTaskDelay(2000);
-        LEDS_OFF(BSP_LED_0_MASK);
-        }
-#endif
-
+static uint32_t tagAnalysis(tags * tag) {
+#if DEBUG_EVENT == 0
     if(onIgnorelist(tag->message.id)) 
     {
           // skip this transmission
-          return -1;
+       return -1;
     } else {
-
-
-#ifndef CALIBRATE
-    distance = tag->message.tof*SPEED_OF_LIGHT;
-    if(distance > 10) {
-      putOnIgnorelist(tag->message.id);
-      return -2;
-    }
-
+        distance = tag->message.tof*SPEED_OF_LIGHT;
+        if(distance > 10) {
+          putOnIgnorelist(tag->message.id);
+          return -2;
+        }
     else if(analysis(tag, distance)){
    //   return (int)uartTransmit(NRF_BAUD); //transmit something that says this Id wants acces!
      return true;
     }
     return false;
-#else
-
-
-      int old_delay = delay;
-      distance[cal] = tof * SPEED_OF_LIGHT;
-      printf("Distance : %f\r\n",distance[cal]);
-      cal++;
-      if(cal == AVG) {
-         delay = calibrate_device(distance, delay);
-         cal = 0;
-         if(old_delay == delay) {
-            printf("set TX_ANT_DLY and RX_ANT_DLY in main to %d",delay);
-            exit(0);
-         }
-      }
-
-#endif
-  }
-  
+    }
 }
 // -----------------------DEBUGGING CODE-------------------------------
-#elif DEBUG_ENABLED > 0
+
+ #elif DEBUG_EVENT == 3
+      counter++;
+      if(counter % 2 == 0) {
+        tag->message.id = counter;
+      } else {
+        tag->message.id = counter-1;
+      }
+
+    if(onIgnorelist(tag->message.id)) 
+    {
+          // skip this transmission
+       return -1;
+    }  
+          distance = tag->message.tof*SPEED_OF_LIGHT;
+    if(distance > 10) {
+      putOnIgnorelist(tag->message.id);
+    }
+    printf("Distance : %f\r\n",distance);
+    }
+
+#elif DEBUG_EVENT == 2 
+    if(onIgnorelist(tag->message.id)) 
+    {
+          // skip this transmission
+       return -1;
+    }  
+          distance = tag->message.tof*SPEED_OF_LIGHT;
+    if(distance > 10) {
+      putOnIgnorelist(tag->message.id);
+    }
+    printf("Distance : %f\r\n",distance);
+    if (analysis(tag, distance)){
+        printf("_________________Signal_________________\r\n");
+        LEDS_ON(BSP_LED_0_MASK);
+        vTaskDelay(2000);
+        LEDS_OFF(BSP_LED_0_MASK);
+        }
+    }
+
+
+
+#elif DEBUG_EVENT == 1
+    if(tag_id == 0) {
+      if(tag->message.id != 0) {
+        tag_id = tag->message.id;
+        int old_delay = delay;
+        distance[cal] = tag->message.tof * SPEED_OF_LIGHT;
+        printf("Distance : %f\r\n",distance[cal]);
+        cal++;
+        if(cal == AVG) {
+           delay = calibrate_device(distance, delay);
+           cal = 0;
+           if(old_delay == delay) {
+              printf("set TX_ANT_DLY and RX_ANT_DLY in main to %d",delay);
+              exit(0);
+           }
+        }
+      }
+   }
+}
+#endif
+#elif DEBUG_MOVEMENTSTATE == 1
 static int movementAnalyzer(void)
 {
   xMessage message;
@@ -284,7 +309,6 @@ static int movementAnalyzer(void)
 
          default:
           printf("why did we hit default?\r\n");
-  //
       }
     }
   } else {
@@ -351,34 +375,12 @@ static int updateTag(tags* tag, xMessage message) {
 }
 
 static uint32_t tagAnalysis(tags * tag) {
-  #ifdef TEST
-      counter++;
-      if(counter % 2 == 0) {
-        tag_id = counter;
-      } else {
-        tag_id = counter-1;
-      }
-          distance = tag.message.tof*SPEED_OF_LIGHT;
-    if(distance > 10) {
-      putOnIgnorelist(tag.message.id);
-    }
-    printf("Distance : %f\r\n",distance);
-    if (analysis(&tag1, distance)){
-        printf("_________________Signal_________________\r\n");
-        LEDS_ON(BSP_LED_0_MASK);
-        vTaskDelay(2000);
-        LEDS_OFF(BSP_LED_0_MASK);
-        }
-#endif
-
     if(onIgnorelist(tag->message.id)) 
     {
           // skip this transmission
           return -1;
     } else {
 
-
-#ifndef CALIBRATE
     distance = tag->message.tof*SPEED_OF_LIGHT;
     printf("Distance : %f\r\n",distance);
     if(distance > 10) {
@@ -391,23 +393,6 @@ static uint32_t tagAnalysis(tags * tag) {
      return true;
     }
     return false;
-#else
-
-
-      int old_delay = delay;
-      distance[cal] = tof * SPEED_OF_LIGHT;
-      printf("Distance : %f\r\n",distance[cal]);
-      cal++;
-      if(cal == AVG) {
-         delay = calibrate_device(distance, delay);
-         cal = 0;
-         if(old_delay == delay) {
-            printf("set TX_ANT_DLY and RX_ANT_DLY in main to %d",delay);
-            exit(0);
-         }
-      }
-
-#endif
   }
 }
 #endif

@@ -1,3 +1,6 @@
+#ifndef IGNORELIST_H
+#define IGNORELIST_H
+
 /*!
 * @brief Component name:	Ignorelist
 *
@@ -33,3 +36,5 @@ _Bool onIgnorelist(uint64_t id);
  * @param[in]  id           : Tag id
  */
 void putOnIgnorelist(uint64_t id);
+
+#endif
