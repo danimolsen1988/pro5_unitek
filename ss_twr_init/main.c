@@ -35,6 +35,7 @@
 #include "deca_regs.h"
 #include "deca_device_api.h"
 #include "uart.h"
+#include "uart_fifo.h"
 	
 //-----------------dw1000----------------------------
 
@@ -74,12 +75,17 @@ static dwt_config_t config = {
 #define TIMER_PERIOD      2000          /**< Timer period. LED1 timer will expire after 1000 ms */
 
 #ifdef USE_FREERTOS
-
-TaskHandle_t  ss_initiator_task_handle;   /**< Reference to SS TWR Initiator FreeRTOS task. */
-extern void ss_initiator_task_function (void * pvParameter);
 TaskHandle_t  led_toggle_task_handle;   /**< Reference to LED0 toggling FreeRTOS task. */
 TimerHandle_t led_toggle_timer_handle;  /**< Reference to LED1 toggling FreeRTOS timer. */
-#endif
+#ifdef DEBUG_UART
+TaskHandle_t uart_test_task_handle;
+extern void uart_test_task_function(void * pvParameter);
+#else
+TaskHandle_t  ss_initiator_task_handle;   /**< Reference to SS TWR Initiator FreeRTOS task. */
+extern void ss_initiator_task_function (void * pvParameter);
+
+#endif // DEBUG UART
+#endif  //USE_RTOS
 
 #ifdef USE_FREERTOS
 
@@ -128,8 +134,16 @@ int main(void)
     led_toggle_timer_handle = xTimerCreate( "LED1", TIMER_PERIOD, pdTRUE, NULL, led_toggle_timer_callback);
     UNUSED_VARIABLE(xTimerStart(led_toggle_timer_handle, 0));
 
+  #ifdef DEBUG_UART
+    /* Create task for testing/debugging uart, priority 2 */
+    UNUSED_VARIABLE(xTaskCreate(uart_test_task_function, "UARTTEST_INIT",configMINIMAL_STACK_SIZE,NULL,2,&uart_test_task_handle));
+
+  #else
+
     /* Create task for SS TWR Initiator set to 2 */
     UNUSED_VARIABLE(xTaskCreate(ss_initiator_task_function, "SSTWR_INIT", configMINIMAL_STACK_SIZE + 200, NULL, 2, &ss_initiator_task_handle));
+  #endif // #ifdef DEBUG_UART
+    
   #endif // #ifdef USE_FREERTOS
   
   //-------------dw1000  ini------------------------------------	
@@ -137,9 +151,13 @@ int main(void)
   /* Setup DW1000 IRQ pin */  
   nrf_gpio_cfg_input(DW1000_IRQ, NRF_GPIO_PIN_NOPULL); 		//irq
   
-  /*Initialization UART*/
+  #ifdef DEBUG_UART
+  uartInit(NRF_UART_BAUDRATE_115200,false);
+  #else
+ /*Initialization UART*/
   boUART_Init ();
   printf("Singled Sided Two Way Ranging Initiator Example \r\n");
+  #endif
   
   /* Reset DW1000 */
   reset_DW1000(); 
