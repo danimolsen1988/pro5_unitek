@@ -16,8 +16,10 @@ blabla
   * nRF
   * dwm1001
 * Connecting PC to UWB-units
- * PUTTY
+  * PUTTY
 * Running Code
+* Analog Discovery 2
+  * Installing WaveForms
 
 
 ## SEGGER embedded studio
@@ -64,12 +66,20 @@ Follow instuctions from site.
 
 
 ## SDKs
-nRF5 SDK
+nRF5 SDK : https://infocenter.nordicsemi.com/index.jsp?topic=%2Fstruct_sdk%2Fstruct%2Fsdk_nrf5_latest.html
 
 
 ## Connecting PC and UWB-units
-
+Comming soon...
 
 
 ## Running Code
+Comming soon...
+
+
+## Analog Discovery 2
+Er et 100MS/s USB Osciliscope, Logic Analyzer og variabel Strømforsyning. Tilsluttes Pc via USB-kabel
+
+### Installing WaveForms
+Download software: https://store.digilentinc.com/waveforms-download-only/
 
