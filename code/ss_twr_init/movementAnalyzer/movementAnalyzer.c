@@ -18,11 +18,13 @@
 #include "../Ignorelist/ignorelist.h"
 #include "../movementAnalysis/movementAnalysis.h"
 #include "../movementstruct/movementStruct.h"
+#include "../uart/uart_fifo.h"
+#include "inttypes.h"
 
 /* Declaration of static functions. */
 static int tagOnList(tags * tag, uint64_t id);
 static int updateTag(tags* tag, xMessage message);
-static _Bool newTag(tags tag[],xMessage message);
+static _Bool newTag(tags * tag,xMessage message);
 static _Bool deleteTag(tags* tag, uint64_t id);
 static uint32_t tagAnalysis(tags* tag);
 static int movementAnalyzer(void);
@@ -55,7 +57,6 @@ extern xQueueHandle xQueue;
   #else
     #define RNG_DELAY_MS 100 // inter-ranging delay. should be cordinated with TDM-task
   #endif
-  static double tof;
   static double distance;
 #endif
 /*! ------------------------------------------------------------------------------------------------------------------
@@ -206,8 +207,13 @@ static uint32_t tagAnalysis(tags * tag) {
       return -2;
     }
     else if(analysis(tag, distance)){
-   //   return (int)uartTransmit(NRF_BAUD); //transmit something that says this Id wants acces!
-     return true;
+      uint32_t tmp[2];
+      tmp[0] = tag->message.id>>32;
+      tmp[1] = tag->message.id;
+      char buff[UART_MESSAGE_FORMAT_SIZE];
+      snprintf(buff,sizeof(buff),"%04x%08x%08x",WANTSACCESS,tmp[0],tmp[1]);
+      uartTransmit(buff,UART_MESSAGE_FORMAT_SIZE);
+      return true;
     }
     return false;
   }

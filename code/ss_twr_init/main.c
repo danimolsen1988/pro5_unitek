@@ -35,11 +35,11 @@
 #include "deca_regs.h"
 #include "deca_device_api.h"
 #include "../movementStruct/movementStruct.h"
-#if DEBUG_MOVEMENTSTATE == 1
-#include "UART.h"
+#if DEBUG_MOVEMENTSTATE == 0 && DEBUG_EVENT == 0
+#include "../uart/uart_fifo.h"
 #else
+#include "UART.h"
 #endif
-	
 //-----------------dw1000----------------------------
 
 
@@ -108,7 +108,7 @@ int main(void)
                    &movementAnalyzer_initiator_handler) !=pdPASS) {
       exit(0);  // could not create task, so abort
       }
-#if DEBUG_MOVEMENTSTATE == 1   
+#if DEBUG_MOVEMENTSTATE == 1  
     //IF DEBUG CREATE DEBUGGING TASK
     if(xTaskCreate(test_ss_init_main, "movementAnalyser_TEST", 
                   configMINIMAL_STACK_SIZE+100, NULL, 2, 
@@ -125,6 +125,7 @@ int main(void)
   /*Initialization UART*/
   #if DEBUG_MOVEMENTSTATE == 0 && DEBUG_EVENT == 0
   // danis uart
+  uartInit(NRF_UART_BAUDRATE_115200, false);
   #else
   boUART_Init ();
   #endif
@@ -247,6 +248,7 @@ static void test_ss_init_main(void * pvParameter) {
       }
       vTaskDelay(DEBUG_DELAY);
       }
+      printf("test complete!\r\n");
   }
 }
 #endif
