@@ -108,7 +108,7 @@ int main(void)
                    &movementAnalyzer_initiator_handler) !=pdPASS) {
       exit(0);  // could not create task, so abort
       }
-#if DEBUG_MOVEMENTSTATE == 1  
+#if DEBUG_MOVEMENTSTATE == 0  
     //IF DEBUG CREATE DEBUGGING TASK
     if(xTaskCreate(test_ss_init_main, "movementAnalyser_TEST", 
                   configMINIMAL_STACK_SIZE+100, NULL, 2, 
