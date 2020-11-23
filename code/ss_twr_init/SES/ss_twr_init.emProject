@@ -46,6 +46,10 @@
       <folder Name="movementAnalysis">
         <file file_name="../movementAnalysis/movementAnalysis.c" />
       </folder>
+      <folder Name="TDM">
+        <file file_name="../TDM/tdm.c" />
+        <file file_name="../TDM/tdm.h" />
+      </folder>
     </folder>
     <folder Name="Board Definition">
       <file file_name="../../../nRF5_SDK_14.2.0/components/boards/boards.c" />
@@ -114,6 +118,8 @@
     </folder>
     <folder Name="Uart">
       <file file_name="../UART/UART.c" />
+      <file file_name="../UART/uart_fifo.c" />
+      <file file_name="../UART/uart_fifo.h" />
     </folder>
     <folder Name="::CMSIS" />
     <folder Name="::Device" />
