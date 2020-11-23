@@ -208,16 +208,19 @@ static uint32_t tagAnalysis(tags * tag) {
     }
     else if(analysis(tag, distance)){
       uint32_t tmp[2];
-      tmp[0] = tag->message.id>>32;
-      tmp[1] = tag->message.id;
+      tmp[0] = tag->message.id>> 32;
+      tmp[1] = tag->message.id & 0xffffffff;
       char buff[UART_MESSAGE_FORMAT_SIZE];
-      snprintf(buff,sizeof(buff),"%04x%08x%08x",WANTSACCESS,tmp[0],tmp[1]);
+      snprintf(buff,sizeof(buff),"%s-%08x%08x",WANTSACCESS, tmp[0],tmp[1]);
+
       uartTransmit(buff,UART_MESSAGE_FORMAT_SIZE);
       return true;
     }
     return false;
   }
 }
+
+
 // -----------------------DEBUGGING CODE-------------------------------
 
  #elif DEBUG_EVENT == 3

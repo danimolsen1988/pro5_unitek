@@ -12,8 +12,8 @@
 #define TAGLISTSIZE 3
 
 //mabye move til uart_fifo.h?
-#define WANTSACCESS 0x1010  // uart beskedformat - cmd field.
-#define UART_MESSAGE_FORMAT_SIZE 24
+#define WANTSACCESS "AW"  // uart beskedformat - cmd field.
+#define UART_MESSAGE_FORMAT_SIZE 20
 
 /**
 * @brief MovementAnalyzer Initiator task entry function.

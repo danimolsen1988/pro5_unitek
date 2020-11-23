@@ -83,8 +83,8 @@ TimerHandle_t led_toggle_timer_handle;  /**< Reference to LED1 toggling FreeRTOS
 
 //DEBUGGING HANDLE
 TaskHandle_t test_ss_init_main_handle;    // task handle for debugging task.
-#if DEBUG_MOVEMENTSTATE == 1 || DEBUG_EVENT ==3
-#define DEBUG_DELAY        1000           // delay for debugging
+#if DEBUG_MOVEMENTSTATE == 0 || DEBUG_EVENT ==3
+#define DEBUG_DELAY        100           // delay for debugging
 static _Bool test_ss_init_main_case(xMessage message);
 static void test_ss_init_main(void * pvParameter);
 #endif
@@ -180,7 +180,7 @@ int main(void)
 }
 
 //-----------------------DEBUGGING CODE--------------------------------------
-#if DEBUG_MOVEMENTSTATE == 1
+#if DEBUG_MOVEMENTSTATE == 0
 static _Bool test_ss_init_main_case(xMessage message) {
       switch(message.event) {
       case  NEW_TAG:
