@@ -9,24 +9,30 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include "tdm.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "deca_device_api.h"
 #include "deca_regs.h"
 #include "port_platform.h"
 
-#define frequency 7
+#define frequency 200 //make sure it is slow when we test 
 #define ALL_MSG_COMMON_LEN 2
-#define RX_BUF_LEN 30
+//#define RX_BUF_LEN 30 //NOT CORRECT SIZE
+#define RX_BUF_LEN 32 //added 2 bytes for CMD
 /* Indexes to access some of the fields in the frames defined above. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 20
-#define RESP_MSG_RESP_TX_TS_IDX 24
+//#define RESP_MSG_POLL_RX_TS_IDX 20
+//#define RESP_MSG_RESP_TX_TS_IDX 24
+#define RESP_MSG_POLL_RX_TS_IDX 22
+#define RESP_MSG_RESP_TX_TS_IDX 26
 #define RESP_MSG_TS_LEN 4
 #define RESP_MSG_SOURCE_ID_IDX 11
 #define RESP_MSG_TARGET_ID_IDX 3
 #define RESP_MSG_ID_LEN 8
+#define RESP_MSG_CMD_LEN 2
+
+#define RESP_MSG_CMD_IDX 20 //20-21 is CMD field...
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
 * 1 uus = 512 / 499.2 us and 1 us = 499.2 * 128 dtu. */
@@ -35,11 +41,13 @@
 /* Speed of light in air, in metres per second. */
 #define SPEED_OF_LIGHT 299702547
 
-tdmState nextState = IDLE;
+
+
+tdmState nextState;
 tdmOrginaizer organizer;
-/* Frames used in the ranging process. See NOTE 1,2 below. */
-static uint8 tx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static uint8 rx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+/* Frames used in the ranging process. See NOTE 1,2 below. */ //extended to 32
+static uint8 tx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 rx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* Length of the common part of the message (up to and including the function code, see NOTE 1 below). */
 
 /* Frame sequence number, incremented after each transmission. */
@@ -52,6 +60,9 @@ static uint8 rx_buffer[RX_BUF_LEN];
 /* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
 static uint32 status_reg = 0;
 
+/* broadcast target address */
+static uint8 broadCastAddr[] = {0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x000};
+
 
 /**@brief tdm task entry function.
 *
@@ -60,7 +71,9 @@ static uint32 status_reg = 0;
 void tdmTask (void * pvParameter)
 {
   UNUSED_PARAMETER(pvParameter);
- 
+
+  initTdm(); // init it
+
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = frequency; //find out the tickrate...
   xLastWakeTime = xTaskGetTickCount();
@@ -74,7 +87,7 @@ void tdmTask (void * pvParameter)
     // Perform action here.   
     //this is where i run my main code 
     /* Tasks must be implemented to never return... */
-    
+    stepState(nextState);
   }
 }
 
@@ -97,8 +110,24 @@ void initTdm(){
   organizer.slot1 = slotOne;
   organizer.slot2 = slotTwo;
   organizer.slot3 = slotThree;
+
+  //SET source addr now, it never changes...
+  //uint64 tag_id;
+  uwbAddress uwb_id;
+
+  dwt_geteui((uint8*) &uwb_id.addr);
+
+  //dwt_geteui((uint8_t*) &tag_id);
+  setMsgField(&tx_poll_msg[RESP_MSG_SOURCE_ID_IDX], uwb_id.addrArr,RESP_MSG_ID_LEN);
+/*
+  for (int i = 0; i < RESP_MSG_ID_LEN; i++)
+  {
+    tx_poll_msg[RESP_MSG_SOURCE_ID_IDX+RESP_MSG_ID_LEN-1-i] = (tag_id >> (i*8));
+  }
+  */
 }
 
+/*
 bool getTimeSlot(uwbAddress address){
   if(organizer.slotsFree > 0){
     if(organizer.slot1.free){
@@ -120,9 +149,44 @@ bool getTimeSlot(uwbAddress address){
   }else{
     return false;
   }
+}*/
+
+bool getTimeSlot(tdmSlot * freeSlot){
+  bool hasFreeSlot = true;
+  if(organizer.slotsFree > 0){
+    if(organizer.slot1.free){
+      freeSlot = &organizer.slot1;
+    }else if(organizer.slot2.free){
+      freeSlot = &organizer.slot2;
+    }else if(organizer.slot3.free){
+      freeSlot = &organizer.slot3;
+    }else{
+      //we had a problem somewhere a mismatch has happend
+      //should reset structure
+      hasFreeSlot = false;
+    }
+  }else{
+    hasFreeSlot = false;
+  }
+  return hasFreeSlot;
+}
+
+void emptyTimeslot(tdmSlot * slot){
+  slot->free = true;
+  slot->timeoutCount = 0;
+  organizer.slotsFree = organizer.slotsFree + 1;
 }
 
 //en funktion til discover
+void buildMessage(uint8 * cmd, uint8 * target){
+  //source should be set from beginning...
+  tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
+  //set cmd_field
+  //set destination, ONLY if its not a broadcast
+  // if broadacst reset til nothing?   
+  setMsgField(&tx_poll_msg[RESP_MSG_CMD_IDX],cmd,RESP_MSG_CMD_LEN);
+  setMsgField(&tx_poll_msg[RESP_MSG_TARGET_ID_IDX],target,RESP_MSG_ID_LEN);
+}
 
 //en funktion til timeslot
 
@@ -130,22 +194,21 @@ bool getTimeSlot(uwbAddress address){
 //sender og venter på reply
 //returnere frame?
 
-void sendAndRecieve(uint8_t * msg, int length){
-/* Write frame data to DW1000 and prepare transmission. See NOTE 3 below. */
+bool sendAndReceive(uint8 * tx_msg, int length){
+  bool success = false;
+  /* Write frame data to DW1000 and prepare transmission. See NOTE 3 below. */
   //tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb; -- MOVE TO MESSAGE FUNCTION
   dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS);
   //dwt_writetxdata(sizeof(tx_poll_msg), tx_poll_msg, 0); /* Zero offset in TX buffer. */
   //dwt_writetxfctrl(sizeof(tx_poll_msg), 0, 1); /* Zero offset in TX buffer, ranging. */
-  dwt_writetxdata(length, msg, 0); /* Zero offset in TX buffer. */
+  dwt_writetxdata(length, tx_msg, 0); /* Zero offset in TX buffer. */
   dwt_writetxfctrl(length, 0, 1); /* Zero offset in TX buffer, ranging. */
 
   /* Start transmission, indicating that a response is expected so that reception is enabled automatically after the frame is sent and the delay
   * set by dwt_setrxaftertxdelay() has elapsed. */
   dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);
-  tx_count++;
-  printf("Transmission # : %d\r\n",tx_count);
-
-  uint64_t tag_id;
+    
+  printf("Transmission # : \r\n");
 
   //LEDS_OFF(BSP_LED_1_MASK);
 
@@ -153,6 +216,13 @@ void sendAndRecieve(uint8_t * msg, int length){
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
   {};
 
+int temp = 0;		
+    if(status_reg & SYS_STATUS_RXFCG )
+    temp =1;
+    else if(status_reg & SYS_STATUS_ALL_RX_TO )
+    temp =2;
+    if(status_reg & SYS_STATUS_ALL_RX_ERR )
+    temp =3;
     #if 0  // include if required to help debug timeouts.
     int temp = 0;		
     if(status_reg & SYS_STATUS_RXFCG )
@@ -183,56 +253,267 @@ void sendAndRecieve(uint8_t * msg, int length){
       dwt_readrxdata(rx_buffer, frame_len, 0);
     }
 
-    /* Check that the frame is the expected response from the companion "SS TWR responder" example.
-    * As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
+    /* As the sequence number field of the frame is not relevant, it is cleared to simplify the validation of the frame. */
     rx_buffer[ALL_MSG_SN_IDX] = 0;
-
-    /* reading source ID of tag. */
-    for(int i = 0; i < RESP_MSG_ID_LEN; i++)
-    {
-      tag_id = (tag_id   << 8) + rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
-    }
-    //should now have tag_id, should check for empty slots 
-
-#ifdef TEST
-      counter++;
-      if(counter % 2 == 0) {
-        tag_id = counter;
-      } else {
-        tag_id = counter-1;
-      }
-#endif
-/*
-    if(onIgnorelist(tag_id)) 
-    {
-          // skip this transmission
-    }
-*/
+    
+    //compare framecontrol
+    /* Check that the frame is the expected response from the companion "SS TWR responder" example.*/
     if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
     {	
-      rx_count++;
-      printf("Reception # : %d\r\n",rx_count);
-      uint32 poll_tx_ts, resp_rx_ts, poll_rx_ts, resp_tx_ts;
-      int32 rtd_init, rtd_resp;
-      float clockOffsetRatio ;
+      success = true;
+    }
+  }
+  else
+  {
+    /* Clear RX error/timeout events in the DW1000 status register. */
+    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR);
 
-      /* Retrieve poll transmission and response reception timestamps. See NOTE 5 below. */
-      poll_tx_ts = dwt_readtxtimestamplo32();
-      resp_rx_ts = dwt_readrxtimestamplo32();
+    /* Reset RX to properly reinitialise LDE operation. */
+    dwt_rxreset();
+    //printf("FAILURE # : \r\n");
+  }  
+  return success;
+}
 
-      /* Read carrier integrator value and calculate clock offset ratio. See NOTE 7 below. */
-      clockOffsetRatio = dwt_readcarrierintegrator() * (FREQ_OFFSET_MULTIPLIER * HERTZ_TO_PPM_MULTIPLIER_CHAN_5 / 1.0e6) ;
 
-      /* Get timestamps embedded in response message. */
-      resp_msg_get_ts(&rx_buffer[RESP_MSG_POLL_RX_TS_IDX], &poll_rx_ts);
-      resp_msg_get_ts(&rx_buffer[RESP_MSG_RESP_TX_TS_IDX], &resp_tx_ts);
 
-      /* Compute time of flight and distance, using clock offset ratio to correct for differing local and remote clock rates */
-      rtd_init = resp_rx_ts - poll_tx_ts;
-      rtd_resp = resp_tx_ts - poll_rx_ts;
+void runTDMCycle(tdmSlot * slot){
+  bool transceive = false;
+  uwbAddress uwb_id;
+  bool hasFreeSlot = false;
+  //tdmSlot * freeSlot;
+  //FIGURE OUT WHAT MODE WE ARE IN
+  //DISCOVER OR OTHER??
+  if(nextState == DISCOVER){
+    //CHECK FOR EMPTY SLOTS!!    
+    if(organizer.slotsFree > 0){
+      hasFreeSlot = true;    
+  }else{
+    hasFreeSlot = false;
+  }
 
-      tof = ((rtd_init - rtd_resp * (1.0f - clockOffsetRatio)) / 2.0f) * DWT_TIME_UNITS; // Specifying 1.0f and 2.0f are floats to clear warning
+    //hasFreeSlot = getTimeSlot(freeSlot);
+    if(!hasFreeSlot){
+      return; //no empty slots do not bother
+    }
+    //create message - only need to set target addr to empty
+    setMsgField(&tx_poll_msg[RESP_MSG_TARGET_ID_IDX],broadCastAddr,RESP_MSG_ID_LEN);
+  }else{
+    //"normal operation"
+    if(slot->free){
+      return; //do nothing
+    }   
+    //create message 
+    switch(slot->event){
+      case TW:
+        //normal TWR message
+        //er jo bare cmdfield som sættes hver gang
+        buildMessage("TW",slot->address.addrArr);
+        break;
+      case TG:
+        //timeslot grating TWR message
+        buildMessage("TG",slot->address.addrArr);
+        break;
+      case TR:
+        //timeslot denied
+        buildMessage("TR",slot->address.addrArr);
+        break;
+      default:
+        //should never be here...
+        //exit or something like that
+        break;
+    }
+  }
 
+  transceive = sendAndReceive(tx_poll_msg,RX_BUF_LEN);
+  if(transceive){  
+    //all is good    
+    printf("Reception # : \r\n");
+
+    //get id
+    for(int i = 0; i < RESP_MSG_ID_LEN; i++)
+    {
+      //uwb_id.addr = (uwb_id.addr << 8) + rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+      uwb_id.addrArr[i] = rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+    }
+
+    //check for discover
+    if(nextState == DISCOVER){
+      if(hasFreeSlot){
+        if(organizer.slot1.free){
+          organizer.slot1.address = uwb_id;
+          organizer.slot1.free = false;
+          organizer.slot1.timeoutCount = 0;
+          organizer.slot1.event = TG;
+          organizer.slotsFree = organizer.slotsFree - 1;
+        }else if(organizer.slot2.free){
+          organizer.slot2.address = uwb_id;
+          organizer.slot2.free = false;
+          organizer.slot2.timeoutCount = 0;
+          organizer.slot1.event = TG;
+          organizer.slotsFree = organizer.slotsFree - 1;          
+        }else if(organizer.slot3.free){
+          organizer.slot3.address = uwb_id;
+          organizer.slot3.free = false;
+          organizer.slot3.timeoutCount = 0;
+          organizer.slot1.event = TG;
+          organizer.slotsFree = organizer.slotsFree - 1;
+        }else{
+          //we had a problem somewhere a mismatch has happend
+          //should reset structure          
+        }
+        //NOTIFY QUEUE EVENT NEW_TAG
+        createEventMsg(uwb_id,NULL);//THIS FUNCTION SHOULD BE EXPANDED
+      }
+    }else{
+      //it is timeslot
+      slot->timeoutCount = 0; //just reset timeout since we has success
+      switch(slot->event){
+        case TW:
+          //keep event the same..
+          //SEND NOTIFICATION UPDATE_TAG
+          createEventMsg(uwb_id,NULL);//THIS FUNCTION SHOULD BE EXPANDED
+          break;
+        case TG:
+          //update to event TW
+          slot->event = TW;
+          //SEND NOTIFICATION UPDATE_TAG
+          createEventMsg(uwb_id,NULL);//THIS FUNCTION SHOULD BE EXPANDED
+          break;
+        case TR:
+          //empty up timeslot - event came from other place, we should not notify back
+          emptyTimeslot(slot);
+          break;
+      }
+      //just create event Msg
+    }    
+  }else{
+    //its fucked..
+    if(nextState != DISCOVER){
+      slot->timeoutCount = slot->timeoutCount + 1;
+
+      //CHECK TO SEE IF WE SHOULD REMOVE IT
+      if(slot->timeoutCount >= 3){
+        //remove it
+        emptyTimeslot(slot);
+        //we decided to remove tag, notify it
+        //SEND NOTIFICATION REMOVE_TAG
+      }
+    }    
+  }
+
+
+
+
+
+      
+
+      
+
+//##########################################################################################
+      /* reading source ID of tag. */
+      //uint64_t tag_id;
+      /*
+      uwbAddress uwb_id;
+      /*
+      for(int i = 0; i < RESP_MSG_ID_LEN; i++)
+      {
+        tag_id = (tag_id   << 8) + rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+      }
+      */
+      /*
+      for(int i = 0; i < RESP_MSG_ID_LEN; i++)
+      {
+        //uwb_id.addr = (uwb_id.addr << 8) + rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+        uwb_id.addrArr[i] = rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+      }*/      
+}
+
+int createEventMsg(uwbAddress address, void * placeholderforevent){
+  uint32 poll_tx_ts, resp_rx_ts, poll_rx_ts, resp_tx_ts;
+  int32 rtd_init, rtd_resp;
+  float clockOffsetRatio ;
+  double tof;
+  double distance;
+
+  //should be remade to create msg for event queue
+  /* Retrieve poll transmission and response reception timestamps. See NOTE 5 below. */
+  poll_tx_ts = dwt_readtxtimestamplo32();
+  resp_rx_ts = dwt_readrxtimestamplo32();
+
+  /* Read carrier integrator value and calculate clock offset ratio. See NOTE 7 below. */
+  clockOffsetRatio = dwt_readcarrierintegrator() * (FREQ_OFFSET_MULTIPLIER * HERTZ_TO_PPM_MULTIPLIER_CHAN_5 / 1.0e6) ;
+
+  /* Get timestamps embedded in response message. */
+  msgGetTs(&rx_buffer[RESP_MSG_POLL_RX_TS_IDX], &poll_rx_ts);
+  msgGetTs(&rx_buffer[RESP_MSG_RESP_TX_TS_IDX], &resp_tx_ts);
+
+  /* Compute time of flight and distance, using clock offset ratio to correct for differing local and remote clock rates */
+  rtd_init = resp_rx_ts - poll_tx_ts;
+  rtd_resp = resp_tx_ts - poll_rx_ts;
+
+  tof = ((rtd_init - rtd_resp * (1.0f - clockOffsetRatio)) / 2.0f) * DWT_TIME_UNITS; // Specifying 1.0f and 2.0f are floats to clear warning
+
+  distance = tof*SPEED_OF_LIGHT;    
+  printf("Distance : %f\r\n",distance);
+  return 9;
+}
+
+
+
+void stepState(tdmEvent event){
+  switch(nextState){
+    case DISCOVER:
+      //just do what is neeeded
+      runTDMCycle(NULL);
+      nextState = SLOT_ONE;
+      break;
+    case  SLOT_ONE:
+      runTDMCycle(&organizer.slot1);
+      nextState = SLOT_TWO;
+      break;
+    case SLOT_TWO:
+      runTDMCycle(&organizer.slot2);
+      nextState = SLOT_THREE;
+      break;
+    case SLOT_THREE:
+      runTDMCycle(&organizer.slot3);
+      nextState = DISCOVER;
+      break;
+    default:
+      //should never enter here
+      break;
+  }
+}
+
+static void msgGetTs(uint8 *ts_field, uint32 *ts)
+{
+  int i;
+  *ts = 0;
+  for (i = 0; i < RESP_MSG_TS_LEN; i++)
+  {
+    *ts += ts_field[i] << (i * 8);
+  }
+}
+
+
+/*
+* @brief fill a msg field with data
+*
+* @param field pointer on the frist bye of the field to be filled
+*        data value to be written
+*        length data length
+*
+* @return none
+*/
+static void setMsgField(uint8 *field, uint8 * data, int length){
+  for(int i = 0; i < length; i++){
+    field[i] = data[i];
+  }
+}
+
+
+/*
 //might need some other way to calibrate, so it does not happen here. but in some other task only for calibrating..
 //enter calibate mode..
 #ifdef CALIBRATE
@@ -250,96 +531,10 @@ void sendAndRecieve(uint8_t * msg, int length){
       }
 
 #else
-    distance = tof*SPEED_OF_LIGHT;
-    if(distance > 10) {
-      //putOnIgnorelist(tag_id);
-    }
-    printf("Distance : %f\r\n",distance);
-    //this is where i should queue event to notify
-    /*
-    if(analysis(&tag1, distance)){
-      //printf("_________________Signal_________________\r\n");
-    }*/
-
+    distance = tof*SPEED_OF_LIGHT;    
+    printf("Distance : %f\r\n",distance);  
 #endif
-
-    }
-  }
-  else
-  {
-    /* Clear RX error/timeout events in the DW1000 status register. */
-    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR);
-
-    /* Reset RX to properly reinitialise LDE operation. */
-    dwt_rxreset();
-  }  
-}
-
-
-
-void runTDMCycle(tdmSlot * slot){
-  //FIGURE OUT WHAT MODE WE ARE IN
-  //DISCOVER OR OTHER??
-  if(nextState == DISCOVER){
-    //create message like this....
-  }else{
-    //"normal operation"
-    if(slot->free){
-      return; //do nothing
-    }
-    uint8_t cmdField[2];
-    //create message with addr
-    //add cmd_field...
-    switch(slot->event){
-      case TW:
-        //normal TWR message
-        //do a mem copy
-        break;
-      case TG:
-        //timeslot grating TWR message
-        break;
-      case TR:
-        //timeslot denied
-        break;
-      case default:
-        //should never be here...
-        //exit or something like that
-        break;
-    }
-  }
-
-
-
-
-  
-}
-
-
-
-void stepState(tdmEvents event){
-  switch(nextState){
-    case DISCOVER:
-      //just do what is neeeded
-      nextState = SLOT_ONE;
-      break;
-    case  SLOT_ONE:
-      nextState = SLOT_TWO;
-      break;
-    case SLOT_TWO:
-      nextState = SLOT_THREE;
-      break;
-    case SLOT_THREE:
-      nextState = DISCOVER;
-      break;
-    case default:
-      //should never enter here
-      break;
-  }
-}
-
-void OTHERNAME(){
-
-}
+*/
 
 /*****************************************************************************************************************************************************
 * NOTES:

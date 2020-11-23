@@ -6,6 +6,8 @@
 #ifndef TDM_H
 #define TDM_H
 
+#include "deca_device_api.h"
+
 typedef enum {
   DISCOVER,
   SLOT_ONE,
@@ -22,7 +24,7 @@ typedef enum {
 
 typedef union {
   uint64_t addr;
-  uint8_t addrArr[8];
+  uint8 addrArr[8];
 }uwbAddress;
 
 typedef struct {
@@ -40,7 +42,16 @@ typedef struct {
 }tdmOrginaizer;
 
 
-
+void initTdm();
+bool getTimeSlot(tdmSlot * freeSlot);
+void buildMessage(uint8 * cmd, uint8 * target);
+bool sendAndReceive(uint8 * tx_msg, int length);
+void runTDMCycle(tdmSlot * slot);
+void stepState(tdmEvent event);
+static void setMsgField(uint8 *field, uint8 * data, int length);
+void emptyTimeslot(tdmSlot * slot);
+int createEventMsg(uwbAddress address, void * placeholderforevent);
+static void msgGetTs(uint8 *ts_field, uint32 *ts);
 
 
 #endif /* TDM_H */
