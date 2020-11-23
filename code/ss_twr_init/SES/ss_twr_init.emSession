@@ -2,10 +2,10 @@
 <session>
  <Bookmarks/>
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
-  <BreakpointListItem trigger="" line="120" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../main.c" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="142" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../main.c" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="175" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../main.c" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="216" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="../movementAnalyzer/movementAnalyzer.c" useHWbreakpoint="false"/>
   <BreakpointListItem trigger="" line="112" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="../../../nRF5_SDK_14.2.0/components/libraries/uart/retarget.c" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="107" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="../ss_init_main.c" useHWbreakpoint="false"/>
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
@@ -27,14 +27,12 @@
   <ProjectSessionItem path="ss_twr_init"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application"/>
-  <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;Calibration"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;Ignorelist"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;movementAnalysis"/>
-  <ProjectSessionItem path="ss_twr_init;ss_twr_init;Decadriver"/>
+  <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;movementAnalyzer"/>
+  <ProjectSessionItem path="ss_twr_init;ss_twr_init;Application;movementStruct"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Freertos"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Internal Files"/>
-  <ProjectSessionItem path="ss_twr_init;ss_twr_init;nRF_Drivers"/>
-  <ProjectSessionItem path="ss_twr_init;ss_twr_init;nRF_Libraries"/>
   <ProjectSessionItem path="ss_twr_init;ss_twr_init;Uart"/>
  </Project>
  <Register1>
@@ -56,7 +54,11 @@
   <Trace enabled="Yes"/>
  </TraceWindow>
  <Watch1>
-  <Watches active="1" update="Never"/>
+  <Watches active="1" update="Never">
+   <Watchpoint expression="default_tag" name="default_tag" radix="-1" linenumber="64" filename="../ss_init_main.c"/>
+   <Watchpoint expression="tag" name="tag" radix="-1" linenumber="33" filename="../movementAnalyzer/movementAnalyzer.c"/>
+   <Watchpoint expression="buff" name="buff" radix="-1" linenumber="216" filename="../movementAnalyzer/movementAnalyzer.c"/>
+  </Watches>
  </Watch1>
  <Watch2>
   <Watches active="0" update="Never"/>
@@ -68,20 +70,9 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="107" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.c" selected="0" top="84" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="20" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Ignorelist/ignorelist.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="94" useTextEdit="1" openedFrom="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/Ignorelist/ignorelist.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h" selected="0" top="86" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="85" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="1" top="51" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="198" useTextEdit="1" openedFrom="C:/Users/Lasse/PRO5_GIT/pro5_unitek/code/ss_twr_init/main.c" useBinaryEdit="0" left="0" path="../ss_init_main.c" selected="0" top="173" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="17" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../Calibration/calibration.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_device.c" selected="0" top="27" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="49" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="36" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="77" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../movementAnalysis/movementAnalysis.c" selected="0" top="33" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../movementAnalysis/movementAnalysis.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="224" useTextEdit="1" openedFrom="C:/Users/Lasse/PRO5_GIT/pro5_unitek/code/ss_twr_init/main.c" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/boards/boards.h" selected="0" top="211" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="121" useTextEdit="1" openedFrom="C:/Users/Lasse/PRO5_GIT/pro5_unitek/code/ss_twr_init/ss_init_main.c" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_device_api.h" selected="0" top="108" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="24" useTextEdit="1" openedFrom="C:/Users/Lasse/PRO5_GIT/pro5_unitek/nRF5_SDK_14.2.0/components/boards/boards.h" useBinaryEdit="0" left="0" path="../../../boards/dw1001_dev.h" selected="0" top="8" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="411" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_14.2.0/components/drivers_nrf/spi_master/nrf_drv_spi.c" selected="0" top="389" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="31" y="86" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="0" top="57" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../movementAnalyzer/movementAnalyzer.c" selected="0" top="177" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="61" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="1" top="30" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ss_twr_init" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="C:/Users/rikke/Documents/PRO5_test/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s&#xa;C:/Users/Lasse/PRO5_GIT/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s&#xa;C:/Users/rikke/Documents/PRO5_test/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses/ses_nrf52_startup.s&#xa;C:/Users/Lasse/PRO5_GIT/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses/ses_nrf52_startup.s" fileDialogInitialDirectory="C:/Users/Lasse/PRO5_GIT/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="ss_twr_init" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="C:/Users/rikke/Documents/PRO5_test/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s&#xa;C:/Users/Lasse/PRO5_GIT/pro5_unitek/code/ss_twr_init/SES/RTE/thumb_crt0.s&#xa;C:/Users/rikke/Documents/PRO5_test/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses/ses_nrf52_startup.s&#xa;C:/Users/Lasse/PRO5_GIT/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses/ses_nrf52_startup.s" fileDialogInitialDirectory="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_init/movementAnalyzer" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
