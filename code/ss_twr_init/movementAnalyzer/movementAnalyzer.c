@@ -35,6 +35,7 @@ const tags default_tag;
 
 //Queue for sending data between TDM-task and this task.
 extern xQueueHandle xQueue;
+extern xQueueHandle xStatusQueue;
 
 // data far calibration
 #if DEBUG_EVENT == 1
@@ -53,7 +54,7 @@ extern xQueueHandle xQueue;
 
 #else /* DEBUG_EVENT */
   #if DEBUG_MOVEMENTSTATE == 1
-    #define RNG_DELAY_MS 1000
+    #define RNG_DELAY_MS 24
   #else
     #define RNG_DELAY_MS 100 // inter-ranging delay. should be cordinated with TDM-task
   #endif
@@ -70,11 +71,26 @@ void movementAnalyzer_initiator (void * pvParameter) {
   UNUSED_PARAMETER(pvParameter);
   dwt_setleds(DWT_LEDS_DISABLE);
 
+//  TickType_t xLastWakeTime;
+ // const TickType_t xFrequency = RNG_DELAY_MS; //find out the tickrate...
+  //xLastWakeTime = xTaskGetTickCount();
+//  // Initialise the xLastWakeTime variable with the current time.
+
+  while (true){
+    // Wait for the next cycle.
+    /* Delay a task until */
+  //  vTaskDelayUntil( &xLastWakeTime, RNG_DELAY_MS );
+    // Perform action here.   
+    //this is where i run my main code 
+    /* Tasks must be implemented to never return... */
+    movementAnalyzer();
+  }
+  /*
   while (true)
   { // call main task
     movementAnalyzer();
     vTaskDelay(RNG_DELAY_MS);
-  }
+  }*/
 }
 /** @brief  determines if a tag is considered wanting access. 
 *           sending message through uart if access is granted.
@@ -97,7 +113,8 @@ static int movementAnalyzer(void) {
         
         case UPDATE_TAG: // updates a specific tags data, if tag is on the list
           if((index = tagOnList(tag,message.id)) !=-1) { 
-              updateTag(&tag[index],message);
+              if(updateTag(&tag[index],message)) {
+              }
           }
           break;
         
@@ -180,6 +197,7 @@ static _Bool newTag(tags *tag,xMessage message) {
 static int updateTag(tags* tag, xMessage message) {
   tag->message = message;
   if(tagAnalysis(tag)) {
+
     deleteTag(tag,message.id);
     return true;
   }
@@ -214,6 +232,12 @@ static uint32_t tagAnalysis(tags * tag) {
       snprintf(buff,sizeof(buff),"%s-%08x%08x",WANTSACCESS, tmp[0],tmp[1]);
 
       uartTransmit(buff,UART_MESSAGE_FORMAT_SIZE);
+      if(xStatusQueue != NULL){
+        tag->message.event = DELETE_TAG;
+          if(xQueueSend(xStatusQueue,(void *)&tag->message,0)== pdPASS){
+            //all is good
+        }
+  }
       return true;
     }
     return false;
@@ -292,7 +316,7 @@ static int movementAnalyzer(void)
 //this value should be set, so it fits with dani's time. or figure out how to block until queue got data.
 //takes a full copy instead of pointer, incase data is overwritten before handled
   if( xQueue != NULL){
-    if(xQueueReceive(xQueue,&(message),(TickType_t)100) ==pdPASS) {
+    if(xQueueReceive(xQueue,&(message),(TickType_t)100000000) ==pdPASS) {
  
       switch(message.event) { 
     
@@ -308,7 +332,7 @@ static int movementAnalyzer(void)
         case UPDATE_TAG:
             if((index = tagOnList(tag,message.id)) !=-1) { 
                 if(!updateTag(&tag[index],message)){
-                printf("updatedtag! id: %d\r\n",(int) tag[index].message.id);
+                //printf("updatedtag! id: %d\r\n",(int) tag[index].message.id);
                 }
             } else {
             printf("update, id not on list! id: %d\r\n",(int) message.id);
@@ -399,7 +423,7 @@ static uint32_t tagAnalysis(tags * tag) {
     } else {
 
     distance = tag->message.tof*SPEED_OF_LIGHT;
-    printf("Distance : %f\r\n",distance);
+    //printf("Distance : %f\r\n",distance);
     if(distance > 10) {
       putOnIgnorelist(tag->message.id);
       return -2;
@@ -407,6 +431,12 @@ static uint32_t tagAnalysis(tags * tag) {
 
     else if(analysis(tag, distance)){
    //   return (int)uartTransmit(NRF_BAUD); //transmit something that says this Id wants acces!
+         if(xStatusQueue != NULL){
+        tag->message.event = DELETE_TAG;
+          if(xQueueSend(xStatusQueue,(void *)&tag->message,0)== pdPASS){
+            //all is good
+        }
+  }
      return true;
     }
     return false;

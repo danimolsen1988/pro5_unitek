@@ -73,6 +73,7 @@ static dwt_config_t config = {
   extern int ss_resp_run(void);
 #endif    // #ifdef USE_FREERTOS
 
+
 #ifdef USE_FREERTOS
 
   /**@brief LED0 task entry function.
@@ -101,6 +102,7 @@ static dwt_config_t config = {
     UNUSED_PARAMETER(pvParameter);
     LEDS_INVERT(BSP_LED_1_MASK);
 }
+
 
 #endif  // #ifdef USE_FREERTOS
 
@@ -164,6 +166,7 @@ int main(void)
   #ifdef USE_FREERTOS
     /* Start FreeRTOS scheduler. */
     vTaskStartScheduler();	
+
 
     while(1)
     {}

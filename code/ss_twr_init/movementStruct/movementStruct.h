@@ -19,7 +19,7 @@ typedef enum {
 } event_type;
 
 //size of queue containing tags struct
-#define QUEUESIZE 20
+#define QUEUESIZE 5
 
 /**@brief       struct for event data
  *

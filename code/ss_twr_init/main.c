@@ -78,6 +78,7 @@ extern void setupDelayTimer();
 
 TaskHandle_t  movementAnalyzer_initiator_handler;   /**< Reference to SS TWR Initiator FreeRTOS task. */
 extern void movementAnalyzer_initiator (void * pvParameter);
+extern void tdmTask (void * pvParameter);
 TaskHandle_t  led_toggle_task_handle;   /**< Reference to LED0 toggling FreeRTOS task. */
 TimerHandle_t led_toggle_timer_handle;  /**< Reference to LED1 toggling FreeRTOS timer. */
 
@@ -90,6 +91,7 @@ static void test_ss_init_main(void * pvParameter);
 #endif
 // xQueue handle, to queue sending type xMessage
 QueueHandle_t xQueue;
+QueueHandle_t xStatusQueue;
 
 /**@brief tests the main function
  *
@@ -102,13 +104,16 @@ int main(void)
   LEDS_CONFIGURE(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK);
   LEDS_OFF(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK );
 
-    /* Create task for SS TWR Initiator set to 2 */
+    /* Create task for movement analyzer set priority to 1 */
     if(xTaskCreate(movementAnalyzer_initiator, "movementAnalyser_INIT", 
-                   configMINIMAL_STACK_SIZE+200 , NULL, 2, 
+                   configMINIMAL_STACK_SIZE+160 , NULL, 1, 
                    &movementAnalyzer_initiator_handler) !=pdPASS) {
       exit(0);  // could not create task, so abort
       }
-#if DEBUG_MOVEMENTSTATE == 0  
+    if(xTaskCreate(tdmTask, "TDM_INIT", configMINIMAL_STACK_SIZE + 140, NULL,2,NULL) != pdPASS){
+      exit(0);
+    }
+#if DEBUG_MOVEMENTSTATE == 2  
     //IF DEBUG CREATE DEBUGGING TASK
     if(xTaskCreate(test_ss_init_main, "movementAnalyser_TEST", 
                   configMINIMAL_STACK_SIZE+100, NULL, 2, 
@@ -180,7 +185,7 @@ int main(void)
 }
 
 //-----------------------DEBUGGING CODE--------------------------------------
-#if DEBUG_MOVEMENTSTATE == 1
+#if DEBUG_MOVEMENTSTATE == 2
 static _Bool test_ss_init_main_case(xMessage message) {
       switch(message.event) {
       case  NEW_TAG:

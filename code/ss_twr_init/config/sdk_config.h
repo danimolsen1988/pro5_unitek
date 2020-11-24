@@ -59,7 +59,7 @@
 
 
 #ifndef DEBUG_MOVEMENTSTATE
-#define DEBUG_MOVEMENTSTATE 0
+#define DEBUG_MOVEMENTSTATE 1
 #endif
 
 // </h>
