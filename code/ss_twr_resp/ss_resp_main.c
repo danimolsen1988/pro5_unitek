@@ -30,27 +30,30 @@
 #define RNG_DELAY_MS 40
 
 /* Frames used in the ranging process. See NOTE 2,3 below. */
-static uint8 rx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static uint8 tx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 rx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 tx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* Length of the common part of the message (up to and including the function code, see NOTE 3 below). */
 #define ALL_MSG_COMMON_LEN 2
 
 /* Index to access some of the fields in the frames involved in the process. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 20
-#define RESP_MSG_RESP_TX_TS_IDX 24
+#define RESP_MSG_POLL_RX_TS_IDX 22
+#define RESP_MSG_RESP_TX_TS_IDX 26
 #define RESP_MSG_TS_LEN 4	
 #define RESP_MSG_SOURCE_ID_IDX 11
 #define RESP_MSG_TARGET_ID_IDX 3
 #define RESP_MSG_ID_LEN 8
+#define RESP_MSG_CMD_LEN 2
+
+#define RESP_MSG_CMD_IDX 20 //20-21 is CMD field...
 
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
 
 /* Buffer to store received response message.
 * Its size is adjusted to longest frame that this example code is supposed to handle. */
-#define RX_BUF_LEN 30
+#define RX_BUF_LEN 32
 static uint8 rx_buffer[RX_BUF_LEN];
 
 /* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
@@ -78,6 +81,8 @@ static uint64 poll_rx_ts;
 //static uint64 get_tx_timestamp_u64(void);
 static uint64 get_rx_timestamp_u64(void);
 static void resp_msg_set_ts(uint8 *ts_field, const uint64 ts);
+static void msgGetField(uint8 * field, uint8 * buffer, int length);
+static void setMsgField(uint8 *field, uint8 * data, int length);
 //static void final_msg_get_ts(const uint8 *ts_field, uint32 *ts);
 
 /* Timestamps of frames transmission/reception.
@@ -85,6 +90,18 @@ static void resp_msg_set_ts(uint8 *ts_field, const uint64 ts);
 typedef unsigned long long uint64;
 static uint64 poll_rx_ts;
 static uint64 resp_tx_ts;
+
+static bool hasTimeSlot = false;
+
+typedef union {
+  uint64_t addr;
+  uint8 addrArr[8];
+}uwbAddress;
+
+uwbAddress myAddress;
+
+/* broadcast target address */
+static uint8 broadCastAddr[] = {0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x000};
 
 /*! ------------------------------------------------------------------------------------------------------------------
 * @fn main()
@@ -101,14 +118,6 @@ int ss_resp_run(void)
 
   /* Activate reception immediately. */
   dwt_rxenable(DWT_START_RX_IMMEDIATE);
-
-  uint64 tag_id;
-  dwt_geteui((uint8_t*) &tag_id);
-
-  for (int i = 0; i < RESP_MSG_ID_LEN; i++)
-  {
-    tx_resp_msg[RESP_MSG_SOURCE_ID_IDX+RESP_MSG_ID_LEN-1-i] = (tag_id >> (i*8));
-  }
 
   /* Poll for reception of a frame or error/timeout. See NOTE 5 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
@@ -144,6 +153,67 @@ int ss_resp_run(void)
     {
       uint32 resp_tx_time;
       int ret;
+//#################################################################################################
+    
+    //should create some fancy method to get stuff.
+
+      //msgGetTs(&rx_buffer[RESP_MSG_POLL_RX_TS_IDX], &poll_rx_ts);
+      
+      
+      uwbAddress sourceAddr;
+      uwbAddress targetAddr;
+      //get target and source
+      for(int i = 0; i < RESP_MSG_ID_LEN; i++)
+      {
+        //uwb_id.addr = (uwb_id.addr << 8) + rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+        targetAddr.addrArr[i] = rx_buffer[RESP_MSG_TARGET_ID_IDX + i];
+        sourceAddr.addrArr[i] = rx_buffer[RESP_MSG_SOURCE_ID_IDX + i];
+      }
+
+      
+//#################################################################################################      
+      //READ DESTINATION ADDR - IS IT FOR ME OR BROADCAST
+      //IF BROADCAST CHECK IF WE HAVE SLOT
+      //IF FOR ME DO STUFF
+      //READ CMD FIELD
+      //IF TIMESLOT REMOVED SET IDLE
+      //IF TIMESLOT GRANTED SET BOOL TRUE
+      //ALWAYS TWR
+//#################################################################################################
+      if(targetAddr.addr != myAddress.addr){
+        if(memcmp(targetAddr.addrArr,broadCastAddr,RESP_MSG_ID_LEN)==0){
+          //IS broadcast
+          //printf("BROADCAST");
+          if(hasTimeSlot){
+            //printf("HAS TIMESLOT")
+            return(1);
+          }
+        }else{
+          //printf("NOT FOR ME!!");
+          //MSG IS NOT FOR ME
+          //should abort.. and skip to 
+          return(1);
+        }        
+      }else{
+        //set cmdfield here
+        uint8 cmdField[2];
+        uint8 test[] = {0x54,0x47};
+        msgGetField(&rx_buffer[RESP_MSG_CMD_IDX], cmdField,RESP_MSG_CMD_LEN);
+        if(strncmp(cmdField,"TR",RESP_MSG_CMD_LEN)==0){
+          //set hastimeslot to false, and sleep
+          hasTimeSlot = false;
+          vTaskDelay(2000);//sleep for aprox 2 seconds
+          return(1);
+        }else if(strncmp(cmdField,"TG",RESP_MSG_CMD_LEN)==0){
+          hasTimeSlot = true;
+          //printf("GRANTED");
+        }        
+        //set cmdfield to what we recieved
+        setMsgField(&tx_resp_msg[RESP_MSG_CMD_IDX],cmdField,RESP_MSG_CMD_LEN);
+      } 
+      //SET RECIEVER ADDR HERE
+      setMsgField(&tx_resp_msg[RESP_MSG_TARGET_ID_IDX],sourceAddr.addrArr,RESP_MSG_ID_LEN);
+
 
       /* Retrieve poll reception timestamp. */
       poll_rx_ts = get_rx_timestamp_u64();
@@ -154,6 +224,7 @@ int ss_resp_run(void)
 
       /* Response TX timestamp is the transmission time we programmed plus the antenna delay. */
       resp_tx_ts = (((uint64)(resp_tx_time & 0xFFFFFFFEUL)) << 8) + TX_ANT_DLY;
+      
 
       /* Write all timestamps in the final message. See NOTE 8 below. */
       resp_msg_set_ts(&tx_resp_msg[RESP_MSG_POLL_RX_TS_IDX], poll_rx_ts);
@@ -161,6 +232,7 @@ int ss_resp_run(void)
 
       /* Write and send the response message. See NOTE 9 below. */
       tx_resp_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
+
       dwt_writetxdata(sizeof(tx_resp_msg), tx_resp_msg, 0); /* Zero offset in TX buffer. See Note 5 below.*/
       dwt_writetxfctrl(sizeof(tx_resp_msg), 0, 1); /* Zero offset in TX buffer, ranging. */
       ret = dwt_starttx(DWT_START_TX_DELAYED);
@@ -253,6 +325,30 @@ static void resp_msg_set_ts(uint8 *ts_field, const uint64 ts)
 }
 
 
+/*
+* @brief fill a msg field with data
+*
+* @param field pointer on the frist bye of the field to be filled
+*        data value to be written
+*        length data length
+*
+* @return none
+*/
+static void setMsgField(uint8 *field, uint8 * data, int length){
+  for(int i = 0; i < length; i++){
+    field[i] = data[i];
+  }
+}
+
+static void msgGetField(uint8 * field, uint8 * buffer, int length)
+{
+  for (int i = 0; i < length; i++)
+  {
+    buffer[i] = field[i];
+  }
+}
+
+
 /**@brief SS TWR Initiator task entry function.
 *
 * @param[in] pvParameter   Pointer that will be used as the parameter for the task.
@@ -262,6 +358,17 @@ void ss_responder_task_function (void * pvParameter)
   UNUSED_PARAMETER(pvParameter);
 
   dwt_setleds(DWT_LEDS_ENABLE);
+
+  //SET SOURCE ADDR
+  //uint64 tag_id;
+  
+  dwt_geteui((uint8_t*) &myAddress.addr);
+
+  for (int i = 0; i < RESP_MSG_ID_LEN; i++)
+  {
+    tx_resp_msg[RESP_MSG_SOURCE_ID_IDX+i] = myAddress.addrArr[i];
+    //tx_resp_msg[RESP_MSG_SOURCE_ID_IDX+RESP_MSG_ID_LEN-1-i] = (tag_id >> (i*8));
+  }
 
   while (true)
   {

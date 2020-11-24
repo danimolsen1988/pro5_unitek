@@ -53,10 +53,10 @@ static dwt_config_t config = {
 };
 
 /* Preamble timeout, in multiple of PAC size. See NOTE 3 below. */
-#define PRE_TIMEOUT 1000
+#define PRE_TIMEOUT 1000 //1000
 
 /* Delay between frames, in UWB microseconds. See NOTE 1 below. */
-#define POLL_TX_TO_RESP_RX_DLY_UUS 100 
+#define POLL_TX_TO_RESP_RX_DLY_UUS 100 //100
 
 /* rx and tx antenna delay*/
 #ifdef CALIBRATE
@@ -77,6 +77,9 @@ extern void setupTimer();
 
 TaskHandle_t  ss_initiator_task_handle;   /**< Reference to SS TWR Initiator FreeRTOS task. */
 extern void ss_initiator_task_function (void * pvParameter);
+
+
+extern void tdmTask (void * pvParameter);
 TaskHandle_t  led_toggle_task_handle;   /**< Reference to LED0 toggling FreeRTOS task. */
 TimerHandle_t led_toggle_timer_handle;  /**< Reference to LED1 toggling FreeRTOS timer. */
 #endif
@@ -122,7 +125,8 @@ int main(void)
 
   #ifdef USE_FREERTOS
     /* Create task for SS TWR Initiator set to 2 */
-    UNUSED_VARIABLE(xTaskCreate(ss_initiator_task_function, "SSTWR_INIT", configMINIMAL_STACK_SIZE + 200, NULL, 2, &ss_initiator_task_handle));
+    //UNUSED_VARIABLE(xTaskCreate(ss_initiator_task_function, "SSTWR_INIT", configMINIMAL_STACK_SIZE + 200, NULL, 2, &ss_initiator_task_handle));
+    UNUSED_VARIABLE(xTaskCreate(tdmTask, "TDM_INIT", configMINIMAL_STACK_SIZE + 200, NULL,2,NULL));
   #endif // #ifdef USE_FREERTOS
   
   //-------------dw1000  ini------------------------------------	

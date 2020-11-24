@@ -1,7 +1,9 @@
 <!DOCTYPE CrossStudio_Session_File>
 <session>
  <Bookmarks/>
- <Breakpoints groups="Breakpoints" active_group="Breakpoints"/>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
+ </Breakpoints>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
   <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
@@ -49,7 +51,10 @@
   <Trace enabled="Yes"/>
  </TraceWindow>
  <Watch1>
-  <Watches active="1" update="Never"/>
+  <Watches active="1" update="Never">
+   <Watchpoint expression="cmdField" name="cmdField" radix="-1" linenumber="202" filename="../ss_resp_main.c"/>
+   <Watchpoint expression="rx_buffer" name="rx_buffer" radix="-1" linenumber="201" filename="../ss_resp_main.c"/>
+  </Watches>
  </Watch1>
  <Watch2>
   <Watches active="0" update="Never"/>
@@ -61,11 +66,12 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="150" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="0" top="122" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="46" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../ss_resp_main.c" selected="1" top="15" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="107" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../main.c" selected="1" top="90" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="9" y="209" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../ss_resp_main.c" selected="0" top="152" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="129" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="45" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="34" useTextEdit="1" openedFrom="C:/Users/rikke/Documents/PRO5_test/pro5_unitek/code/ss_twr_resp/ss_resp_main.c" useBinaryEdit="0" left="0" path="../../../deca_driver/port/port_platform.h" selected="0" top="15" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="15" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../deca_driver/port/port_platform.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="361" useTextEdit="1" openedFrom="E:/dwm1001_repos/pro5_unitek/code/ss_twr_resp/ss_resp_main.c" useBinaryEdit="0" left="0" path="../../../deca_driver/deca_regs.h" selected="0" top="344" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ss_twr_resp" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/WorkArea/Repositories/dwm1001-keil-examples/nRF5_SDK_14.2.0/components/toolchain/ses" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="ss_twr_resp" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="nrf52832_xxaa" sessionSettings="" debugSearchFileMap="C:/Users/Keld/Documents/GitHub/pro5_unitek/code/ss_twr_resp/SES/RTE/thumb_crt0.s&#xa;E:/dwm1001_repos/pro5_unitek/code/ss_twr_resp/SES/RTE/thumb_crt0.s&#xa;C:/Users/rikke/Documents/PRO5_test/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses/ses_nrf52_startup.s&#xa;E:/dwm1001_repos/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses/ses_nrf52_startup.s" fileDialogInitialDirectory="E:/dwm1001_repos/pro5_unitek/nRF5_SDK_14.2.0/components/toolchain/ses" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
