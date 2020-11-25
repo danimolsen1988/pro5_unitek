@@ -10,13 +10,16 @@
 
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "../../code/tdm/tdmStructures.h"
 
+/*
 // event types
 typedef enum {
   UPDATE_TAG,
   DELETE_TAG,
   NEW_TAG
 } event_type;
+*/
 
 //size of queue containing tags struct
 #define QUEUESIZE 5

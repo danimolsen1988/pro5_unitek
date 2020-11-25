@@ -55,6 +55,7 @@
       </folder>
       <folder Name="TDM">
         <file file_name="../TDM/tdm.c" />
+        <file file_name="../../tdm/tdmStructures.h" />
       </folder>
     </folder>
     <folder Name="Board Definition">

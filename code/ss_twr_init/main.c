@@ -39,6 +39,7 @@
 #include "../uart/uart_fifo.h"
 #else
 #include "UART.h"
+
 #endif
 //-----------------dw1000----------------------------
 
@@ -161,7 +162,8 @@ int main(void)
   /* Set expected response's delay and timeout. 
   * As this example only handles one incoming frame with always the same delay and timeout, those values can be set here once for all. */
   dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
-  dwt_setrxtimeout(65000); // Maximum value timeout with DW1000 is 65ms  
+  //dwt_setrxtimeout(65000); // Maximum value timeout with DW1000 is 65ms SKAL OPSÆTTES SAMMEN FREQUENCY 
+  dwt_setrxtimeout(10000); // Maximum value timeout with DW1000 is 10ms MUST BE LOWER THAN TIMESLOT.. 
   
   dwt_seteui((uint8_t*) NRF_FICR->DEVICEID);
 
@@ -171,6 +173,7 @@ int main(void)
       exit(EXIT_FAILURE); //couldn't setup timer for ignorelist
     }
     setupDelayTimer();
+   
 
     if(!setupQueue()) { // couldn't set up queue for tag events
       exit(EXIT_FAILURE);

@@ -55,4 +55,6 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/movementAnalysis.o: \
  ../../../nRF5_SDK_14.2.0/external/freertos/portable/ARM/nrf52/portmacro.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/portable/CMSIS/nrf52/portmacro_cmsis.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/mpu_wrappers.h \
- ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h
+ ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
+ e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h \
+ ../../../deca_driver/deca_device_api.h

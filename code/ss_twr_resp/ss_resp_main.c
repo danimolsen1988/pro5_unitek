@@ -28,35 +28,37 @@
 #include "port_platform.h"
 #include "timers.h"
 #include "nrf_drv_clock.h"
+#include "../../code/tdm/tdmStructures.h"
 
 /* Inter-ranging delay period, in milliseconds. See NOTE 1*/
-#define RNG_DELAY_MS 40
+#define RNG_DELAY_MS 20
 
 /* Frames used in the ranging process. See NOTE 2,3 below. */
-static uint8 rx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static uint8 tx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//                            1     2     3  4      5       6     7       8     9     10      11    12      13    14    15      16      17    18      19    20  21 22 23 24 25 26 27 28 29 30 31
+static uint8 rx_poll_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8 tx_resp_msg[] = {0x88, 0x37, 0, 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0 , 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 /* Length of the common part of the message (up to and including the function code, see NOTE 3 below). */
 #define ALL_MSG_COMMON_LEN 2
 
 /* Index to access some of the fields in the frames involved in the process. */
 #define ALL_MSG_SN_IDX 2
-#define RESP_MSG_POLL_RX_TS_IDX 22
-#define RESP_MSG_RESP_TX_TS_IDX 26
+#define RESP_MSG_POLL_RX_TS_IDX 21
+#define RESP_MSG_RESP_TX_TS_IDX 25
 #define RESP_MSG_TS_LEN 4	
 #define RESP_MSG_SOURCE_ID_IDX 11
 #define RESP_MSG_TARGET_ID_IDX 3
 #define RESP_MSG_ID_LEN 8
-#define RESP_MSG_CMD_LEN 2
+#define RESP_MSG_CMD_LEN 1
 
-#define RESP_MSG_CMD_IDX 20 //20-21 is CMD field...
+#define RESP_MSG_CMD_IDX 20 //20 is CMD field...
 
 /* Frame sequence number, incremented after each transmission. */
 static uint8 frame_seq_nb = 0;
 
 /* Buffer to store received response message.
 * Its size is adjusted to longest frame that this example code is supposed to handle. */
-#define RX_BUF_LEN 32
+#define RX_BUF_LEN 31
 static uint8 rx_buffer[RX_BUF_LEN];
 
 /* Hold copy of status register state here for reference so that it can be examined at a debug breakpoint. */
@@ -95,26 +97,35 @@ static uint64 poll_rx_ts;
 static uint64 resp_tx_ts;
 
 static volatile bool hasTimeSlot = false;
-
+/*
 typedef union {
   uint64_t addr;
   uint8 addrArr[8];
 }uwbAddress;
 
-uwbAddress myAddress;
+// event types
+typedef enum {
+  UPDATE_TAG = 0,
+  DELETE_TAG = 1,
+  NEW_TAG = 2
+} event_type;
+
+*/
+
+static uwbAddress myAddress;
 
 /* broadcast target address */
-static uint8 broadCastAddr[] = {0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00, 0x000};
+static uint8 broadCastAddr[] = {0 , 0 , 0 , 0 , 0 , 0 , 0, 0};
 
 // timer def
-TimerHandle_t resetTimeSlot;
+static TimerHandle_t resetTimeSlot;
 
 void vTimerCallback(TimerHandle_t xTimer){
   //reset
   hasTimeSlot = false;
 }
 
-void initTimers(){
+static void initTimers(){
   resetTimeSlot = xTimerCreate("resetter",10000,pdFALSE,NULL,vTimerCallback);
   if(resetTimeSlot == NULL){
     //ERROR
@@ -172,79 +183,57 @@ int ss_resp_run(void)
     {
       uint32 resp_tx_time;
       int ret;
-//#################################################################################################
-    
-    //should create some fancy method to get stuff.
-
-      //msgGetTs(&rx_buffer[RESP_MSG_POLL_RX_TS_IDX], &poll_rx_ts);
-      
       
       uwbAddress sourceAddr;
       uwbAddress targetAddr;
-      //get target and source
-      for(int i = 0; i < RESP_MSG_ID_LEN; i++)
-      {
-        //uwb_id.addr = (uwb_id.addr << 8) + rx_buffer[RESP_MSG_SOURCE_ID_IDX+i];
+      //get target and source      
+      for(int i = 0; i < RESP_MSG_ID_LEN; i++)      {
         targetAddr.addrArr[i] = rx_buffer[RESP_MSG_TARGET_ID_IDX + i];
         sourceAddr.addrArr[i] = rx_buffer[RESP_MSG_SOURCE_ID_IDX + i];
       }
 
-      //set cmdfield here
-      uint8 cmdField[2];
+      //set cmdfield here - is only one long..
+      uint8 cmdField = rx_buffer[RESP_MSG_CMD_IDX];
 
-      msgGetField(&rx_buffer[RESP_MSG_CMD_IDX], cmdField,RESP_MSG_CMD_LEN);
+      //msgGetField(&rx_buffer[RESP_MSG_CMD_IDX], cmdField,RESP_MSG_CMD_LEN);
       
-//#################################################################################################      
-      //READ DESTINATION ADDR - IS IT FOR ME OR BROADCAST
-      //IF BROADCAST CHECK IF WE HAVE SLOT
-      //IF FOR ME DO STUFF
-      //READ CMD FIELD
-      //IF TIMESLOT REMOVED SET IDLE
-      //IF TIMESLOT GRANTED SET BOOL TRUE
-      //ALWAYS TWR
-//#################################################################################################
-      if(targetAddr.addr != myAddress.addr){
-        if(memcmp(targetAddr.addrArr,broadCastAddr,RESP_MSG_ID_LEN)==0){
-          if(strncmp(cmdField,"BC",RESP_MSG_CMD_LEN)==0){
-            //IS broadcast
-            //printf("BROADCAST");
-            if(hasTimeSlot){
-              //printf("HAS TIMESLOT")              
-              return(1);
-            }
-          }          
-        }else{
-          //printf("NOT FOR ME!!");
-          //MSG IS NOT FOR ME
-          //should abort.. and skip to 
+      //check for broadcast because broadcast are inherintly slow.
+      if(cmdField == NEW_TAG){
+        if(hasTimeSlot){
           return(1);
-        }        
-      }else{
-
-         //Stop timer and start again, only need to reset if we do not hear from anchor in 2000 ticks
-        if(resetTimeSlot != NULL){
-          if(xTimerReset(resetTimeSlot,0)!=pdPASS){
-            if(xTimerStart(resetTimeSlot,0) != pdPASS){
-             //ERROR
-            }
-          }    
         }
-
-        if(strncmp(cmdField,"TR",RESP_MSG_CMD_LEN)==0){
-          //set hastimeslot to false, and sleep
-          hasTimeSlot = false;
-          vTaskDelay(2000);//sleep for aprox 2 seconds
+      }else{
+        //check to see if its for me
+        if(targetAddr.addr != myAddress.addr){
+          //not for me just return
           return(1);
-        }else if(strncmp(cmdField,"TG",RESP_MSG_CMD_LEN)==0){
-          hasTimeSlot = true;
-          //printf("GRANTED");
-        }        
-        //set cmdfield to what we recieved
-        setMsgField(&tx_resp_msg[RESP_MSG_CMD_IDX],cmdField,RESP_MSG_CMD_LEN);
-      } 
-      //SET RECIEVER ADDR HERE
-      setMsgField(&tx_resp_msg[RESP_MSG_TARGET_ID_IDX],sourceAddr.addrArr,RESP_MSG_ID_LEN);
+        }
+      }
+      
+      //if we are being communicated with assume we have timeslot...
+      hasTimeSlot = true;
 
+      //check for timeslot remove
+      if(cmdField == DELETE_TAG){
+        hasTimeSlot = false;
+        vTaskDelay(8000);//sleep for aprox 8 seconds
+        return(1);
+      }
+      
+      //Stop timer and start again
+      //only need to reset if we do not hear from anchor in N ticks
+      //only beeing handled in
+      if(resetTimeSlot != NULL){
+        if(xTimerReset(resetTimeSlot,0)!=pdPASS){
+          //error
+        }    
+      }
+
+      //prepared response
+      //SET CMD to same as we got
+      tx_resp_msg[RESP_MSG_CMD_IDX] = cmdField;
+      //SET RECIEVER ADDR
+      setMsgField(&tx_resp_msg[RESP_MSG_TARGET_ID_IDX],sourceAddr.addrArr,RESP_MSG_ID_LEN);
 
       /* Retrieve poll reception timestamp. */
       poll_rx_ts = get_rx_timestamp_u64();
@@ -372,8 +361,7 @@ static void setMsgField(uint8 *field, uint8 * data, int length){
   }
 }
 
-static void msgGetField(uint8 * field, uint8 * buffer, int length)
-{
+static void msgGetField(uint8 * field, uint8 * buffer, int length){
   for (int i = 0; i < length; i++)
   {
     buffer[i] = field[i];
@@ -470,3 +458,42 @@ void ss_responder_task_function (void * pvParameter)
 *
 ****************************************************************************************************************************************************/
  
+//OLD AND REPLACED...
+ /*
+
+
+      if(targetAddr.addr != myAddress.addr){
+        if(memcmp(targetAddr.addrArr,broadCastAddr,RESP_MSG_ID_LEN)==0){
+          if(strncmp(cmdField,"BC",RESP_MSG_CMD_LEN)==0){
+            //IS broadcast
+            //printf("BROADCAST");
+            if(hasTimeSlot){
+              //printf("HAS TIMESLOT")              
+              return(1);
+            }
+          }          
+        }else{
+          //printf("NOT FOR ME!!");
+          //MSG IS NOT FOR ME
+          //should abort.. and skip to 
+          return(1);
+        }        
+      }else{
+
+
+
+        if(strncmp(cmdField,"TR",RESP_MSG_CMD_LEN)==0){
+          //set hastimeslot to false, and sleep
+          hasTimeSlot = false;
+          vTaskDelay(2000);//sleep for aprox 2 seconds
+          return(1);
+        }else if(strncmp(cmdField,"TG",RESP_MSG_CMD_LEN)==0){
+          hasTimeSlot = true;
+          //printf("GRANTED");
+        }        
+        //set cmdfield to what we recieved
+        setMsgField(&tx_resp_msg[RESP_MSG_CMD_IDX],cmdField,RESP_MSG_CMD_LEN);
+      } 
+      //SET RECIEVER ADDR HERE
+      setMsgField(&tx_resp_msg[RESP_MSG_TARGET_ID_IDX],sourceAddr.addrArr,RESP_MSG_ID_LEN);
+ */

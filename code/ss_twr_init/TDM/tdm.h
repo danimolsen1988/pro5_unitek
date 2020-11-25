@@ -8,6 +8,7 @@
 
 #include "deca_device_api.h"
 #include "movementStruct.h"
+#include "../../code/tdm/tdmStructures.h"
 
 typedef enum {
   DISCOVER,
@@ -17,23 +18,25 @@ typedef enum {
   IDLE
 }tdmState;
 
+/*
 typedef enum {
   TW,
   TR,
   TG,
   BC
 }tdmEvent; 
-
+*/
+/*
 typedef union {
   uint64_t addr;
   uint8 addrArr[8];
 }uwbAddress;
-
+*/
 typedef struct {
  uwbAddress address;
  int timeoutCount;
  bool free;
- tdmEvent event;
+ event_type event;
 } tdmSlot;
 
 typedef struct {
@@ -44,17 +47,18 @@ typedef struct {
 }tdmOrginaizer;
 
 
-void initTdm();
-bool getTimeSlot(tdmSlot * freeSlot);
-void buildMessage(uint8 * cmd, uint8 * target);
-bool sendAndReceive(uint8 * tx_msg, int length);
-void runTDMCycle(tdmSlot * slot, int slutNum);
-void stepState(tdmEvent event);
-static void setMsgField(uint8 *field, uint8 * data, int length);
-void emptyTimeslot(tdmSlot * slot);
-bool createEventMsg(uwbAddress address, tdmEvent eventType, int slot);
+static void initTdm();
+static void emptyTimeslot(tdmSlot * slot);
+static void buildMessage(uint8 cmd, uint8 * target);
+static bool sendAndReceive(uint8 * tx_msg, int length);
+static void doBroadCast();
+static void updateTimeouts(tdmSlot * slot, int slotNum);
+static void doTagTransmission(tdmSlot * slot,int slotNum);
+static bool createEventMsg(uwbAddress address, event_type event, int slot);
+void stepState();
 static void msgGetTs(uint8 *ts_field, uint32 *ts);
 static void setNewStatus(xMessage * statusMsg);
+static void setMsgField(uint8 *field, uint8 * data, int length);
 
 #endif /* TDM_H */
 

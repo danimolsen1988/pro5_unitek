@@ -41,6 +41,7 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/tdm.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/mpu_wrappers.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
+ e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/task.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/list.h \
  ../../../deca_driver/deca_regs.h ../../../deca_driver/deca_version.h \

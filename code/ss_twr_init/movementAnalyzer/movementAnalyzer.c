@@ -29,6 +29,10 @@ static _Bool deleteTag(tags* tag, uint64_t id);
 static uint32_t tagAnalysis(tags* tag);
 static int movementAnalyzer(void);
 
+//timer for LEDS
+APP_TIMER_DEF(led_granted_timer);
+static volatile int led_granted_flag = 0;
+
 //tag struct for keeping data on tags.
 static tags tag[TAGLISTSIZE] = {0}; 
 const tags default_tag;
@@ -36,6 +40,8 @@ const tags default_tag;
 //Queue for sending data between TDM-task and this task.
 extern xQueueHandle xQueue;
 extern xQueueHandle xStatusQueue;
+
+
 
 // data far calibration
 #if DEBUG_EVENT == 1
@@ -60,7 +66,12 @@ extern xQueueHandle xStatusQueue;
   #endif
   static double distance;
 #endif
-/*! ------------------------------------------------------------------------------------------------------------------
+/*! ------------------------------------------------------------------------------------------------------------------*/
+
+static void led_timer_handler(void * p_context) {
+  //SET FLAG
+  led_granted_flag = 0;
+}
 
 
 /**@brief   MovementAnalyzer Initiator task entry function.
@@ -70,7 +81,7 @@ extern xQueueHandle xStatusQueue;
 void movementAnalyzer_initiator (void * pvParameter) {
   UNUSED_PARAMETER(pvParameter);
   dwt_setleds(DWT_LEDS_DISABLE);
-
+  app_timer_create(&led_granted_timer,APP_TIMER_MODE_SINGLE_SHOT,led_timer_handler);
 //  TickType_t xLastWakeTime;
  // const TickType_t xFrequency = RNG_DELAY_MS; //find out the tickrate...
   //xLastWakeTime = xTaskGetTickCount();
@@ -92,6 +103,9 @@ void movementAnalyzer_initiator (void * pvParameter) {
     vTaskDelay(RNG_DELAY_MS);
   }*/
 }
+
+
+
 /** @brief  determines if a tag is considered wanting access. 
 *           sending message through uart if access is granted.
 */
@@ -103,6 +117,10 @@ static int movementAnalyzer(void) {
   
   //if queue is empty, do nothing
   if( xQueue != NULL){
+    if(led_granted_flag == 0){
+    //turn off
+    LEDS_OFF(BSP_LED_0_MASK);
+    }
     if(xQueueReceive(xQueue,&(message),(TickType_t)100) ==pdPASS) {
 
       switch(message.event) { // do this depending on event value.
@@ -197,7 +215,11 @@ static _Bool newTag(tags *tag,xMessage message) {
 static int updateTag(tags* tag, xMessage message) {
   tag->message = message;
   if(tagAnalysis(tag)) {
-
+    //TURN ON GREEN LED...
+    LEDS_ON(BSP_LED_0_MASK);
+    led_granted_flag = 1;
+    //START TIMER
+    app_timer_start(led_granted_timer,APP_TIMER_TICKS(2000),NULL);
     deleteTag(tag,message.id);
     return true;
   }
@@ -229,7 +251,7 @@ static uint32_t tagAnalysis(tags * tag) {
       tmp[0] = tag->message.id>> 32;
       tmp[1] = tag->message.id & 0xffffffff;
       char buff[UART_MESSAGE_FORMAT_SIZE];
-      snprintf(buff,sizeof(buff),"%s-%08x%08x",WANTSACCESS, tmp[0],tmp[1]);
+      snprintf(buff,sizeof(buff),"%s%08x%08x",WANTSACCESS, tmp[0],tmp[1]);
 
       uartTransmit(buff,UART_MESSAGE_FORMAT_SIZE);
       if(xStatusQueue != NULL){
@@ -316,7 +338,13 @@ static int movementAnalyzer(void)
 //this value should be set, so it fits with dani's time. or figure out how to block until queue got data.
 //takes a full copy instead of pointer, incase data is overwritten before handled
   if( xQueue != NULL){
-    if(xQueueReceive(xQueue,&(message),(TickType_t)100000000) ==pdPASS) {
+
+    if(led_granted_flag == 0){
+      //turn off
+      LEDS_OFF(BSP_LED_0_MASK);
+    }
+
+    if(xQueueReceive(xQueue,&(message),(TickType_t)1000) ==pdPASS) {
  
       switch(message.event) { 
     
@@ -408,6 +436,12 @@ static _Bool newTag(tags *tag,xMessage message) {
 static int updateTag(tags* tag, xMessage message) {
   tag->message = message;
   if(tagAnalysis(tag)) {
+    //TURN ON GREEN LED...
+    LEDS_ON(BSP_LED_0_MASK);
+    led_granted_flag = 1;
+    //START TIMER
+    app_timer_start(led_granted_timer,APP_TIMER_TICKS(2000),NULL);
+
     printf("access granted! deleted tag id:%d \r\n",(int)message.id);
     deleteTag(tag,message.id);
     return true;
@@ -423,20 +457,19 @@ static uint32_t tagAnalysis(tags * tag) {
     } else {
 
     distance = tag->message.tof*SPEED_OF_LIGHT;
-    //printf("Distance : %f\r\n",distance);
+    //printf("Distance : %f\r\n",distance);      
+
     if(distance > 10) {
       putOnIgnorelist(tag->message.id);
       return -2;
-    }
-
-    else if(analysis(tag, distance)){
+    }else if(analysis(tag, distance)){
    //   return (int)uartTransmit(NRF_BAUD); //transmit something that says this Id wants acces!
          if(xStatusQueue != NULL){
         tag->message.event = DELETE_TAG;
           if(xQueueSend(xStatusQueue,(void *)&tag->message,0)== pdPASS){
             //all is good
         }
-  }
+    }     
      return true;
     }
     return false;

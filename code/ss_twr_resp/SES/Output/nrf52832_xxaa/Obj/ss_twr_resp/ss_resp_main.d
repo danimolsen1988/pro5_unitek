@@ -68,4 +68,5 @@ Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o: \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/task.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/clock/nrf_drv_clock.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_clock.h \
- ../../../nRF5_SDK_14.2.0/components/drivers_nrf/common/nrf_drv_common.h
+ ../../../nRF5_SDK_14.2.0/components/drivers_nrf/common/nrf_drv_common.h \
+ e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h

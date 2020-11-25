@@ -75,6 +75,7 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/movementAnalyzer.o: \
  e:\dwm1001_repos\pro5_unitek\code\ss_twr_init\movementanalysis\movementanalysis.h \
  e:\dwm1001_repos\pro5_unitek\code\ss_twr_init\movementstruct\movementstruct.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
+ e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h \
  e:\dwm1001_repos\pro5_unitek\code\ss_twr_init\movementstruct\movementstruct.h \
  e:\dwm1001_repos\pro5_unitek\code\ss_twr_init\uart\uart_fifo.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_uart.h \

@@ -17,6 +17,7 @@ APP_TIMER_DEF(delay_timer_id);
  */
 bool analysis(tags *tag, double distance) //call this function in main file
 {
+
   double average_distance = ma_filter4(distance, tag->old_dist1, tag->old_dist2, tag->old_dist3); 
   double velocity = central_difference(average_distance, tag->old_avg3); //using a central difference filter to calculate velocity
 

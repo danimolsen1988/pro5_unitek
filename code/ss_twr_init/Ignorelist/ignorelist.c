@@ -232,3 +232,4 @@ static void createTimer(app_timer_id_t timer_id) {
                               timer_handler);
   APP_ERROR_CHECK(err_code);
 }
+
