@@ -123,6 +123,7 @@ static TimerHandle_t resetTimeSlot;
 void vTimerCallback(TimerHandle_t xTimer){
   //reset
   hasTimeSlot = false;
+  LEDS_OFF(BSP_LED_1_MASK);
 }
 
 static void initTimers(){
@@ -145,14 +146,16 @@ static void initTimers(){
 
 int ss_resp_run(void)
 {
-
   /* Activate reception immediately. */
   dwt_rxenable(DWT_START_RX_IMMEDIATE);
 
+
+
+  
   /* Poll for reception of a frame or error/timeout. See NOTE 5 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
   {};
-  
+
     #if 0	  // Include to determine the type of timeout if required.
     int temp = 0;
     // (frame wait timeout and preamble detect timeout)
@@ -213,13 +216,20 @@ int ss_resp_run(void)
       //if we are being communicated with assume we have timeslot...
       hasTimeSlot = true;
 
+      LEDS_ON(BSP_LED_1_MASK);
+
       //check for timeslot remove
       if(cmdField == DELETE_TAG){
         hasTimeSlot = false;
+        LEDS_ON(BSP_LED_0_MASK);
+        LEDS_OFF(BSP_LED_1_MASK);
         vTaskDelay(8000);//sleep for aprox 8 seconds
+        LEDS_OFF(BSP_LED_0_MASK);
         return(1);
       }
       
+        
+
       //Stop timer and start again
       //only need to reset if we do not hear from anchor in N ticks
       //only beeing handled in

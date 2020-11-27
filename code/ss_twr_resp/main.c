@@ -109,15 +109,15 @@ static dwt_config_t config = {
 int main(void)
 {
   /* Setup some LEDs for debug Green and Blue on DWM1001-DEV */
-  LEDS_CONFIGURE(BSP_LED_0_MASK | BSP_LED_1_MASK);
-  LEDS_ON(BSP_LED_0_MASK | BSP_LED_1_MASK);
+  LEDS_CONFIGURE(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK | BSP_LED_3_MASK);
+  LEDS_OFF(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK | BSP_LED_3_MASK);
 
   #ifdef USE_FREERTOS
     /* Create task for LED0 blinking with priority set to 2 */
-    UNUSED_VARIABLE(xTaskCreate(led_toggle_task_function, "LED0", configMINIMAL_STACK_SIZE + 200, NULL, 2, &led_toggle_task_handle));
+    //UNUSED_VARIABLE(xTaskCreate(led_toggle_task_function, "LED0", configMINIMAL_STACK_SIZE + 200, NULL, 2, &led_toggle_task_handle));
 
     /* Start timer for LED1 blinking */
-    led_toggle_timer_handle = xTimerCreate( "LED1", TIMER_PERIOD, pdTRUE, NULL, led_toggle_timer_callback);
+    //led_toggle_timer_handle = xTimerCreate( "LED1", TIMER_PERIOD, pdTRUE, NULL, led_toggle_timer_callback);
     UNUSED_VARIABLE(xTimerStart(led_toggle_timer_handle, 0));
 
     /* Create task for SS TWR Initiator set to 2 */
