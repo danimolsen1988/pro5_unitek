@@ -1,19 +1,20 @@
 Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o: \
- E:\dwm1001_repos\pro5_unitek\code\ss_twr_resp\ss_resp_main.c \
- ../config/sdk_config.h E:/programs/segger-IDE/include/stdio.h \
- E:/programs/segger-IDE/include/__crossworks.h \
- E:/programs/segger-IDE/include/string.h \
+ C:\Users\Lasse\PRO5_GIT\pro5_unitek\code\ss_twr_resp\ss_resp_main.c \
+ ../config/sdk_config.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdio.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/__crossworks.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/string.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/timer/app_timer.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
- E:/programs/segger-IDE/include/stdint.h \
- E:/programs/segger-IDE/include/stdbool.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdint.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdbool.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52.h \
- C:/Users/Dani/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/core_cm4.h \
- C:/Users/Dani/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_version.h \
- C:/Users/Dani/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_compiler.h \
- C:/Users/Dani/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_gcc.h \
- C:/Users/Dani/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/mpu_armv7.h \
+ C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/core_cm4.h \
+ C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_version.h \
+ C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_compiler.h \
+ C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/cmsis_gcc.h \
+ C:/Users/Lasse/AppData/Local/SEGGER/SEGGER\ Embedded\ Studio/v3/packages/CMSIS_5/CMSIS/Core/Include/mpu_armv7.h \
  ../../../nRF5_SDK_14.2.0/components/toolchain/system_nrf52.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf52_bitfields.h \
  ../../../nRF5_SDK_14.2.0/components/device/nrf51_to_nrf52.h \
@@ -24,7 +25,7 @@ Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error_weak.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
- E:/programs/segger-IDE/include/stddef.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stddef.h \
  ../../../nRF5_SDK_14.2.0/components/device/compiler_abstraction.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/nordic_common.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/config/FreeRTOSConfig.h \
@@ -53,7 +54,7 @@ Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o: \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_peripherals.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_spim.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_gpio.h \
- E:/programs/segger-IDE/include/stdlib.h \
+ C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 5.10b/include/stdlib.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/delay/nrf_delay.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/experimental_log/nrf_log.h \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/sdk_common.h \
@@ -69,4 +70,4 @@ Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o: \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/clock/nrf_drv_clock.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/hal/nrf_clock.h \
  ../../../nRF5_SDK_14.2.0/components/drivers_nrf/common/nrf_drv_common.h \
- e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h
+ c:\users\lasse\pro5_git\pro5_unitek\code\tdm\tdmstructures.h

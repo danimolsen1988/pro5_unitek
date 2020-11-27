@@ -237,7 +237,8 @@ static void doBroadCast(){
     }else if(organizer.slot3.address.addr == uwb_id.addr){
       return;
     }
-
+  
+    int tagId = 0;
     //HAVING A POP PUSH STRUCTURE FOR GETTING AVAILBLE SLOTS??
     if(organizer.slot1.free){
       organizer.slot1.address = uwb_id;
@@ -245,24 +246,27 @@ static void doBroadCast(){
       organizer.slot1.timeoutCount = 0;
       organizer.slot1.event = UPDATE_TAG;
       organizer.slotsFree = organizer.slotsFree - 1;
+      tagId = 1;
     }else if(organizer.slot2.free){
       organizer.slot2.address = uwb_id;
       organizer.slot2.free = false;
       organizer.slot2.timeoutCount = 0;
       organizer.slot2.event = UPDATE_TAG;
-      organizer.slotsFree = organizer.slotsFree - 1;          
+      organizer.slotsFree = organizer.slotsFree - 1;
+      tagId = 2;
     }else if(organizer.slot3.free){
       organizer.slot3.address = uwb_id;
       organizer.slot3.free = false;
       organizer.slot3.timeoutCount = 0;
       organizer.slot3.event = UPDATE_TAG;
       organizer.slotsFree = organizer.slotsFree - 1;
+      tagId = 3;
     }else{
       //we had a problem somewhere a mismatch has happend
       //should reset structure          
     }
     //NOTIFY QUEUE EVENT NEW_TAG       
-    createEventMsg(uwb_id,NEW_TAG, 0);
+    createEventMsg(uwb_id,NEW_TAG, tagId);
   }
 
 }
@@ -357,7 +361,7 @@ static bool createEventMsg(uwbAddress address, event_type event, int slot){
   tof = ((rtd_init - rtd_resp * (1.0f - clockOffsetRatio)) / 2.0f) * DWT_TIME_UNITS; // Specifying 1.0f and 2.0f are floats to clear warning
   
   eventMessage.tof = tof;
-
+  eventMessage.slotId = slot;
 
   //For debug
   #if DEBUG_MOVEMENTSTATE == 1

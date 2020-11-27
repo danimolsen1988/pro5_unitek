@@ -75,7 +75,6 @@ static dwt_config_t config = {
 //--------------dw1000---end---------------
 extern _Bool setupTimer();
 extern _Bool setupQueue();
-extern void setupDelayTimer();
 
 TaskHandle_t  movementAnalyzer_initiator_handler;   /**< Reference to SS TWR Initiator FreeRTOS task. */
 extern void movementAnalyzer_initiator (void * pvParameter);
@@ -172,7 +171,6 @@ int main(void)
     if(!setupTimer()) { 
       exit(EXIT_FAILURE); //couldn't setup timer for ignorelist
     }
-    setupDelayTimer();
    
 
     if(!setupQueue()) { // couldn't set up queue for tag events

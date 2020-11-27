@@ -5,7 +5,7 @@
 
 #include "movementAnalysis.h"
 
-APP_TIMER_DEF(delay_timer_id);
+//APP_TIMER_DEF(delay_timer_id);
 
 /**
  * @brief analyse the speed and distance of a tag
@@ -17,7 +17,6 @@ APP_TIMER_DEF(delay_timer_id);
  */
 bool analysis(tags *tag, double distance) //call this function in main file
 {
-
   double average_distance = ma_filter4(distance, tag->old_dist1, tag->old_dist2, tag->old_dist3); 
   double velocity = central_difference(average_distance, tag->old_avg3); //using a central difference filter to calculate velocity
 
@@ -28,21 +27,21 @@ bool analysis(tags *tag, double distance) //call this function in main file
   tag->old_avg2 = tag->old_avg;
   tag->old_avg = average_distance;
   
-  if (delaySample == true){
+  if (tag->delaySample == true){
     return false;
   }
 
   if (average_distance < 1.2){ //distance from anchor to tag
-    if (velocity < 0.01){ //velocity on tag
+    if (velocity < 0.02){ //velocity on tag
       tag->i++;
         if (tag->i == 3){
           tag->i = 0;
           return true;
         }
       ret_code_t err_code;
-      err_code = app_timer_start(delay_timer_id, APP_TIMER_TICKS(DELAY), NULL);
+      err_code = app_timer_start(tag->timerHandle, APP_TIMER_TICKS(DELAY), tag);
       APP_ERROR_CHECK(err_code);
-      delaySample = true;
+      tag->delaySample = true;
       return false;
     }
       else{
@@ -53,37 +52,29 @@ bool analysis(tags *tag, double distance) //call this function in main file
 
 }
 
+
 /**
  * @brief timerhandler for timers
  */
+ /*
 static void delayTimerhandler(void * p_context) {
   delaySample = false;
-}
+}*/
 
 /**
  * @brief intern function for creating timer
  *
  * @param[timer_id]        : timer id
  */
+ /*
 static void createDelayTimer(app_timer_id_t timer_id) {
   ret_code_t err_code;
   err_code = app_timer_create(&timer_id,
                               APP_TIMER_MODE_SINGLE_SHOT,
                               delayTimerhandler);
   APP_ERROR_CHECK(err_code);
-}
+}*/
 
-/**
- * @brief setup for delay timer
- */
-extern void setupDelayTimer() {
-  if (!delayTimerInitialized) {
-    createDelayTimer(delay_timer_id);
-    delayTimerInitialized = true;
-  } else {
-    printf("delay timer is already intialized!"); 
-  }
-}
 
 
 /**
