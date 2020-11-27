@@ -270,12 +270,13 @@ static void doBroadCast(){
 static void updateTimeouts(tdmSlot * slot, int slotNum){
   slot->timeoutCount = slot->timeoutCount + 1;
   //check to see if uwb-tag should loose slot
-  if(slot->timeoutCount >= 3){
-    //remove it
-    emptyTimeslot(slot);
+  if(slot->timeoutCount >= 3){       
     //we decided to remove tag, notify it
     //SEND NOTIFICATION REMOVE_TAG
     createEventMsg(slot->address,DELETE_TAG, slotNum);
+
+    //remove it 
+    emptyTimeslot(slot);
   }
 }
 
@@ -308,6 +309,7 @@ static void doTagTransmission(tdmSlot * slot,int slotNum){
     }else{
       //error
       //transmission did not go well
+      //updateTimeouts(slot, slotNum);
       updateTimeouts(slot, slotNum);
     }
   }else{
@@ -319,6 +321,7 @@ static void doTagTransmission(tdmSlot * slot,int slotNum){
     }else{
       //error
       //transmission did not go well
+      //updateTimeouts(slot, slotNum);
       updateTimeouts(slot, slotNum);
     }
   }
@@ -355,12 +358,13 @@ static bool createEventMsg(uwbAddress address, event_type event, int slot){
   
   eventMessage.tof = tof;
 
-/*
-  //DELETE IF PROVES TOO SLOW
+
+  //For debug
+  #if DEBUG_MOVEMENTSTATE == 1
   if(event != UPDATE_TAG){
-    printf("Event : %d # slot : %d \r\n",event,slot);
+    printf("Event : %d # slot : %d  # free : %d  #  Id : %d \r\n",event,slot, organizer.slotsFree, (int)address.addr);
   }
-  */
+  #endif
   
   if(xQueue != NULL){
     if(xQueueSend(xQueue,(void *)&eventMessage,0) == pdTRUE) {
