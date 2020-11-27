@@ -299,10 +299,6 @@ static void doTagTransmission(tdmSlot * slot,int slotNum){
     }
   }
 
-
-
-  bool success = false;
-
   if(slot->event == DELETE_TAG){
     //delete
     buildMessage(DELETE_TAG,slot->address.addrArr);
