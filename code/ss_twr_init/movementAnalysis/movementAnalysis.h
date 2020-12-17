@@ -13,10 +13,7 @@
 #include "nrf_drv_clock.h"
 #include "../movementStruct/movementStruct.h"
 
-#define DELAY 200 // delay for hardware timer in ms
-
-static bool delayTimerInitialized = false; // for setup
-static bool delaySample = false; //delay flag for hardware timer
+#define DELAY 50 // delay for hardware timer in ms
 
 //Abs value, moving average, central difference and analysis functions
 double abs_val(double y);

@@ -31,6 +31,11 @@ static int movementAnalyzer(void);
 
 //timer for LEDS
 APP_TIMER_DEF(led_granted_timer);
+
+//timer for tags
+APP_TIMER_DEF(delay_timer_tag_1);
+APP_TIMER_DEF(delay_timer_tag_2);
+APP_TIMER_DEF(delay_timer_tag_3);
 static volatile int led_granted_flag = 0;
 
 //tag struct for keeping data on tags.
@@ -40,6 +45,7 @@ const tags default_tag;
 //Queue for sending data between TDM-task and this task.
 extern xQueueHandle xQueue;
 extern xQueueHandle xStatusQueue;
+
 
 
 
@@ -73,6 +79,36 @@ static void led_timer_handler(void * p_context) {
   led_granted_flag = 0;
 }
 
+/**
+ * @brief timerhandler for timers
+ */
+static void delayTimerhandler(void * p_context) {
+  ((tags*)p_context)->delaySample = false;
+}
+
+/**
+ * @brief intern function for creating timer
+ *
+ * @param[timer_id]        : timer id
+ */
+static void createDelayTimer() {
+  ret_code_t err_code;
+  err_code = app_timer_create(&delay_timer_tag_1,
+                              APP_TIMER_MODE_SINGLE_SHOT,
+                              delayTimerhandler);
+  APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_create(&delay_timer_tag_2,
+                              APP_TIMER_MODE_SINGLE_SHOT,
+                              delayTimerhandler);
+  APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_create(&delay_timer_tag_3,
+                              APP_TIMER_MODE_SINGLE_SHOT,
+                              delayTimerhandler);
+  APP_ERROR_CHECK(err_code);
+}
+
 
 /**@brief   MovementAnalyzer Initiator task entry function.
 *
@@ -82,10 +118,7 @@ void movementAnalyzer_initiator (void * pvParameter) {
   UNUSED_PARAMETER(pvParameter);
   dwt_setleds(DWT_LEDS_DISABLE);
   app_timer_create(&led_granted_timer,APP_TIMER_MODE_SINGLE_SHOT,led_timer_handler);
-//  TickType_t xLastWakeTime;
- // const TickType_t xFrequency = RNG_DELAY_MS; //find out the tickrate...
-  //xLastWakeTime = xTaskGetTickCount();
-//  // Initialise the xLastWakeTime variable with the current time.
+  createDelayTimer();
 
   while (true){
     // Wait for the next cycle.
@@ -95,13 +128,7 @@ void movementAnalyzer_initiator (void * pvParameter) {
     //this is where i run my main code 
     /* Tasks must be implemented to never return... */
     movementAnalyzer();
-  }
-  /*
-  while (true)
-  { // call main task
-    movementAnalyzer();
-    vTaskDelay(RNG_DELAY_MS);
-  }*/
+  } 
 }
 
 
@@ -196,6 +223,20 @@ static _Bool newTag(tags *tag,xMessage message) {
     if(!tag[i].taken) {
       tag[i].taken = true;
       tag[i].message = message;
+      switch(message.slotId){
+        case 1:
+          tag[i].timerHandle = delay_timer_tag_1;
+          break;
+        case 2:
+          tag[i].timerHandle = delay_timer_tag_2;
+          break;
+        case 3:
+          tag[i].timerHandle = delay_timer_tag_3;
+          break;
+        default:
+          //LORT
+          break;
+      }      
       if(tagAnalysis(&tag[i])) {
         deleteTag(&tag[i],message.id);
       }
@@ -247,6 +288,7 @@ static uint32_t tagAnalysis(tags * tag) {
       return -2;
     }
     else if(analysis(tag, distance)){
+      
       uint32_t tmp[2];
       tmp[0] = tag->message.id>> 32;
       tmp[1] = tag->message.id & 0xffffffff;
@@ -423,6 +465,20 @@ static _Bool newTag(tags *tag,xMessage message) {
     if(!tag[i].taken) {
       tag[i].taken = true;
       tag[i].message = message;
+       switch(message.slotId){
+        case 1:
+          tag[i].timerHandle = delay_timer_tag_1;
+          break;
+        case 2:
+          tag[i].timerHandle = delay_timer_tag_2;
+          break;
+        case 3:
+          tag[i].timerHandle = delay_timer_tag_3;
+          break;
+        default:
+          //LORT
+          break;
+      }      
       if(tagAnalysis(&tag[i])) {
         printf("access granted! deleted tag id:%d \r\n",(int)message.id);
         deleteTag(&tag[i],message.id);

@@ -11,6 +11,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "../../code/tdm/tdmStructures.h"
+#include "app_timer.h"
 
 /*
 // event types
@@ -34,6 +35,7 @@ typedef struct message{
   event_type event;
   uint64_t id;
   double tof;
+  uint8 slotId;
 }xMessage;
 
 /**@brief       struct for event data, measurements
@@ -57,6 +59,8 @@ typedef struct message{
   double old_dist1;
   double old_dist2;
   double old_dist3;
+  bool delaySample;
+  app_timer_id_t timerHandle;
   int i;
 };
 
