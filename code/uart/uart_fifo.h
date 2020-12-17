@@ -1,5 +1,6 @@
 #ifndef UART_FIFO_H
 #define UART_FIFO_H
+#include "nrf_uart.h"
 /*!
 * @brief Component name:	uart_fifo
 *

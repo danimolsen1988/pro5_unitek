@@ -43,7 +43,14 @@ static nrf_drv_uart_t uartInstance = NRF_DRV_UART_INSTANCE(APP_UART_DRIVER_INSTA
 //Eventhandler
 static void uartEventhandler(nrf_drv_uart_event_t * p_event, void* p_context);
       
-
+/**
+* @brief Initialize uart
+*
+* @param {nrf_uart_baudrate_t} baud baudrate.
+* @param {bool} parity use parity bit.
+*
+* @return {uint32_t} if initialization was a success
+*/
 uint32_t uartInit(nrf_uart_baudrate_t baud, bool parity){                                  
   buffers.tx_buf = txBuf;                                                              
   buffers.tx_buf_size = sizeof (txBuf);  
@@ -73,17 +80,35 @@ uint32_t uartInit(nrf_uart_baudrate_t baud, bool parity){
     return NRF_SUCCESS;
 }
 
+/**
+* @brief Deinitialize uart
+*
+* @return {uint32_t} if Deinitialization was a success
+*/
 uint32_t uartDeinit(){
     nrf_drv_uart_uninit(&uartInstance);
     return NRF_SUCCESS;
 }
 
+/**
+* @brief flush uart
+*
+* @return {uint32_t} if flush was a success
+*/
 uint32_t uartFlush(){
     uint32_t errCode;
     errCode = app_fifo_flush(&txFifo);
     return errCode;
 }
 
+/**
+* @brief transmit message
+*
+* @param {char *} data message to send.
+* @param {uint32_t} length message length.
+*
+* @return {uint32_t} if queuing the message into fifo was a success
+*/
 uint32_t uartTransmit(char * data, uint32_t length){
     uint32_t errCode;
     
@@ -111,6 +136,14 @@ uint32_t uartTransmit(char * data, uint32_t length){
     return errCode;
 }
 
+/**
+* @brief uart eventhandler.
+*
+* @param {nrf_drv_uart_event_t*} p_event uart event.
+* @param {void*} p_context custom variable to pass.
+*
+* @return none
+*/
 static void uartEventhandler(nrf_drv_uart_event_t * p_event, void* p_context) {    
     uint32_t errCode;
     switch (p_event->type) {
