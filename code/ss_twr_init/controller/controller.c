@@ -1,12 +1,12 @@
 /*!
-* @brief Component name:	movementAnalzer
+* @brief Component name:	controller
 *
 * the main application for movement analysis
 * 
 *
-* @file movementAnalyzer.c
+* @file controller.c
 */
-#include "movementAnalyser.h"
+#include "controller.h"
 #include <stdio.h>
 #include <string.h>
 #include "FreeRTOS.h"
@@ -55,6 +55,7 @@ extern xQueueHandle xStatusQueue;
   static int cal = 0;
   static int delay = 0;
   static uint64_t tag_id = 0;
+  static bool calibrate = false;
   #define RNG_DELAY_MS 10
   //data for ignorelist debugging
 #elif DEBUG_EVENT == 3
@@ -308,7 +309,6 @@ static uint32_t tagAnalysis(tags * tag) {
   }
 }
 
-
 // -----------------------DEBUGGING CODE-------------------------------
 
  #elif DEBUG_EVENT == 3
@@ -351,9 +351,12 @@ static uint32_t tagAnalysis(tags * tag) {
 
 
 #elif DEBUG_EVENT == 1
-    if(tag_id == 0) {
       if(tag->message.id != 0) {
-        tag_id = tag->message.id;
+        if(calibrate == false) {
+          tag_id = tag->message.id;
+          calibrate==true;
+        }
+        if(tag_id == tag->message.id) {
         int old_delay = delay;
         distance[cal] = tag->message.tof * SPEED_OF_LIGHT;
         printf("Distance : %f\r\n",distance[cal]);
@@ -367,7 +370,7 @@ static uint32_t tagAnalysis(tags * tag) {
            }
         }
       }
-   }
+    }
 }
 #endif
 #elif DEBUG_MOVEMENTSTATE == 1
@@ -402,7 +405,7 @@ static int movementAnalyzer(void)
         case UPDATE_TAG:
             if((index = tagOnList(tag,message.id)) !=-1) { 
                 if(!updateTag(&tag[index],message)){
-                //printf("updatedtag! id: %d\r\n",(int) tag[index].message.id);
+                printf("updatedtag! id: %d\r\n",(int) tag[index].message.id);
                 }
             } else {
             printf("update, id not on list! id: %d\r\n",(int) message.id);
@@ -419,7 +422,7 @@ static int movementAnalyzer(void)
           break;
 
          default:
-          printf("something went very wrong in movementAnalyzer - switch\r\n");
+          printf("something went very wrong in controller - switch\r\n");
       }
     }
   } else {
@@ -476,7 +479,6 @@ static _Bool newTag(tags *tag,xMessage message) {
           tag[i].timerHandle = delay_timer_tag_3;
           break;
         default:
-          //LORT
           break;
       }      
       if(tagAnalysis(&tag[i])) {

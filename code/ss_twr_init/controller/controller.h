@@ -1,5 +1,5 @@
-#ifndef MOVEMENTANALYZER_H
-#define MOVEMENTANALYZER_H
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 /* UWB microsecond (uus) to device time unit (dtu, around 15.65 ps) conversion factor.
 * 1 uus = 512 / 499.2 us and 1 us = 499.2 * 128 dtu. */
