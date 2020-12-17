@@ -38,6 +38,8 @@
       <file file_name="../ss_resp_main.c" />
       <folder Name="TDM">
         <file file_name="../../tdm/tdmStructures.h" />
+        <file file_name="../../tdm/uwbHelper.c" />
+        <file file_name="../../tdm/uwbHelper.h" />
       </folder>
     </folder>
     <folder Name="Board Definition">

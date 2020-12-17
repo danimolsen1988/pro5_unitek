@@ -38,5 +38,5 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/movementStruct.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/mpu_wrappers.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
- e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h \
+ ../../tdm/../../code/tdm/tdmStructures.h \
  ../../../deca_driver/deca_device_api.h

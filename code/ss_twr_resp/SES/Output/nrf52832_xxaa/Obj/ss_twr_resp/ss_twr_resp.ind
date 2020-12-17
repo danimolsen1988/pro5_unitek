@@ -3,6 +3,7 @@
 "Output/nrf52832_xxaa/Obj/ss_twr_resp/ses_nrf52_startup.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_resp/main.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_resp/ss_resp_main.o"
+"Output/nrf52832_xxaa/Obj/ss_twr_resp/uwbHelper.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_resp/boards.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_resp/bsp_nfc.o"

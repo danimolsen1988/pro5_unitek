@@ -73,5 +73,5 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/main.o: \
  ../../../deca_driver/deca_version.h \
  ../movementAnalysis./../movementStruct/movementStruct.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
- e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h \
+ ../../tdm/../../code/tdm/tdmStructures.h \
  e:\dwm1001_repos\pro5_unitek\code\uart\uart_fifo.h

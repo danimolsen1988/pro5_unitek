@@ -8,6 +8,7 @@
 "Output/nrf52832_xxaa/Obj/ss_twr_init/movementStruct.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_init/movementAnalyzer.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_init/tdm.o"
+"Output/nrf52832_xxaa/Obj/ss_twr_init/uwbHelper.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_init/boards.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_init/bsp.o"
 "Output/nrf52832_xxaa/Obj/ss_twr_init/bsp_nfc.o"

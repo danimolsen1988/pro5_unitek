@@ -29,6 +29,8 @@
 #include "timers.h"
 #include "nrf_drv_clock.h"
 #include "../../code/tdm/tdmStructures.h"
+#include "../../code/tdm/uwbHelper.h"
+
 
 /* Inter-ranging delay period, in milliseconds. See NOTE 1*/
 #define RNG_DELAY_MS 20
@@ -83,12 +85,8 @@ typedef unsigned long long uint64;
 static uint64 poll_rx_ts;
 
 /* Declaration of static functions. */
-//static uint64 get_tx_timestamp_u64(void);
 static uint64 get_rx_timestamp_u64(void);
 static void resp_msg_set_ts(uint8 *ts_field, const uint64 ts);
-static void msgGetField(uint8 * field, uint8 * buffer, int length);
-static void setMsgField(uint8 *field, uint8 * data, int length);
-//static void final_msg_get_ts(const uint8 *ts_field, uint32 *ts);
 
 /* Timestamps of frames transmission/reception.
 * As they are 40-bit wide, we need to define a 64-bit int type to handle them. */
@@ -97,20 +95,6 @@ static uint64 poll_rx_ts;
 static uint64 resp_tx_ts;
 
 static volatile bool hasTimeSlot = false;
-/*
-typedef union {
-  uint64_t addr;
-  uint8 addrArr[8];
-}uwbAddress;
-
-// event types
-typedef enum {
-  UPDATE_TAG = 0,
-  DELETE_TAG = 1,
-  NEW_TAG = 2
-} event_type;
-
-*/
 
 static uwbAddress myAddress;
 
@@ -194,10 +178,8 @@ int ss_resp_run(void)
 
       //set cmdfield here - is only one long..
       uint8 cmdField = rx_buffer[RESP_MSG_CMD_IDX];
-
-      //msgGetField(&rx_buffer[RESP_MSG_CMD_IDX], cmdField,RESP_MSG_CMD_LEN);
       
-      //check for broadcast because broadcast are inherintly slow.
+      //check for broadcast
       if(cmdField == NEW_TAG){
         if(hasTimeSlot){
           return(1);
@@ -222,7 +204,6 @@ int ss_resp_run(void)
       
       //Stop timer and start again
       //only need to reset if we do not hear from anchor in N ticks
-      //only beeing handled in
       if(resetTimeSlot != NULL){
         if(xTimerReset(resetTimeSlot,0)!=pdPASS){
           //error
@@ -346,30 +327,6 @@ static void resp_msg_set_ts(uint8 *ts_field, const uint64 ts)
 }
 
 
-/*
-* @brief fill a msg field with data
-*
-* @param field pointer on the frist bye of the field to be filled
-*        data value to be written
-*        length data length
-*
-* @return none
-*/
-static void setMsgField(uint8 *field, uint8 * data, int length){
-  for(int i = 0; i < length; i++){
-    field[i] = data[i];
-  }
-}
-
-static void msgGetField(uint8 * field, uint8 * buffer, int length){
-  for (int i = 0; i < length; i++)
-  {
-    buffer[i] = field[i];
-  }
-}
-
-
-
 /**@brief SS TWR Initiator task entry function.
 *
 * @param[in] pvParameter   Pointer that will be used as the parameter for the task.
@@ -380,15 +337,11 @@ void ss_responder_task_function (void * pvParameter)
 
   dwt_setleds(DWT_LEDS_ENABLE);
 
-  //SET SOURCE ADDR
-  //uint64 tag_id;
-  
   dwt_geteui((uint8_t*) &myAddress.addr);
 
   for (int i = 0; i < RESP_MSG_ID_LEN; i++)
   {
     tx_resp_msg[RESP_MSG_SOURCE_ID_IDX+i] = myAddress.addrArr[i];
-    //tx_resp_msg[RESP_MSG_SOURCE_ID_IDX+RESP_MSG_ID_LEN-1-i] = (tag_id >> (i*8));
   }
   
   //create timer
@@ -457,43 +410,3 @@ void ss_responder_task_function (void * pvParameter)
 *    DW1000 API Guide for more details on the DW1000 driver functions.
 *
 ****************************************************************************************************************************************************/
- 
-//OLD AND REPLACED...
- /*
-
-
-      if(targetAddr.addr != myAddress.addr){
-        if(memcmp(targetAddr.addrArr,broadCastAddr,RESP_MSG_ID_LEN)==0){
-          if(strncmp(cmdField,"BC",RESP_MSG_CMD_LEN)==0){
-            //IS broadcast
-            //printf("BROADCAST");
-            if(hasTimeSlot){
-              //printf("HAS TIMESLOT")              
-              return(1);
-            }
-          }          
-        }else{
-          //printf("NOT FOR ME!!");
-          //MSG IS NOT FOR ME
-          //should abort.. and skip to 
-          return(1);
-        }        
-      }else{
-
-
-
-        if(strncmp(cmdField,"TR",RESP_MSG_CMD_LEN)==0){
-          //set hastimeslot to false, and sleep
-          hasTimeSlot = false;
-          vTaskDelay(2000);//sleep for aprox 2 seconds
-          return(1);
-        }else if(strncmp(cmdField,"TG",RESP_MSG_CMD_LEN)==0){
-          hasTimeSlot = true;
-          //printf("GRANTED");
-        }        
-        //set cmdfield to what we recieved
-        setMsgField(&tx_resp_msg[RESP_MSG_CMD_IDX],cmdField,RESP_MSG_CMD_LEN);
-      } 
-      //SET RECIEVER ADDR HERE
-      setMsgField(&tx_resp_msg[RESP_MSG_TARGET_ID_IDX],sourceAddr.addrArr,RESP_MSG_ID_LEN);
- */

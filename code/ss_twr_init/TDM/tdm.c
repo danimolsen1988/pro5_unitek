@@ -15,6 +15,7 @@
 #include "task.h"
 #include "deca_regs.h"
 #include "port_platform.h"
+#include "../../code/tdm/uwbHelper.h"
 
 
 //#define frequency 60 //make sure it is slow when we test
@@ -41,8 +42,21 @@
 /* Speed of light in air, in metres per second. */
 #define SPEED_OF_LIGHT 299702547
 
+static void initTdm();
+static void emptyTimeslot(tdmSlot * slot);
+static void buildMessage(uint8 cmd, uint8 * target);
+static bool sendAndReceive(uint8 * txMsg, int length);
+static void doBroadcast();
+static void updateTimeouts(tdmSlot * slot, int slotNum);
+static void doTagTransmission(tdmSlot * slot,int slotNum);
+static bool createEventMsg(uwbAddress address, event_type event, int slotNum);
+static void stepState();
+static void msgGetTs(uint8 * tsField, uint32 * ts);
+static void setNewStatus(xMessage * statusMsg);
+
+
 static tdmState nextState;
-static tdmOrginaizer organizer;
+static tdmOrganizer organizer;
 
 /* Frames used in the ranging process. See NOTE 2,3 below. */
 //                            1     2     3  4      5       6     7       8     9     10      11    12      13    14    15      16      17    18      19    20  21 22 23 24 25 26 27 28 29 30 31
@@ -68,9 +82,12 @@ extern xQueueHandle xQueue;
 extern xQueueHandle xStatusQueue;
 
 
-/**@brief tdm task entry function.
+/**
+* @brief tdm task entry function.
 *
-* @param[in] pvParameter   Pointer that will be used as the parameter for the task.
+* @param {void*} pvParameter Pointer that will be used as the parameter for the task.
+*
+* @return none
 */
 void tdmTask (void * pvParameter){
   UNUSED_PARAMETER(pvParameter);
@@ -93,6 +110,11 @@ void tdmTask (void * pvParameter){
   }
 }
 
+/**
+* @brief Initialize TDM
+*
+* @return none
+*/
 static void initTdm(){
   nextState = DISCOVER;
 
@@ -109,16 +131,23 @@ static void initTdm(){
   slotThree.timeoutCount = 0;
 
   organizer.slotsFree = 3;
-  organizer.slot1 = slotOne;
-  organizer.slot2 = slotTwo;
-  organizer.slot3 = slotThree;
+  organizer.slotOne = slotOne;
+  organizer.slotTwo = slotTwo;
+  organizer.slotThree = slotThree;
 
   //SET source addr now, it never changes...
   uwbAddress uwb_id;
   dwt_geteui((uint8*) &uwb_id.addr);
-  setMsgField(&tx_poll_msg[RESP_MSG_SOURCE_ID_IDX], uwb_id.addrArr,RESP_MSG_ID_LEN);
+  setMsgField(&tx_poll_msg[RESP_MSG_SOURCE_ID_IDX], uwb_id.addrArr,RESP_MSG_ID_LEN);  
 }
 
+/**
+* @brief Empty a timeslot
+*
+* @param {tdmSlot *} timeslot to empty.
+*
+* @return none
+*/
 static void emptyTimeslot(tdmSlot * slot){
   slot->free = true;
   slot->timeoutCount = 0;
@@ -126,7 +155,14 @@ static void emptyTimeslot(tdmSlot * slot){
   organizer.slotsFree = organizer.slotsFree + 1;
 }
 
-
+/**
+* @brief build dataframe with message and command
+*
+* @param {uint8} cmd command.
+* @param {uint8*} target receiver id.
+*
+* @return none
+*/
 static void buildMessage(uint8 cmd, uint8 * target){
   //source should be set from beginning...
   tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
@@ -136,7 +172,14 @@ static void buildMessage(uint8 cmd, uint8 * target){
   setMsgField(&tx_poll_msg[RESP_MSG_TARGET_ID_IDX],target,RESP_MSG_ID_LEN);
 }
 
-
+/**
+* @brief send and recieve
+*
+* @param {uint8 *} tx_msg message to send.
+* @param {int} length message length.
+*
+* @return {bool} if transmitting and receiving was a success
+*/
 static bool sendAndReceive(uint8 * tx_msg, int length){
   bool success = false;
   /* Write frame data to DW1000 and prepare transmission. See NOTE 3 below. */
@@ -146,10 +189,8 @@ static bool sendAndReceive(uint8 * tx_msg, int length){
 
   /* Start transmission, indicating that a response is expected so that reception is enabled automatically after the frame is sent and the delay
   * set by dwt_setrxaftertxdelay() has elapsed. */
-  dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);   
+  dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);    
  
-
-  
 
   /* We assume that the transmission is achieved correctly, poll for reception of a frame or error/timeout. See NOTE 4 below. */
   while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
@@ -199,7 +240,12 @@ static bool sendAndReceive(uint8 * tx_msg, int length){
   return success;
 }
 
-static void doBroadCast(){
+/**
+* @brief transmit broadcast message and wait for reply - adds any found UWB-Tag
+*
+* @return none
+*/
+static void doBroadcast(){
   //ONLY HANDLE BROADCASTS HERE
   //CHECK FOR EMPTY SLOTS!!    
   if(organizer.slotsFree < 3){
@@ -218,6 +264,8 @@ static void doBroadCast(){
 
   //create message - only need to set target addr to empty
   setMsgField(&tx_poll_msg[RESP_MSG_TARGET_ID_IDX],broadCastAddr,RESP_MSG_ID_LEN);
+  
+  //setMsgField()
   tx_poll_msg[RESP_MSG_CMD_IDX] = NEW_TAG; //might need to typecast it to uint...
 
   if(sendAndReceive(tx_poll_msg,RX_BUF_LEN)){
@@ -230,32 +278,32 @@ static void doBroadCast(){
     tdmSlot * availableSlot;
 
     //VERIFY WE DO NOT HAVE IT - IDEALLY THIS SHOULD NOT HAPPEN..
-    if(organizer.slot1.address.addr == uwb_id.addr){
+    if(organizer.slotOne.address.addr == uwb_id.addr){
       return;
-    }else if(organizer.slot2.address.addr == uwb_id.addr){
+    }else if(organizer.slotTwo.address.addr == uwb_id.addr){
       return;
-    }else if(organizer.slot3.address.addr == uwb_id.addr){
+    }else if(organizer.slotThree.address.addr == uwb_id.addr){
       return;
     }
 
     //HAVING A POP PUSH STRUCTURE FOR GETTING AVAILBLE SLOTS??
-    if(organizer.slot1.free){
-      organizer.slot1.address = uwb_id;
-      organizer.slot1.free = false;
-      organizer.slot1.timeoutCount = 0;
-      organizer.slot1.event = UPDATE_TAG;
+    if(organizer.slotOne.free){
+      organizer.slotOne.address = uwb_id;
+      organizer.slotOne.free = false;
+      organizer.slotOne.timeoutCount = 0;
+      organizer.slotOne.event = UPDATE_TAG;
       organizer.slotsFree = organizer.slotsFree - 1;
-    }else if(organizer.slot2.free){
-      organizer.slot2.address = uwb_id;
-      organizer.slot2.free = false;
-      organizer.slot2.timeoutCount = 0;
-      organizer.slot2.event = UPDATE_TAG;
+    }else if(organizer.slotTwo.free){
+      organizer.slotTwo.address = uwb_id;
+      organizer.slotTwo.free = false;
+      organizer.slotTwo.timeoutCount = 0;
+      organizer.slotTwo.event = UPDATE_TAG;
       organizer.slotsFree = organizer.slotsFree - 1;          
-    }else if(organizer.slot3.free){
-      organizer.slot3.address = uwb_id;
-      organizer.slot3.free = false;
-      organizer.slot3.timeoutCount = 0;
-      organizer.slot3.event = UPDATE_TAG;
+    }else if(organizer.slotThree.free){
+      organizer.slotThree.address = uwb_id;
+      organizer.slotThree.free = false;
+      organizer.slotThree.timeoutCount = 0;
+      organizer.slotThree.event = UPDATE_TAG;
       organizer.slotsFree = organizer.slotsFree - 1;
     }else{
       //we had a problem somewhere a mismatch has happend
@@ -267,19 +315,34 @@ static void doBroadCast(){
 
 }
 
+/**
+* @brief update timeout count for a timeslot
+*
+* @param {tdmSlot *} slot timeslot to update.
+* @param {int} slotNum actual timeslot number (1-3).
+*
+* @return none
+*/
 static void updateTimeouts(tdmSlot * slot, int slotNum){
   slot->timeoutCount = slot->timeoutCount + 1;
   //check to see if uwb-tag should loose slot
   if(slot->timeoutCount >= 3){
-    //remove it
-    emptyTimeslot(slot);
     //we decided to remove tag, notify it
     //SEND NOTIFICATION REMOVE_TAG
     createEventMsg(slot->address,DELETE_TAG, slotNum);
+    //remove it
+    emptyTimeslot(slot);
   }
 }
 
-
+/**
+* @brief transmit twr message
+*
+* @param {tdmSlot *} timeslot for communication.
+* @param {int} slotNum actual timeslot number (1-3)
+*
+* @return none
+*/
 static void doTagTransmission(tdmSlot * slot,int slotNum){
   //ONLY HANDLE "TIMESLOT" HERE
   //"timeslot"
@@ -325,8 +388,15 @@ static void doTagTransmission(tdmSlot * slot,int slotNum){
 }
 
 
-/*EVENT SHIT NEEDS TO BE FIXED*/
-static bool createEventMsg(uwbAddress address, event_type event, int slot){
+/**
+* @brief create event message and queue to controller
+*
+* @param {uwbAddress *} address Id of UWB-Tag.
+* @param {event_type} event type of event.
+*
+* @return {bool} if queuing the event was a success
+*/
+static bool createEventMsg(uwbAddress address, event_type event, int slotNum){
   uint32 poll_tx_ts, resp_rx_ts, poll_rx_ts, resp_tx_ts;
   int32 rtd_init, rtd_resp;
   float clockOffsetRatio ;
@@ -355,12 +425,11 @@ static bool createEventMsg(uwbAddress address, event_type event, int slot){
   
   eventMessage.tof = tof;
 
-/*
-  //DELETE IF PROVES TOO SLOW
+#if DEBUG_MOVEMENTSTATE == 1
   if(event != UPDATE_TAG){
-    printf("Event : %d # slot : %d \r\n",event,slot);
+    printf("Event : %d # slot : %d \r\n",event,slotNum);
   }
-  */
+#endif
   
   if(xQueue != NULL){
     if(xQueueSend(xQueue,(void *)&eventMessage,0) == pdTRUE) {
@@ -371,24 +440,28 @@ static bool createEventMsg(uwbAddress address, event_type event, int slot){
 }
 
 
-
-void stepState(){
+/**
+* @brief State Machine ofr handling timeslot
+*
+* @return none
+*/
+static void stepState(){
   switch(nextState){
     case DISCOVER:
       //just do what is neeeded
-      doBroadCast();
+      doBroadcast();
       nextState = SLOT_ONE;
       break;
     case  SLOT_ONE:
-      doTagTransmission(&organizer.slot1,1);
+      doTagTransmission(&organizer.slotOne,1);
       nextState = SLOT_TWO;
       break;
     case SLOT_TWO:
-      doTagTransmission(&organizer.slot2,2);
+      doTagTransmission(&organizer.slotTwo,2);
       nextState = SLOT_THREE;
       break;
     case SLOT_THREE:
-      doTagTransmission(&organizer.slot3,3);
+      doTagTransmission(&organizer.slotThree,3);
       nextState = DISCOVER;
       break;
     default:
@@ -397,6 +470,14 @@ void stepState(){
   }
 }
 
+/**
+* @brief get timestamps from message
+*
+* @param {uint88 *} ts_field start position of ts_field.
+* @param {uint32 *} ts set value of ts_field.
+*
+* @return none
+*/
 static void msgGetTs(uint8 *ts_field, uint32 *ts){
   int i;
   *ts = 0;
@@ -406,29 +487,20 @@ static void msgGetTs(uint8 *ts_field, uint32 *ts){
   }
 }
 
-static void setNewStatus(xMessage * statusMsg){
-  if(!organizer.slot1.free && organizer.slot1.address.addr == statusMsg->id){
-    organizer.slot1.event = DELETE_TAG;
-  }else if(!organizer.slot2.free && organizer.slot2.address.addr == statusMsg->id){
-    organizer.slot2.event = DELETE_TAG;
-  }else if(!organizer.slot3.free && organizer.slot3.address.addr == statusMsg->id){
-    organizer.slot3.event = DELETE_TAG;
-  }
-}
-
-
-/*
-* @brief fill a msg field with data
+/**
+* @brief update status for a timeslot
 *
-* @param field pointer on the frist bye of the field to be filled
-*        data value to be written
-*        length data length
+* @param {xMessage *} statusMsg status.
 *
 * @return none
 */
-static void setMsgField(uint8 *field, uint8 * data, int length){
-  for(int i = 0; i < length; i++){
-    field[i] = data[i];
+static void setNewStatus(xMessage * statusMsg){
+  if(!organizer.slotOne.free && organizer.slotOne.address.addr == statusMsg->id){
+    organizer.slotOne.event = DELETE_TAG;
+  }else if(!organizer.slotTwo.free && organizer.slotTwo.address.addr == statusMsg->id){
+    organizer.slotTwo.event = DELETE_TAG;
+  }else if(!organizer.slotThree.free && organizer.slotThree.address.addr == statusMsg->id){
+    organizer.slotThree.event = DELETE_TAG;
   }
 }
 

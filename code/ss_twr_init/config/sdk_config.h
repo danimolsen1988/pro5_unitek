@@ -51,7 +51,8 @@
 //#define TEST // for ignorelist
 
 
-
+//#define DEBUG_UART      // define to run debug for uart, normal opration mode is not running, can only be used with RTOS
+                        //  comment if not debugging
 
 // <h> movementAnalyzer
 //==========================================================

@@ -41,7 +41,7 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/tdm.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/util/app_util.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/mpu_wrappers.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/queue.h \
- e:\dwm1001_repos\pro5_unitek\code\tdm\tdmstructures.h \
+ ../../tdm/../../code/tdm/tdmStructures.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/task.h \
  ../../../nRF5_SDK_14.2.0/external/freertos/source/include/list.h \
  ../../../deca_driver/deca_regs.h ../../../deca_driver/deca_version.h \
@@ -67,4 +67,5 @@ Output/nrf52832_xxaa/Obj/ss_twr_init/tdm.o: \
  ../../../nRF5_SDK_14.2.0/components/libraries/experimental_log/src/nrf_log_internal.h \
  ../../../nRF5_SDK_14.2.0/components/boards/boards.h \
  ../../../boards/dw1001_dev.h \
- ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h
+ ../../../nRF5_SDK_14.2.0/components/libraries/util/app_error.h \
+ ../../tdm/../../code/tdm/uwbHelper.h

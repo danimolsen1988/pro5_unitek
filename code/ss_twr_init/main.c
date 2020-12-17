@@ -90,6 +90,11 @@ TaskHandle_t test_ss_init_main_handle;    // task handle for debugging task.
 static _Bool test_ss_init_main_case(xMessage message);
 static void test_ss_init_main(void * pvParameter);
 #endif
+//DEBUGGING UART
+#ifdef DEBUG_UART
+TaskHandle_t uart_test_task_handle;
+extern void uart_test_task_function(void * pvParameter);
+#endif // #ifdef DEBUG_UART
 // xQueue handle, to queue sending type xMessage
 QueueHandle_t xQueue;
 QueueHandle_t xStatusQueue;
@@ -104,7 +109,12 @@ int main(void)
   /* Setup some LEDs for debug Green and Blue on DWM1001-DEV */
   LEDS_CONFIGURE(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK);
   LEDS_OFF(BSP_LED_0_MASK | BSP_LED_1_MASK | BSP_LED_2_MASK );
+  
+  #ifdef DEBUG_UART
+    /* Create task for testing/debugging uart, priority 2 */
+    UNUSED_VARIABLE(xTaskCreate(uart_test_task_function, "UARTTEST_INIT",configMINIMAL_STACK_SIZE,NULL,2,&uart_test_task_handle));
 
+  #else
     /* Create task for movement analyzer set priority to 1 */
     if(xTaskCreate(movementAnalyzer_initiator, "movementAnalyser_INIT", 
                    configMINIMAL_STACK_SIZE+160 , NULL, 1, 
@@ -114,6 +124,9 @@ int main(void)
     if(xTaskCreate(tdmTask, "TDM_INIT", configMINIMAL_STACK_SIZE + 140, NULL,2,NULL) != pdPASS){
       exit(0);
     }
+  #endif // #ifdef DEBUG_UART
+
+
 #if DEBUG_MOVEMENTSTATE == 2  
     //IF DEBUG CREATE DEBUGGING TASK
     if(xTaskCreate(test_ss_init_main, "movementAnalyser_TEST", 
@@ -129,7 +142,7 @@ int main(void)
   
 
   /*Initialization UART*/
-  #if DEBUG_MOVEMENTSTATE == 0 && DEBUG_EVENT == 0
+  #if (DEBUG_MOVEMENTSTATE == 0 && DEBUG_EVENT == 0) || DEBUG_UART
   // danis uart
   uartInit(NRF_UART_BAUDRATE_115200, false);
   #else
